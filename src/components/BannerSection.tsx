@@ -13,7 +13,7 @@ export default function BannerSection({
   bannerImage = "/header/banner.png",
 }: BannerSectionProps) {
   return (
-    <div className="w-full mb-2 relative">
+    <div className="w-full mb-4 relative">
       <div className="relative" style={{ height: "auto" }}>
         <Image
           alt="Banner"
