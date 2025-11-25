@@ -14,6 +14,7 @@
   --secondary: #f5f5f5;
   --secondary-foreground: #171717;
   --destructive: #ef4444;
+  --info: #3b82f6;
 }
 
 @theme inline {
@@ -30,8 +31,36 @@
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-destructive: var(--destructive);
+  --color-info: var(--info);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+
+  --animate-collapsible-down: collapsible-down 300ms ease-out;
+  --animate-collapsible-up: collapsible-up 300ms ease-out;
+
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+      opacity: 0;
+    }
+
+    to {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+
+    to {
+      height: 0;
+      opacity: 0;
+    }
+  }
 }
 
 .dark {
@@ -48,6 +77,7 @@
   --secondary: #171717;
   --secondary-foreground: #ededed;
   --destructive: #ef4444;
+  --info: #60a5fa;
 }
 
 body {
