@@ -2,6 +2,8 @@ import BannerSection from "@/components/BannerSection";
 import ProfileHeader from "@/components/ProfileHeader";
 import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
 import About from "@/components/About";
+import { WorkExperience } from "@/components/WorkExperience";
+import { WORK_EXPERIENCE_DATA } from "@/data/workExperienceData";
 
 
 export default function Home() {
@@ -37,9 +39,13 @@ export default function Home() {
             </div>
 
             {/* Main Content Sections */}
-            <div className="bg-background border border-gray-300 p-4">
+            <div className="bg-background border border-gray-300 p-4 mb-6">
               <About content="I'm a passionate software engineer and builder who loves creating elegant solutions to complex problems. With a focus on modern web technologies and user experience, I strive to build products that make a difference." />
-              {/* Add additional sections here */}
+            </div>
+
+            {/* Work Experience Section */}
+            <div className="bg-background border border-gray-300 p-4">
+              <WorkExperience experiences={WORK_EXPERIENCE_DATA} />
             </div>
           </div>
         </DiagonalPatternFrame>
