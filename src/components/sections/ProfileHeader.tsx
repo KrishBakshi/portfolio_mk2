@@ -30,17 +30,17 @@ export default function ProfileHeader({
   return (
     <div className="flex-col -mt-10 px-4 sm:px-0 pb-4 sm:px-0">
       <div
-        className="w-24 h-24 sm:w-28 sm:h-28 mb-4 sm:ml-8 relative z-10 rounded-full overflow-hidden bg-cover bg-center border-2 border-background"
+        className="w-24 h-24 sm:w-28 sm:h-28 mb-4 sm:ml-6 relative z-10 rounded-full overflow-hidden bg-cover bg-center border-1 border-background"
         role="img"
         aria-label={name}
         style={{ backgroundImage: `url("${profileImage}")` }}
       />
-      <div className="text-left sm:flex sm:justify-between sm:items-center w-full sm:px-8 flex-col sm:flex-row">
+      <div className="text-left sm:flex sm:justify-between sm:items-center w-full sm:px-6 flex-col sm:flex-row">
         <div className="px-0">
-          <h1 className="font-sans text-2xl sm:text-4xl tracking-[0.01em] font-semibold mb-0">
+          <h1 className="font-sans text-3xl tracking-[0.01em] font-semibold mb-0">
             {name}
           </h1>
-          <p className="opacity-60 text-xs sm:text-sm text-muted-foreground">
+          <p className="opacity-60 text-xs sm:text-sm text-muted-foreground font-mono">
             {age && `${age} • `}
             {title}
           </p>
