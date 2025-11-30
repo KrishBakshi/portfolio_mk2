@@ -15,9 +15,9 @@ export default function DiagonalPatternFrame({ children, className }: DiagonalPa
         )}>
             {/* Single diagonal pattern canvas extending 60px beyond each side */}
             <div
-                className="absolute dark:opacity-[0.2] opacity-[0.2] inset-0 md:left-[-60px] md:right-[-60px] h-full pointer-events-none z-0"
+                className="absolute dark:opacity-[0.06] opacity-[0.06] inset-0 md:left-[-60px] md:right-[-60px] h-full pointer-events-none z-0 border border-gray dark:border-white border-t-0"
                 style={{
-                    backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, currentColor 2px, currentColor 3px, transparent 3px, transparent 6px)',
+                    backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, currentColor 2px, currentColor 3px, transparent 3px, transparent 6px)',
                     color: 'var(--foreground)'
                 }}
             />

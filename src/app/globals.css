@@ -1,10 +1,16 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --muted: #f5f5f5;
   --muted-foreground: #737373;
   --border: #e5e5e5;
+  --input: #e5e5e5;
   --accent: #f5f5f5;
   --popover: #ffffff;
   --popover-foreground: #171717;
@@ -15,13 +21,19 @@
   --secondary-foreground: #171717;
   --destructive: #ef4444;
   --info: #3b82f6;
+  --code: #f5f5f5;
+  --code-foreground: #171717;
+  --code-number: #a3a3a3;
+  --code-highlight: #e5e5e5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-input: var(--input);
   --color-accent: var(--accent);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
@@ -32,6 +44,10 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-destructive: var(--destructive);
   --color-info: var(--info);
+  --color-code: var(--code);
+  --color-code-foreground: var(--code-foreground);
+  --color-code-number: var(--code-number);
+  --color-code-highlight: var(--code-highlight);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
@@ -66,10 +82,12 @@
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --muted: #171717;
   --muted-foreground: #a3a3a3;
   --border: #262626;
-  --accent: #171717;
-  --popover: #0a0a0a;
+  --input: #262626;
+  --accent: #262626;
+  --popover: #171717;
   --popover-foreground: #ededed;
   --ring: #ededed;
   --primary: #ededed;
@@ -78,6 +96,10 @@
   --secondary-foreground: #ededed;
   --destructive: #ef4444;
   --info: #60a5fa;
+  --code: #171717;
+  --code-foreground: #ededed;
+  --code-number: #525252;
+  --code-highlight: #262626;
 }
 
 body {
@@ -126,4 +148,24 @@ html.dark {
 
 html.light {
   color-scheme: light;
+}
+
+/* Code block styling matching reference */
+@layer components {
+  /* These selectors target elements created by rehype-pretty-code or similar */
+  [data-rehype-pretty-code-figure] {
+    @apply relative my-[1.25em] rounded-xl bg-code text-code-foreground;
+
+    pre {
+      @apply overflow-x-auto overscroll-x-none px-4 py-4;
+    }
+
+    code {
+      @apply font-mono text-sm;
+    }
+  }
+
+  [data-line] {
+    @apply py-0.5;
+  }
 }
