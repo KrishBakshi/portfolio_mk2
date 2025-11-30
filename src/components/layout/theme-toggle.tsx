@@ -8,9 +8,9 @@ import { useMetaColor } from "@/hooks/use-meta-color";
 // Note: Uncomment when you add the audio file at /public/audio/ui-sounds/click.wav
 // import { useSound } from "@/hooks/use-sound";
 
-import { MoonIcon } from "./animated-icons/moon";
-import { SunMediumIcon } from "./animated-icons/sun-medium";
-import { Button } from "./ui/button";
+import { MoonIcon } from "@/components/animated-icons/moon";
+import { SunMediumIcon } from "@/components/animated-icons/sun-medium";
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
