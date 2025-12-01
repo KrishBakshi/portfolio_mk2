@@ -37,7 +37,7 @@ export default function Home() {
                   title="Data Scientist"
                   profileImage="/header/pfp.jpeg"
                   socialLinks={{
-                    twitter: "",
+                    twitter: "https://x.com/KrishBakshi_",
                     github: "https://github.com/KrishBakshi",
                     linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
                     resume: "/resume.pdf",
