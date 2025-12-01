@@ -34,13 +34,13 @@ export default function Home() {
                 {/* p-4 is removed */}
                 <ProfileHeader
                   name="Krish Bakshi"
-                  title="engineer • developer • builder"
+                  title="Data Scientist"
                   profileImage="/header/pfp.jpeg"
                   socialLinks={{
-                    twitter: "https://x.com/yourhandle",
-                    github: "https://github.com/yourusername",
-                    linkedin: "https://www.linkedin.com/in/yourprofile/",
-                    resume: "",
+                    twitter: "",
+                    github: "https://github.com/KrishBakshi",
+                    linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
+                    resume: "/resume.pdf",
                   }}
                 />
               </div>
@@ -48,7 +48,7 @@ export default function Home() {
 
             {/* Main Content Sections */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 py-4 md:py-0 md:px-2 mb-6">
-              <About content="I'm a passionate software engineer and builder who loves creating elegant solutions to complex problems. With a focus on modern web technologies and user experience, I strive to build products that make a difference." />
+              <About content="Hi there! 👋 I'm Krish. I enjoy building smart, AI-driven solutions that solves problems of day-to-day life or bussiness needs . Whether it's forecasting sales, automating tasks, or generating content with AI, I turn ideas into working products using data, code, and creativity." />
             </div>
 
             {/* Skills Section */}

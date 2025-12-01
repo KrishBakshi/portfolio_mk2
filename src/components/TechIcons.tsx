@@ -28,6 +28,24 @@ import ThreeJs from './technologies/ThreeJs';
 import TypeScript from './technologies/TypeScript';
 import Vercel from './technologies/Vercel';
 
+// Import new icon components
+import Python from './technologies/Python';
+import C from './technologies/C';
+import Cpp from './technologies/Cpp';
+import PyTorch from './technologies/PyTorch';
+import PySpark from './technologies/PySpark';
+import Git from './technologies/Git';
+import FastAPI from './technologies/FastAPI';
+import Flask from './technologies/Flask';
+import Docker from './technologies/Docker';
+import GoogleCloud from './technologies/GoogleCloud';
+import Pandas from './technologies/Pandas';
+import HuggingFace from './technologies/HuggingFace';
+import LangChain from './technologies/LangChain';
+import LangGraph from './technologies/LangGraph';
+import Gradio from './technologies/Gradio';
+import Streamlit from './technologies/Streamlit';
+
 export const TechIcons: Record<string, React.ComponentType<any>> = {
     'AWS': AWS,
     'Appwrite': Appwrite,
@@ -57,6 +75,24 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'Three.js': ThreeJs,
     'TypeScript': TypeScript,
     'Vercel': Vercel,
+    
+    // Mapped new icons
+    'Python': Python,
+    'C': C,
+    'C++': Cpp,
+    'PyTorch': PyTorch,
+    'PySpark': PySpark,
+    'Git': Git,
+    'FastAPI': FastAPI,
+    'Flask': Flask,
+    'Docker': Docker,
+    'Google Cloud Platform': GoogleCloud,
+    'Pandas': Pandas,
+    'Hugging Face': HuggingFace,
+    'LangChain': LangChain,
+    'LangGraph': LangGraph,
+    'Gradio': Gradio,
+    'Streamlit': Streamlit,
 };
 
 export function getTechIcon(name: string) {

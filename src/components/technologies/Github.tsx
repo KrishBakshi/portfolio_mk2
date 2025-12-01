@@ -7,7 +7,7 @@ export default function Github({ className }: { className?: string }) {
       viewBox="0 0 128 128"
       className={className}
     >
-      <g fill="#181616">
+      <g fill="currentColor">
         <path
           fillRule="evenodd"
           clipRule="evenodd"

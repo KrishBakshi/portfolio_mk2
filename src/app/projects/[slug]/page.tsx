@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe } from "lucide-react";
 import type { Metadata } from "next";
-import { NotionRenderer } from "@/components/NotionRenderer";
-import { TableOfContents } from "@/components/TableOfContents";
+import { NotionRenderer } from "@/components/blog/NotionRenderer";
+import { TableOfContents } from "@/components/blog/TableOfContents";
 
 import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
 import { BackButton } from "@/components/BackButton";

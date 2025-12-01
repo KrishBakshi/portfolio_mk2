@@ -1,9 +1,9 @@
 import type { NavItem } from "@/types/nav";
 
 export const SITE_INFO = {
-  name: "My Portfolio",
+  name: "Krish Bakshi",
   url: process.env.APP_URL || "http://localhost:3000",
-  description: "A minimal portfolio website",
+  description: "I build cool stuff using Data and AI.",
 };
 
 export const META_THEME_COLORS = {
