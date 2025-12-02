@@ -152,6 +152,7 @@ html.light {
 
 /* Code block styling matching reference */
 @layer components {
+
   /* These selectors target elements created by rehype-pretty-code or similar */
   [data-rehype-pretty-code-figure] {
     @apply relative my-[1.25em] rounded-xl bg-code text-code-foreground;
@@ -167,5 +168,15 @@ html.light {
 
   [data-line] {
     @apply py-0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
   }
 }

@@ -46,6 +46,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${fontSans.variable} ${fontMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <Providers>
           <div className="mx-auto max-w-[calc(48rem+120px)] relative px-2 md:px-0">
