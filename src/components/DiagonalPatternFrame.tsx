@@ -24,8 +24,8 @@ export default function DiagonalPatternFrame({ children, className }: DiagonalPa
 
             {/* Single diagonal pattern canvas – side columns removed */}
 
-            {/* Content sections with gap instead of borders //add py-8 and border border-gray-300 border-dashed fir debugging */}
-            <div className="relative flex flex-col gap-8 pb-8 z-10">
+            {/* Content sections with gap instead of borders //add py-8 pb-8 and border border-gray-300 border-dashed fir debugging */}
+            <div className="relative flex flex-col gap-8 z-10">
                 {children}
             </div>
         </div>
