@@ -25,6 +25,8 @@
   --code-foreground: #171717;
   --code-number: #a3a3a3;
   --code-highlight: #e5e5e5;
+  --selection: #171717;
+  --selection-foreground: #ffffff;
 }
 
 @theme inline {
@@ -48,6 +50,8 @@
   --color-code-foreground: var(--code-foreground);
   --color-code-number: var(--code-number);
   --color-code-highlight: var(--code-highlight);
+  --color-selection: var(--selection);
+  --color-selection-foreground: var(--selection-foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
@@ -100,6 +104,13 @@
   --code-foreground: #ededed;
   --code-number: #525252;
   --code-highlight: #262626;
+  --selection: #ededed;
+  --selection-foreground: #0a0a0a;
+}
+
+::selection {
+  background-color: var(--selection);
+  color: var(--selection-foreground);
 }
 
 body {
