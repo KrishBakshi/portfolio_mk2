@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 
 import { Providers } from "@/components/layout/providers";
+import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
 import { META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
@@ -55,6 +56,7 @@ export default function RootLayout({
               {children}
             </div>
           </div>
+          <ScrollToTopButton />
         </Providers>
       </body>
     </html>
