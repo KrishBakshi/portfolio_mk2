@@ -13,10 +13,13 @@ import {
 import { SiX, SiLinkedin } from "react-icons/si";
 
 export function PostShareMenu({ url }: { url: string }) {
-  // Ensure we have an absolute URL for sharing/copying
-  const absoluteUrl = typeof window !== "undefined" 
-    ? new URL(url, window.location.origin).toString()
-    : url.startsWith("http") ? url : `https://krish.tech${url}`; // Fallback if SSR
+  const [absoluteUrl, setAbsoluteUrl] = React.useState(url);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAbsoluteUrl(new URL(url, window.location.origin).toString());
+    }
+  }, [url]);
 
   const urlEncoded = encodeURIComponent(absoluteUrl);
 

@@ -61,6 +61,18 @@ function getPrompt(url: string, isComponent?: boolean) {
   return `Read ${url}, I want to ask questions about it.`;
 }
 
+function useAbsoluteUrl(url: string) {
+  const [absoluteUrl, setAbsoluteUrl] = React.useState(url);
+  
+  React.useEffect(() => {
+      if (typeof window !== "undefined") {
+         setAbsoluteUrl(new URL(url, window.location.origin).toString());
+      }
+  }, [url]);
+  
+  return absoluteUrl;
+}
+
 type MenuItem = 
   | {
       title: string;
@@ -85,13 +97,9 @@ export function ViewOptions({
   isComponent?: boolean;
 }) {
   const [isMarkdownDialogOpen, setIsMarkdownDialogOpen] = React.useState(false);
+  const fullMarkdownUrl = useAbsoluteUrl(markdownUrl);
 
   const items = React.useMemo<MenuItem[]>(() => {
-    const fullMarkdownUrl =
-      typeof window !== "undefined"
-        ? new URL(markdownUrl, window.location.origin).toString()
-        : markdownUrl;
-
     const q = getPrompt(fullMarkdownUrl, isComponent);
 
     const _items: MenuItem[] = [
@@ -225,10 +233,12 @@ export function LLMCopyButtonWithViewOptions({
   mdxContent?: string;
   isComponent?: boolean;
 }) {
+  const fullMarkdownUrl = useAbsoluteUrl(markdownUrl);
+
   return (
     <div className={cn("flex h-7 items-center rounded-lg border-gray-300/50 dark:border-white/10 bg-secondary text-secondary-foreground shadow-sm")}>
       <div className="flex h-full items-center px-2 gap-2">
-         <CopyButton text={mdxContent || (typeof window !== "undefined" ? new URL(markdownUrl, window.location.origin).toString() : markdownUrl)} />
+         <CopyButton text={mdxContent || fullMarkdownUrl} />
          <span className="text-xs font-medium">MDX</span>
       </div>
       <ViewOptions markdownUrl={markdownUrl} mdxContent={mdxContent} isComponent={isComponent} />

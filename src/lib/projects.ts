@@ -82,3 +82,21 @@ export function getPublishedProjects(): ProjectPreview[] {
     const allProjects = getAllProjects();
     return allProjects.filter((project) => project.frontmatter.isWorking !== false);
 }
+
+/**
+ * Get raw MDX file content (with frontmatter)
+ */
+export function getRawProjectMdxContent(slug: string): string | null {
+    try {
+        const fullPath = path.join(projectsDirectory, `${slug}.mdx`);
+        
+        if (!fs.existsSync(fullPath)) {
+            return null;
+        }
+
+        return fs.readFileSync(fullPath, 'utf8');
+    } catch (error) {
+        console.error(`Error reading raw MDX content for ${slug}:`, error);
+        return null;
+    }
+}

@@ -10,7 +10,9 @@ import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
 import { BackButton } from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getAllProjects, getProjectBySlug } from "@/lib/projects";
+import { getAllProjects, getProjectBySlug, getRawProjectMdxContent } from "@/lib/projects";
+import { PostShareMenu } from "@/components/blog/PostShareMenu";
+import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -62,6 +64,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const { frontmatter, content } = project;
+  const rawMdxContent = getRawProjectMdxContent(slug);
 
   return (
     <div className="min-h-screen transition-colors duration-300 relative">
@@ -70,11 +73,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="mx-auto w-full max-w-3xl sm:px-0">
             <div id="js-cover-mark" className="absolute top-0 left-0 w-full h-32 pointer-events-none" />
 
-            <div className="mb-6">
+            <div className="mt-6 mb-6 flex items-center justify-between">
               <BackButton href="/projects" label="Back to Projects" />
+              
+              <div className="flex items-center gap-2">
+                <LLMCopyButtonWithViewOptions 
+                  markdownUrl={`/projects/${slug}.mdx`} 
+                  mdxContent={rawMdxContent || undefined}
+                />
+                <PostShareMenu url={`/projects/${slug}`} />
+              </div>
             </div>
 
-            <article className="bg-background border border-gray-300 p-6 sm:p-8 relative">
+            <article className="bg-background border border-gray-300/50 dark:border-white/10 p-6 sm:p-8 relative">
               <TableOfContents content={content} title={frontmatter.title} />
               <div className="space-y-8">
                 {/* Header */}
@@ -110,7 +121,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </header>
 
                 {/* Media */}
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-gray-300/50 dark:border-white/10 bg-muted">
                   {frontmatter.video ? (
                     <video
                       src={frontmatter.video}
