@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import remarkUnwrapImages from 'remark-unwrap-images';
 import { cn } from '@/lib/utils';
 import { CopyButton } from './CopyButton';
 import { Code, Heading, Prose } from '@/components/ui/typography';
@@ -18,7 +19,7 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
     return (
         <Prose className={cn("max-w-none", className)}>
             <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkUnwrapImages]}
                 rehypePlugins={[
                     rehypeHighlight,
                     rehypeSlug,
