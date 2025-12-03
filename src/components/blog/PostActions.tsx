@@ -140,7 +140,7 @@ export function ViewOptions({
     }
 
     return _items;
-  }, [markdownUrl, isComponent]);
+  }, [markdownUrl, isComponent, fullMarkdownUrl]);
 
   return (
     <>
