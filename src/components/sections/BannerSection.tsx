@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import BannerOverlay from "./BannerOverlay";
 
@@ -10,7 +8,7 @@ interface BannerSectionProps {
 
 export default function BannerSection({
   quote = "",
-  bannerImage = "/header/banner.png",
+  bannerImage = "/header/banner.svg",
 }: BannerSectionProps) {
   return (
     <div className="w-full mb-4 relative">
