@@ -32,7 +32,7 @@ export default function Home() {
             {/* Banner and Profile Header - Combined */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 border-t-0 mb-6">
               <div className="pt-0">
-                <BannerSection bannerImage="/header/banner.png" quote="" />
+                <BannerSection bannerImage="/header/banner.svg" quote="" />
               </div>
               <div className="">
                 {/* p-4 is removed */}
