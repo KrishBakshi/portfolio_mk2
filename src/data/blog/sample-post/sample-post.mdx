@@ -1,0 +1,90 @@
+---
+title: "Sample Blog Post Using MDX"
+slug: "sample-post"
+description: "A demonstration of MDX capabilities including code blocks, tables, and images."
+image: "/header/banner.png"
+tags: ["MDX", "Next.js", "Demo"]
+date: "2025-12-03"
+author: "Nasiwak"
+readTime: "5 min read"
+isPublished: true
+---
+
+# Welcome to the Sample Blog Post
+
+This is a sample blog post demonstrating various MDX features. We've set the banner image to use the requested banner.
+
+## Rich Text Formatting
+
+You can use **bold text**, *italic text*, and even ~~strikethrough~~.
+
+### Lists
+
+Unordered list:
+- Item 1
+- Item 2
+  - Nested item
+- Item 3
+
+Ordered list:
+1. First step
+2. Second step
+3. Third step
+
+## Code Blocks
+
+Here is a React component example with syntax highlighting:
+
+```tsx
+import React from 'react';
+
+interface Props {
+  name: string;
+}
+
+export const Greeting: React.FC<Props> = ({ name }) => {
+  return (
+    <div className="p-4 bg-blue-100 rounded-lg">
+      <h1>Hello, {name}!</h1>
+    </div>
+  );
+};
+```
+
+And here is a simple Python script:
+
+```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print([fibonacci(i) for i in range(10)])
+```
+
+## Tables
+
+Here is a comparison table:
+
+| Feature | Markdown | MDX |
+| :--- | :---: | :---: |
+| Basic Formatting | ✅ | ✅ |
+| Code Blocks | ✅ | ✅ |
+| React Components | ❌ | ✅ |
+| Custom Styling | ❌ | ✅ |
+
+## Blockquotes
+
+> "The best way to predict the future is to invent it."
+> — Alan Kay
+
+## Images within Content
+
+You can also include images directly in the content:
+
+![Our Banner](/header/banner.png)
+
+## Conclusion
+
+MDX allows you to mix Markdown with JSX, giving you the power to create interactive and rich content for your blog.
+

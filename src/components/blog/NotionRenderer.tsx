@@ -54,12 +54,12 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
                         }
 
                         return (
-                            <div className="relative my-6 overflow-hidden bg-code text-code-foreground">
+                            <div className="relative my-2 overflow-hidden bg-code text-code-foreground">
                                 <div className="absolute top-2 right-2 z-10">
                                     <CopyButton text={String(children).replace(/\n$/, '')} />
                                 </div>
                                 <div className="overflow-x-auto">
-                                    <Code className={cn("font-mono text-sm bg-transparent border-0 p-0 block", className)} data-language={match ? match[1] : 'text'} {...props}>
+                                    <Code className={cn("font-mono text-sm bg-transparent border-0 p-0 block border border-gray-300/50 dark:border-white/10", className)} data-language={match ? match[1] : 'text'} {...props}>
                                         {children}
                                     </Code>
                                 </div>
@@ -86,7 +86,7 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
                     // Images
                     img: ({ src, alt }) => (
                         <figure className="mt-8 mb-8">
-                            <div className="relative rounded-lg overflow-hidden border border-border bg-muted">
+                            <div className="relative rounded-lg overflow-hidden bg-muted">
                                 <img
                                     src={src}
                                     alt={alt || ''}

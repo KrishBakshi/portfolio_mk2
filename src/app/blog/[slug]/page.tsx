@@ -114,7 +114,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                                 </header>
 
                                 {/* Featured Image */}
-                                <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
+                                <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
                                     <Image
                                         src={frontmatter.image}
                                         alt={frontmatter.title}
