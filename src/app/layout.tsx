@@ -8,6 +8,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
 
+import { Analytics } from "@vercel/analytics/next"
+
 export const metadata: Metadata = {
   title: "Krish Bakshi - Data Scientist",
   description: "Yo! Thank you for coming to my portfolio!",
@@ -54,6 +56,7 @@ export default function RootLayout({
             <SiteHeader />
             <div className="mx-auto w-full">
               {children}
+              <Analytics />
             </div>
           </div>
           <ScrollToTopButton />
