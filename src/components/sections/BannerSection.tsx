@@ -8,7 +8,7 @@ interface BannerSectionProps {
 
 export default function BannerSection({
   quote = "",
-  bannerImage = "/header/banner.svg",
+  bannerImage = "",
 }: BannerSectionProps) {
   return (
     <div className="w-full mb-4 relative">
