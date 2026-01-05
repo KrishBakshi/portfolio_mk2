@@ -7,12 +7,7 @@ export type TechStackItem = {
 };
 
 export const TECH_STACK: TechStackItem[] = [
-  {
-    key: "python",
-    title: "Python",
-    href: "https://www.python.org/",
-    categories: ["Language"],
-  },
+  // Languages
   {
     key: "c",
     title: "C",
@@ -26,82 +21,30 @@ export const TECH_STACK: TechStackItem[] = [
     categories: ["Language"],
   },
   {
+    key: "python",
+    title: "Python",
+    href: "https://www.python.org/",
+    categories: ["Language"],
+  },
+  {
     key: "javascript",
     title: "JavaScript",
     href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
     categories: ["Language"],
-  },
-   {
-    key: "postgres",
-    title: "PostgreSQL",
-    href: "https://www.postgresql.org/",
-    categories: ["Database"],
-  },
-  {
-    key: "react",
-    title: "React",
-    href: "https://react.dev/",
-    categories: ["Library", "UI Library"],
-  },
-  {
-    key: "nodejs",
-    title: "Node.js",
-    href: "https://nodejs.org/",
-    categories: ["Runtime Environment"],
-  },
-  {
-    key: "pytorch",
-    title: "PyTorch",
-    href: "https://pytorch.org/",
-    categories: ["Library", "AI/ML"],
-  },
-  {
-    key: "pandas",
-    title: "Pandas",
-    href: "https://pandas.pydata.org/",
-    categories: ["Library", "Data Science"],
-  },
-  {
-    key: "pyspark",
-    title: "PySpark",
-    href: "https://spark.apache.org/docs/latest/api/python/",
-    categories: ["Library", "Big Data"],
-  },
-  {
-    key: "git",
-    title: "Git",
-    href: "https://git-scm.com/",
-    categories: ["Version Control"],
-  },
-  {
-    key: "fastapi",
-    title: "FastAPI",
-    href: "https://fastapi.tiangolo.com/",
-    categories: ["Framework", "Backend"],
-  },
-  {
-    key: "flask",
-    title: "Flask",
-    href: "https://flask.palletsprojects.com/",
-    categories: ["Framework", "Backend"],
-  },
-  {
-    key: "docker",
-    title: "Docker",
-    href: "https://www.docker.com/",
-    categories: ["Containerization"],
-  },
-  {
-    key: "gcp",
-    title: "Google Cloud Platform",
-    href: "https://cloud.google.com/",
-    categories: ["Cloud"],
   },
   {
     key: "typescript",
     title: "TypeScript",
     href: "https://www.typescriptlang.org/",
     categories: ["Language"],
+  },
+
+  // Frontend / Web Frameworks
+  {
+    key: "react",
+    title: "React",
+    href: "https://react.dev/",
+    categories: ["Library", "UI Library"],
   },
   {
     key: "nextjs",
@@ -117,17 +60,57 @@ export const TECH_STACK: TechStackItem[] = [
     categories: ["Framework"],
   },
   {
-    key: "socketio",
-    title: "Socket.io",
-    href: "https://socket.io/",
-    categories: ["Library", "Real-time"],
-  },
-  {
     key: "shadcn-ui",
     title: "shadcn/ui",
     href: "https://ui.shadcn.com/",
     categories: ["Library", "Component Library"],
     theme: true,
+  },
+
+  // Backend / API
+  {
+    key: "nodejs",
+    title: "Node.js",
+    href: "https://nodejs.org/",
+    categories: ["Runtime Environment"],
+  },
+  {
+    key: "fastapi",
+    title: "FastAPI",
+    href: "https://fastapi.tiangolo.com/",
+    categories: ["Framework", "Backend"],
+  },
+  {
+    key: "flask",
+    title: "Flask",
+    href: "https://flask.palletsprojects.com/",
+    categories: ["Framework", "Backend"],
+  },
+  {
+    key: "socketio",
+    title: "Socket.io",
+    href: "https://socket.io/",
+    categories: ["Library", "Real-time"],
+  },
+
+  // Data Science & AI/ML
+  {
+    key: "pandas",
+    title: "Pandas",
+    href: "https://pandas.pydata.org/",
+    categories: ["Library", "Data Science"],
+  },
+  {
+    key: "pyspark",
+    title: "PySpark",
+    href: "https://spark.apache.org/docs/latest/api/python/",
+    categories: ["Library", "Big Data"],
+  },
+  {
+    key: "pytorch",
+    title: "PyTorch",
+    href: "https://pytorch.org/",
+    categories: ["Library", "AI/ML"],
   },
   {
     key: "huggingface",
@@ -147,6 +130,8 @@ export const TECH_STACK: TechStackItem[] = [
     href: "https://langchain-ai.github.io/langgraph/",
     categories: ["Library", "AI/ML"],
   },
+
+  // Data Apps
   {
     key: "gradio",
     title: "Gradio",
@@ -159,11 +144,21 @@ export const TECH_STACK: TechStackItem[] = [
     href: "https://streamlit.io/",
     categories: ["Library", "Data Science", "UI"],
   },
+
+  // Databases
   {
-    key: "github",
-    title: "GitHub",
-    href: "https://github.com/",
-    categories: ["Tool", "Version Control"],
+    key: "postgres",
+    title: "PostgreSQL",
+    href: "https://www.postgresql.org/",
+    categories: ["Database"],
+  },
+
+  // Cloud / DevOps / Tools
+  {
+    key: "docker",
+    title: "Docker",
+    href: "https://www.docker.com/",
+    categories: ["Containerization"],
   },
   {
     key: "aws",
@@ -172,9 +167,27 @@ export const TECH_STACK: TechStackItem[] = [
     categories: ["Cloud"],
   },
   {
+    key: "gcp",
+    title: "Google Cloud Platform",
+    href: "https://cloud.google.com/",
+    categories: ["Cloud"],
+  },
+  {
     key: "vercel",
     title: "Vercel",
     href: "https://vercel.com/",
     categories: ["Cloud"],
+  },
+  {
+    key: "git",
+    title: "Git",
+    href: "https://git-scm.com/",
+    categories: ["Version Control"],
+  },
+  {
+    key: "github",
+    title: "GitHub",
+    href: "https://github.com/",
+    categories: ["Tool", "Version Control"],
   },
 ];
