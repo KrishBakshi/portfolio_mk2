@@ -45,6 +45,10 @@ import LangChain from './technologies/LangChain';
 import LangGraph from './technologies/LangGraph';
 import Gradio from './technologies/Gradio';
 import Streamlit from './technologies/Streamlit';
+import { GoogleBigQuery } from './technologies/GoogleBigQuery';
+import { GoogleGemini } from './technologies/GoogleGemini';
+import { OpenCV } from './technologies/OpenCV';
+import { NumPy } from './technologies/NumPy';
 
 export const TechIcons: Record<string, React.ComponentType<any>> = {
     'AWS': AWS,
@@ -75,7 +79,7 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'Three.js': ThreeJs,
     'TypeScript': TypeScript,
     'Vercel': Vercel,
-    
+
     // Mapped new icons
     'Python': Python,
     'C': C,
@@ -88,11 +92,19 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'Docker': Docker,
     'Google Cloud Platform': GoogleCloud,
     'Pandas': Pandas,
-    'Hugging Face': HuggingFace,
+    'HuggingFace': HuggingFace,
     'LangChain': LangChain,
     'LangGraph': LangGraph,
     'Gradio': Gradio,
     'Streamlit': Streamlit,
+    'GoogleBigQuery': GoogleBigQuery,
+    'BigQuery': GoogleBigQuery,
+    'GoogleGemini': GoogleGemini,
+    'Gemini': GoogleGemini,
+    'Google Gemini': GoogleGemini,
+    'OpenCV': OpenCV,
+    'NumPy': NumPy,
+    'Numpy': NumPy,
 };
 
 export function getTechIcon(name: string) {
