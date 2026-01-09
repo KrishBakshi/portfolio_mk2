@@ -32,7 +32,7 @@ export default function Home() {
             {/* Banner and Profile Header - Combined */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 border-t-0 mb-6">
               <div className="pt-0">
-                <BannerSection bannerImage="/header/banner.jpg" quote="" />
+                <BannerSection bannerImage="/header/vr2.png" quote="" />
               </div>
               <div className="">
                 {/* p-4 is removed */}
@@ -62,7 +62,7 @@ export default function Home() {
 
             {/* Projects Section */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 md:py-0 md:px-2 py-4 mb-6">
-              <Projects projects={projects} max={2} />
+              <Projects projects={projects} max={4} />
             </div>
 
             {/* Skills Section */}
@@ -77,7 +77,7 @@ export default function Home() {
 
             {/* Call To Action Section */}
             <div className={`bg-background ${styles.dashedBorder} md:py-2 md:px-2 py-4 mt-6`}>
-            {/* <div className={`bg-background border border-dashed border-gray dark:border-white/10 md:py-0 md:px-2 py-4 mt-6`}> */}
+              {/* <div className={`bg-background border border-dashed border-gray dark:border-white/10 md:py-0 md:px-2 py-4 mt-6`}> */}
               <CallToAction />
             </div>
 
