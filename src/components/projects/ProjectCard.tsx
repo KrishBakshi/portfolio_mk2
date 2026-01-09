@@ -106,7 +106,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
                 )}
             </CardContent>
             <CardFooter className="px-4 pb-4 pt-0 flex flex-col gap-3 items-start">
-                <div
+                {/* <div
                     className={cn(
                         "flex items-center gap-1 rounded-md px-2 py-1 text-[10px] w-full font-mono",
                         isWorking
@@ -125,7 +125,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
                             Building
                         </>
                     )}
-                </div>
+                </div> */}
 
                 <div className="flex flex-row flex-wrap items-start gap-2 w-full">
                     {link && (

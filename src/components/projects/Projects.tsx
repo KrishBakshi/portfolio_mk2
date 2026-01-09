@@ -8,7 +8,7 @@ interface ProjectsProps {
     showToggle?: boolean;
 }
 
-export function Projects({ projects, max = 2, showToggle = true }: ProjectsProps) {
+export function Projects({ projects, max, showToggle = true }: ProjectsProps) {
     return (
         <div className="space-y-6 px-4 sm:py-4">
             <div className="flex flex-col gap-2">

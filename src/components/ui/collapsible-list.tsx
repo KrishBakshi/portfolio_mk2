@@ -28,13 +28,13 @@ export function CollapsibleList<T>({
   if (items.length <= max) {
     return (
       <div className={listClassName}>
-         {items.map((item, index) => (
-            <Slot
-              key={typeof keyExtractor === "function" ? keyExtractor(item) : index}
-            >
-              {renderItem(item)}
-            </Slot>
-          ))}
+        {items.map((item, index) => (
+          <Slot
+            key={typeof keyExtractor === "function" ? keyExtractor(item) : index}
+          >
+            {renderItem(item)}
+          </Slot>
+        ))}
       </div>
     );
   }
@@ -58,27 +58,27 @@ export function CollapsibleList<T>({
     <Collapsible>
       <div className={listClassName}>
         {items.slice(0, max).map((item, index) => (
-            <Slot
+          <Slot
             key={typeof keyExtractor === "function" ? keyExtractor(item) : index}
-            >
+          >
             {renderItem(item)}
-            </Slot>
+          </Slot>
         ))}
 
         <CollapsibleContent className={listClassName === "flex flex-col" ? "" : "col-span-full"}>
-            <div className={listClassName}>
-                {items.slice(max).map((item, index) => (
-                <Slot
-                    key={
-                    typeof keyExtractor === "function"
-                        ? keyExtractor(item)
-                        : max + index
-                    }
-                >
-                    {renderItem(item)}
-                </Slot>
-                ))}
-            </div>
+          <div className={listClassName}>
+            {items.slice(max).map((item, index) => (
+              <Slot
+                key={
+                  typeof keyExtractor === "function"
+                    ? keyExtractor(item)
+                    : max + index
+                }
+              >
+                {renderItem(item)}
+              </Slot>
+            ))}
+          </div>
         </CollapsibleContent>
       </div>
 
