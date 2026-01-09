@@ -1,0 +1,85 @@
+---
+title: 'YOLO ML Utils'
+slug: 'yolo-ml-utils'
+id: 7
+description: 'A practical utility toolkit for YOLO-based computer vision workflows, covering dataset preparation, annotation processing, visualization, and training/debug utilities used in real-world ML pipelines.'
+video: '/assets/demo/yolo_ml_demo.mp4'
+link: 'https://github.com/KrishBakshi/yolo-ml-utils'
+github: 'https://github.com/KrishBakshi/yolo-ml-utils'
+technologies:
+  - Python
+  - Gradio
+  - OpenCV
+  - NumPy
+  - Ultralytics
+  - Computer Vision
+isWorking: true
+---
+
+## Overview
+
+**YOLO ML Utils** is a modular collection of helper scripts and utilities built to **streamline end-to-end YOLO computer vision workflows**.  
+It focuses on eliminating repetitive boilerplate involved in dataset handling, annotation management, visualization, and training/debug cycles.
+
+The toolkit is designed for **rapid experimentation, cleaner pipelines, and production-friendly workflows**, especially when working with custom datasets and iterative model training.
+
+---
+
+## Why This Project
+
+Working with YOLO models often involves:
+- Repeated dataset restructuring
+- Manual annotation sanity checks
+- Debugging incorrect bounding boxes or masks
+- Writing ad-hoc scripts for visualization and validation
+
+This repository consolidates those recurring tasks into **reusable, consistent utilities**, enabling faster iteration and fewer data-related training failures.
+
+---
+
+## Key Capabilities
+
+- **Dataset Utilities**
+  - Dataset restructuring and format normalization for YOLO training
+  - Train/validation/test split handling
+  - File integrity and consistency checks
+
+- **Annotation Handling**
+  - Parsing and validating YOLO annotation files
+  - Coordinate normalization and conversion helpers
+  - Detection of corrupted or misaligned labels
+
+- **Visualization & Debugging**
+  - Bounding box and annotation overlays on images
+  - Visual inspection tools to catch labeling errors early
+  - Lightweight OpenCV-based rendering for fast checks
+
+- **Training Support**
+  - Utilities to assist during training and evaluation cycles
+  - Debug helpers for common YOLO data-related issues
+  - Designed to plug into existing YOLO pipelines with minimal setup
+
+---
+
+## Design Philosophy
+
+- **Utility-first**: Small, focused scripts that do one job well  
+- **Composable**: Functions can be chained into larger pipelines  
+- **Framework-agnostic**: Compatible with Ultralytics YOLO and custom training loops  
+- **Production-aware**: Built from real experimentation and fine-tuning workflows, not toy examples  
+
+---
+
+## Use Cases
+
+- Rapid prototyping of custom YOLO datasets  
+- Debugging bounding box or annotation issues before long training runs  
+- Standardizing dataset pipelines across multiple experiments  
+- Supporting research, internships, and production ML vision projects  
+
+---
+
+## Status
+
+The repository is **actively usable and extensible**, with utilities added as new YOLO-related needs arise during experimentation and model development.
+
