@@ -8,6 +8,7 @@ export interface ProjectFrontmatter {
     github?: string;
     technologies: string[];
     isWorking?: boolean;
+    id?: number;
 }
 
 export interface Project {

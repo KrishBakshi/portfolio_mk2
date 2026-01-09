@@ -68,7 +68,13 @@ export function getAllProjects(): ProjectPreview[] {
         })
         .filter((project): project is ProjectPreview => project !== null)
         .sort((a, b) => {
-            // Sort by title
+            // Sort by id (highest first)
+            const idA = a.frontmatter.id || 0;
+            const idB = b.frontmatter.id || 0;
+            if (idA !== idB) {
+                return idB - idA;
+            }
+            // Sort by title as fallback
             return a.frontmatter.title.localeCompare(b.frontmatter.title);
         });
 
@@ -89,7 +95,7 @@ export function getPublishedProjects(): ProjectPreview[] {
 export function getRawProjectMdxContent(slug: string): string | null {
     try {
         const fullPath = path.join(projectsDirectory, `${slug}.mdx`);
-        
+
         if (!fs.existsSync(fullPath)) {
             return null;
         }
