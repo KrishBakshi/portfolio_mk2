@@ -1,0 +1,112 @@
+---
+title: 'SEC Filings QA Agent'
+slug: 'sec-filings-qa-agent'
+id: 5
+description: 'A semantic question-answering system for SEC filings (10-K, 8-K, DEF 14A, etc.) using LangChain, vector retrieval, and Gemini Flash for deep financial research workflows.'
+image: '/file.svg'
+video: '/assets/demo/sec_demo.mp4'
+link: 'https://github.com/KrishBakshi/sec-filings-qa-agent'
+github: 'https://github.com/KrishBakshi/sec-filings-qa-agent'
+technologies:
+  - Python
+  - LangChain
+  - ChromaDB
+  - GoogleGemini
+  - HuggingFace
+  - Streamlit
+isWorking: true
+---
+
+## Overview
+
+Built a **semantic Q&A system for SEC filings** that lets users ask natural language questions over regulatory financial documents such as **10-K, 8-K, and DEF 14A** reports.  
+The system combines **retrieval-augmented generation (RAG)** with vector search (ChromaDB), contextual embeddings, and a lightweight Streamlit interface to deliver fast, accurate, and attributed answers across multiple companies’ filings.
+
+It’s designed for **deep financial research** — enabling both analysts and engineers to query dense corporate disclosures with simple queries like *“What are Apple’s risk factors in the latest 10-K?”* or *“How has Tesla described climate-related risks?”*.
+
+---
+
+## Why This Project
+
+Traditional analysis of SEC filings is labor-intensive: filings often exceed hundreds of pages, and pulling insights manually can take hours. By integrating **large language models with retrieval systems**, this project automates the heavy lifting: it extracts context from long documents and grounds responses in the exact source text. This **reduces ambiguity, improves accuracy, and scales document understanding** far beyond keyword search. :contentReference[oaicite:0]{index=0}
+
+---
+
+## Key Capabilities
+
+- **Semantic Question Answering**
+  - Users can ask complex natural language questions about financial reports.
+  - Responses are grounded in the context of relevant filings, improving relevance and trustworthiness.
+
+- **RAG Pipeline Integration**
+  - Documents are chunked and embedded using `sentence-transformers`.
+  - A ChromaDB vector store enables fast retrieval of semantically relevant text passages.
+
+- **Metadata-Driven Attribution**
+  - Answers include contextual metadata like **ticker, date, section, and filing type**, helping users verify responses against original sources.
+
+- **Interactive UI**
+  - Streamlit-based interface for quick explorations, chain queries, and interactive research.
+
+---
+
+## How It Works
+
+1. **Metadata Collection**  
+   Fetch filing metadata using SEC APIs and organize document info.
+
+2. **Preprocessing**  
+   Clean and flatten raw metadata, preparing documents for embeddings.
+
+3. **Chunking & Embedding**  
+   Split filings into manageable text chunks and generate embeddings for vector retrieval.
+
+4. **Database Indexing**  
+   Store embeddings in ChromaDB for fast similarity search.
+
+5. **QA Pipeline**  
+   Use LangChain + Gemini 2.0 Flash to generate answers based on retrieved content.
+
+6. **Interactive Querying**  
+   Deploy a Streamlit app to let users ask questions and receive attributed answers in real time. :contentReference[oaicite:1]{index=1}
+
+---
+
+## Use Cases
+
+- **Corporate Financial Research**  
+  Quickly analyze risk disclosures, executive compensation, or segment performance across years and companies.
+
+- **Investor Insights**  
+  Surface high-impact information from filings before key events like earnings or shareholder meetings.
+
+- **Education & Data Exploration**  
+  Enable finance students and researchers to ask interpretive questions on regulatory filings without manual reading.
+
+---
+
+## Design Highlights
+
+- **Attribution-Focused Answers**  
+  Source metadata travels with the text chunks to ensure that answers link back to precise parts of filings.
+
+- **Conversational Memory**  
+  Supports follow-up questions that build on context from previous queries.
+
+- **Modular & Extensible**  
+  Each phase of the pipeline (ingestion, preprocessing, retrieval, LLM calling) is modular, making custom extensions straightforward.
+
+---
+
+## Sample Questions
+
+- “What are Apple’s risk factors in the latest 10-K?”
+- “Compare R&D spending of Tesla and Microsoft.”
+- “Describe climate-related risk disclosures for JPMorgan.”
+- “How was executive compensation updated for UNH?” :contentReference[oaicite:2]{index=2}
+
+---
+
+## Status
+
+This project is **fully functional and production-ready**, with scope to extend UI filters, improve model accuracy, and add advanced search capabilities.
