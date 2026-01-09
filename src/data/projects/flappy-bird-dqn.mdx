@@ -1,0 +1,122 @@
+---
+title: 'Flappy Bird DQN'
+slug: 'flappy-bird-dqn'
+id: 6
+description: 'A reinforcement learning experiment implementing Deep Q-Learning (DQN) to train an agent that learns to play Flappy Bird from raw game frames—with reward shaping, experience replay, and ε-greedy exploration.'
+image: '/file.svg'
+video: '/assets/demo/flappy_rl_demo.mp4'
+link: 'https://github.com/KrishBakshi/rl-exp/tree/master/deep_q_learning'
+github: 'https://github.com/KrishBakshi/rl-exp/tree/master/deep_q_learning'
+technologies:
+  - Python
+  - PyTorch
+  - Reinforcement Learning
+  - Deep Q-Learning (DQN)
+  - OpenAI Gym
+  - NumPy
+isWorking: true
+---
+
+## Overview
+
+Built a **reinforcement learning (RL) agent using Deep Q-Learning (DQN)** that learns to play **Flappy Bird** directly from pixel inputs. The project demonstrates core RL principles—**state representation from raw frames, experience replay, target networks, and ε-greedy exploration**—to gradually learn optimal policies in a challenging, high-variance environment.
+
+The agent successfully learns to keep the bird alive, navigating pipes by learning when to flap and when to glide, purely through reward-driven trial and error.
+
+---
+
+## Why This Project
+
+Flappy Bird presents a rich RL challenge due to sparse rewards, high-dimensional pixel input, and noisy transitions: simple policies fail quickly, and naive training diverges. Applying Deep Q-Learning in this setting showcases:
+
+- Effective use of **neural value approximation**  
+- Stabilization via **replay buffers and target networks**  
+- Practical exploration strategies to balance discovery and exploitation
+
+This experiment solidifies understanding of RL algorithms in environments with visual state spaces and delayed rewards.
+
+---
+
+## Key Components
+
+- **State Representation**
+  - Input composed of preprocessed stacked frames to capture motion dynamics.
+  - Efficient grayscale + resizing for low-dimensional RL input.
+
+- **Deep Q-Network (DQN)**
+  - Convolutional neural network (CNN) to approximate Q-values.
+  - PyTorch implementation for flexibility and training control.
+
+- **Experience Replay**
+  - Memory buffer that stores transitions for decorrelated training samples.
+  - Mini-batch sampling for stable gradient updates.
+
+- **Target Network**
+  - Separate target network to reduce oscillations and divergence.
+  - Periodic synchronization from online network.
+
+- **Exploration Strategy**
+  - ε-greedy policy with decay to balance exploration and exploitation.
+
+- **Reward Engineering**
+  - Shaping and clipping to ensure useful learning signals evolve.
+
+---
+
+## How It Works
+
+1. **Game Environment**
+   - Built on a Flappy Bird Gym wrapper providing pixel frames and reward signals.
+
+2. **Preprocessing**
+   - Frames are grayscaled, resized, and stacked to form state tensors.
+
+3. **Neural Q-Approximation**
+   - CNN model predicts Q-values for possible actions (flap vs do nothing).
+
+4. **Training Loop**
+   - For every step:
+     - Store (state, action, reward, next_state) in replay buffer.
+     - Sample mini-batch and update network via Bellman targets.
+     - Update target network periodically.
+
+5. **Policy & Exploration**
+   - ε starts high for exploration and decays over episodes to favor learned policy.
+
+---
+
+## Results
+
+The trained agent gradually improves survivability:
+- Early episodes show frequent crashes.
+- With training, the agent **learns to navigate pipes consistently**, maintaining high average episode length.
+- Visualization confirms intelligent flap timing and avoidance of collisions.
+
+---
+
+## Design Highlights
+
+- **Modular Codebase**
+  - Clear separation between environment handling, agent logic, memory buffer, and training loop.
+  - Easy to extend for other RL algorithms (e.g., Double DQN, Dueling Networks).
+
+- **Training Monitoring**
+  - Logging of episodic scores and losses to track progress and debug learning dynamics.
+
+- **Policy Replay**
+  - Optional gameplay rendering to inspect agent behavior qualitatively.
+
+---
+
+## Use Cases
+
+- Reinforcement-learning benchmarking in environments with pixel inputs.  
+- Teaching and experimentation with classical DQN vs improved variants.  
+- Research base for extending to **Double DQN, Prioritized Replay, or A3C/PPO**.
+
+---
+
+## Status
+
+The experiment is **fully working and reproducible**, with scripts and utilities to train from scratch or play back trained models.
+
