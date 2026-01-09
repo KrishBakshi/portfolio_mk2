@@ -101,6 +101,12 @@ export const TECH_STACK: TechStackItem[] = [
     categories: ["Library", "Data Science"],
   },
   {
+    key: "numpy",
+    title: "NumPy",
+    href: "https://numpy.org/",
+    categories: ["Library", "Data Science"],
+  },
+  {
     key: "pyspark",
     title: "PySpark",
     href: "https://spark.apache.org/docs/latest/api/python/",
@@ -113,8 +119,14 @@ export const TECH_STACK: TechStackItem[] = [
     categories: ["Library", "AI/ML"],
   },
   {
+    key: "opencv",
+    title: "OpenCV",
+    href: "https://opencv.org/",
+    categories: ["Library", "AI/ML"],
+  },
+  {
     key: "huggingface",
-    title: "Hugging Face",
+    title: "HuggingFace",
     href: "https://huggingface.co/",
     categories: ["Library", "AI/ML"],
   },
