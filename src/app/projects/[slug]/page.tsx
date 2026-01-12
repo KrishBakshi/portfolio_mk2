@@ -75,10 +75,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <div className="mt-6 mb-6 flex items-center justify-between">
               <BackButton href="/projects" label="Back to Projects" />
-              
+
               <div className="flex items-center gap-2">
-                <LLMCopyButtonWithViewOptions 
-                  markdownUrl={`/projects/${slug}.mdx`} 
+                <LLMCopyButtonWithViewOptions
+                  markdownUrl={`/projects/${slug}.mdx`}
                   mdxContent={rawMdxContent || undefined}
                 />
                 <PostShareMenu url={`/projects/${slug}`} />
@@ -122,9 +122,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
                 {/* Media */}
                 <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-gray-300/50 dark:border-white/10 bg-muted">
-                  {frontmatter.video ? (
+                  {frontmatter.videoFull ? (
                     <video
-                      src={frontmatter.video}
+                      src={frontmatter.videoFull}
                       controls
                       autoPlay
                       muted

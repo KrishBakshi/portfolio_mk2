@@ -3,7 +3,8 @@ export interface ProjectFrontmatter {
     slug: string;
     description: string;
     image: string;
-    video?: string;
+    videoPreview?: string;
+    videoFull?: string;
     link: string;
     github?: string;
     technologies: string[];

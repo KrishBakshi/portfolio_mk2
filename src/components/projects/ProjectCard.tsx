@@ -32,7 +32,8 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         slug,
         description,
         image,
-        video,
+        videoPreview,
+        videoFull,
         link,
         github,
         technologies,
@@ -50,9 +51,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
                 href={`/projects/${slug}`}
                 className="block cursor-pointer"
             >
-                {video ? (
+                {videoPreview ? (
                     <video
-                        src={video}
+                        src={videoPreview}
                         autoPlay
                         loop
                         muted
