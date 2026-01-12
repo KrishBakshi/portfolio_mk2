@@ -28,9 +28,9 @@ export default function ProfileHeader({
   },
 }: ProfileHeaderProps) {
   return (
-    <div className="flex-col -mt-10 px-4 sm:px-0 pb-4 sm:px-0">
+    <div className="flex-col -mt-16 sm:-mt-20 px-4 sm:px-0 pb-4 sm:px-0">
       <div
-        className="w-24 h-24 sm:w-28 sm:h-28 mb-4 sm:ml-6 relative z-10 rounded-full overflow-hidden bg-cover bg-center border-1 border-background"
+        className="w-28 h-28 sm:w-28 sm:h-28 mb-4 sm:ml-6 relative z-10 rounded-full overflow-hidden bg-cover bg-center border-1 border-background"
         role="img"
         aria-label={name}
         style={{ backgroundImage: `url("${profileImage}")` }}
