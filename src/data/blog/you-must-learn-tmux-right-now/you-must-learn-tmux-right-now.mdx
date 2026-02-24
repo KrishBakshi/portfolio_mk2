@@ -1,0 +1,98 @@
+---
+title: "You must learn tmux right now!"
+slug: "you-must-learn-tmux-right-now"
+description: "A practical tmux starter for remote GPU work: panes, detach/reattach, and session management."
+image: "/blog/you-must-learn-tmux-right-now/28f898e9-afd5-4b74-966d-600ad420adc7.png"
+tags: ["tmux", "terminal", "ssh", "productivity"]
+date: "2026-02-24"
+author: "Krish Bakshi"
+readTime: "4 min read"
+isPublished: true
+---
+
+
+I spin up GPU machines all the time for inference and fine-tuning. The launch flow is easy. The messy part starts after SSH:
+
+- I need multiple terminals for logs, training, and quick checks
+- I do not want jobs to die when the connection drops
+- I do not want five separate SSH windows open
+
+`tmux` solves all of that.
+
+## Why tmux is worth it
+
+`tmux` is a terminal multiplexer, which means:
+
+1. You can run multiple terminal sessions in one SSH connection.
+2. You can split your workspace into panes and windows.
+3. You can detach and reattach without losing long-running processes.
+4. You can keep everything organized for server-side work.
+5. You can customize the workflow via `.tmux.conf`.
+
+## A minimal daily workflow
+
+### 1) Start a named session
+
+```bash
+tmux new -s dev
+```
+
+- Creates a session named `dev`
+- Attaches immediately
+
+### 2) Split into panes
+
+Vertical split (left/right):
+
+```text
+Ctrl-b %
+```
+
+Horizontal split (top/bottom):
+
+```text
+Ctrl-b "
+```
+
+Move between panes:
+
+```text
+Ctrl-b ← / → / ↑ / ↓
+```
+
+### 3) Detach and keep everything running
+
+```text
+Ctrl-b d
+```
+
+Your commands continue in the background.
+
+### 4) Reattach later
+
+```bash
+tmux attach -t dev
+```
+
+List sessions:
+
+```bash
+tmux ls
+```
+
+### 5) Stop a session
+
+From outside tmux:
+
+```bash
+tmux kill-session -t dev
+```
+
+From inside tmux:
+
+```text
+Ctrl-b :
+kill-session
+```
+
+If you work on remote machines, tmux stops being "nice to have" very quickly. It becomes core infrastructure for your workflow.
