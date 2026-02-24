@@ -3,7 +3,7 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 
-const projectsDirectory = path.join(process.cwd(), 'src/data/projects');
+const projectsDirectory = path.join(process.cwd(), 'public/data/projects');
 
 /**
  * Get all project files from the projects directory

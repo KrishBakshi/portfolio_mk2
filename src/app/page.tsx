@@ -3,7 +3,7 @@ import ProfileHeader from "@/components/sections/ProfileHeader";
 import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
 import About from "@/components/sections/About";
 import { WorkExperience } from "@/components/sections/WorkExperience";
-import { WORK_EXPERIENCE_DATA } from "@/data/workExperienceData";
+import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 import { Projects } from "@/components/projects/Projects";
 import { Blog } from "@/components/blog/Blog";
 import { Skills } from "@/components/sections/Skills";

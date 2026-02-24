@@ -3,7 +3,7 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 
-const blogDirectory = path.join(process.cwd(), 'src/data/blog');
+const blogDirectory = path.join(process.cwd(), 'public/data/blog');
 
 /**
  * Get all blog post files from the blog directory
@@ -27,7 +27,7 @@ export function getBlogPostSlugs(): string[] {
  */
 export function getBlogPostBySlug(slug: string): Blog | null {
     try {
-        // Look for src/data/blog/slug/slug.mdx
+        // Look for public/data/blog/slug/slug.mdx
         const fullPath = path.join(blogDirectory, slug, `${slug}.mdx`);
 
         if (!fs.existsSync(fullPath)) {

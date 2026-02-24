@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TECH_STACK } from "@/data/skills";
+import { TECH_STACK } from "@/lib/static-data";
 import { getTechIcon } from "@/components/TechIcons";
 import { SimpleTooltip } from "@/components/ui/tooltip";
 import Link from "next/link";

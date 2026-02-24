@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             
                             <div className="flex items-center gap-2">
                                 <LLMCopyButtonWithViewOptions 
-                                    markdownUrl={`/blog/${slug}/${slug}.mdx`} 
+                                    markdownUrl={`/data/blog/${slug}/${slug}.mdx`} 
                                     mdxContent={rawMdxContent || undefined}
                                 />
                                 <PostShareMenu url={`/blog/${slug}`} />

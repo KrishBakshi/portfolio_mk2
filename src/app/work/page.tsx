@@ -1,5 +1,5 @@
 import { WorkExperience } from "@/components/sections/WorkExperience";
-import { WORK_EXPERIENCE_DATA } from "@/data/workExperienceData";
+import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
 
 export default function WorkPage() {
