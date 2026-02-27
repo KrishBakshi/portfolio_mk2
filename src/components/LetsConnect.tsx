@@ -24,7 +24,7 @@ export default function LetsConnect({
         github: "https://github.com/KrishBakshi",
         linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
         resume: "/resume.pdf",
-        mail: "mailto:krishbakshi23@gmail.com" // Update with actual email if available
+        mail: "mailto:business.krishb@gmail.com" // Update with actual email if available
     }
 }: LetsConnectProps) {
     return (

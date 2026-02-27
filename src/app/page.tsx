@@ -45,6 +45,7 @@ export default function Home() {
                     github: "https://github.com/KrishBakshi",
                     linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
                     resume: "/resume.pdf",
+                    // mail: "mailto:business.krishb@gmail.com"
                   }}
                 />
               </div>
