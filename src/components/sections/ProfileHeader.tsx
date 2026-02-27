@@ -1,6 +1,6 @@
 "use client";
 
-import { FaLinkedin, FaXTwitter, FaGithub, FaPaperclip } from "react-icons/fa6";
+import { FaLinkedin, FaXTwitter, FaGithub, FaPaperclip, FaEnvelope } from "react-icons/fa6";
 
 interface ProfileHeaderProps {
   name?: string;
@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
     resume?: string;
     github?: string;
     linkedin?: string;
+    mail?: string;
   };
 }
 
@@ -25,6 +26,7 @@ export default function ProfileHeader({
     github: "",
     linkedin: "",
     resume: "",
+    mail: "",
   },
 }: ProfileHeaderProps) {
   return (
@@ -108,6 +110,16 @@ export default function ProfileHeader({
               }}
             >
               <FaLinkedin size={18} />
+            </a>
+          )}
+          {socialLinks.mail && (
+            <a
+              className="hover:opacity-80 touch-manipulation active:opacity-75 text-foreground"
+              href={socialLinks.mail}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaEnvelope size={18} />
             </a>
           )}
         </div>
