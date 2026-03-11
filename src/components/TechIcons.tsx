@@ -49,6 +49,11 @@ import { GoogleBigQuery } from './technologies/GoogleBigQuery';
 import { GoogleGemini } from './technologies/GoogleGemini';
 import { OpenCV } from './technologies/OpenCV';
 import { NumPy } from './technologies/NumPy';
+import MCP from './technologies/MCP';
+import OpenAI from './technologies/OpenAI';
+import Terminal from './technologies/Terminal';
+import LinkedIn from './technologies/LinkedIn';
+import Perplexity from './technologies/Perplexity';
 
 export const TechIcons: Record<string, React.ComponentType<any>> = {
     'AWS': AWS,
@@ -105,6 +110,15 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'OpenCV': OpenCV,
     'NumPy': NumPy,
     'Numpy': NumPy,
+    'MCP': MCP,
+    'OpenAI': OpenAI,
+    'ChatGPT': OpenAI,
+    'Terminal': Terminal,
+    'CLI': Terminal,
+    'Shell': Terminal,
+    'LinkedIn': LinkedIn,
+    'Linkedin': LinkedIn,
+    'Perplexity': Perplexity,
 };
 
 export function getTechIcon(name: string) {
