@@ -1,0 +1,61 @@
+---
+title: 'LinkedIn Research Agent'
+slug: 'linkedin-research-agent'
+id: 8
+description: 'A Codex-style sourcing assistant that builds LinkedIn Boolean queries, navigates People search via MCP browser automation, and returns clean profile URL lists with optional structured profile extraction.'
+videoPreview: '/assets/demo/preview/linkedin_res_agent.mp4'
+videoFull: '/assets/demo/full/linkedin_res_agent.mp4'
+link: 'https://github.com/KrishBakshi/linkedin_research_agent'
+github: 'https://github.com/KrishBakshi/linkedin_research_agent'
+technologies:
+  - OpenAI
+  - Node.js
+  - CLI
+  - MDX
+  - MCP
+  - LinkedIn
+  - Perplexity
+  - Chrome DevTools MCP
+  - LinkedIn Boolean Search
+isWorking: true
+---
+
+## Overview
+
+Built a **LinkedIn sourcing workflow agent** that turns role requests into structured search operations: it parses hiring intent, generates Boolean query logic, executes LinkedIn People search in an MCP-controlled browser, and returns **plain profile URLs** for downstream recruiting or research pipelines.
+
+The project is designed around reproducible, instruction-driven agent workflows with optional enrichment mode that extracts public profile metadata (name, role, company, headline, location, company link, and public contact fields) from individual profile URLs.
+
+---
+
+## Why This Project
+
+Manual LinkedIn sourcing is repetitive and hard to standardize across searches. This project converts that process into a deterministic agent flow so output quality is consistent: query construction follows clear rules, search navigation is scripted, and results can be saved to timestamped JSON runs.
+
+It also separates discovery from enrichment: Comet navigation collects candidate URLs efficiently, while Chrome DevTools-based extraction handles deeper profile parsing when needed.
+
+---
+
+## Key Capabilities
+
+- **Boolean Query Builder**
+  - Converts user intent into compact LinkedIn-friendly Boolean strings.
+  - Supports includes, excludes, title phrases, and location intent.
+
+- **People Search Navigation**
+  - Applies LinkedIn search + People filter through MCP browser actions.
+  - Collects profile URLs from result pages in strict plain-text format.
+
+- **Optional Profile Extraction**
+  - Given profile URLs, extracts structured public fields for analysis.
+  - Returns empty values for missing fields instead of guessing.
+
+- **Run Artifacts**
+  - Saves timestamped JSON outputs in a dedicated `runs/` directory.
+  - Keeps collected data separate from source instructions and skills.
+
+---
+
+## Status
+
+The project is **working and extensible**, with clear skill-based modules for query generation, search-page navigation, and profile extraction.
