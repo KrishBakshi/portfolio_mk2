@@ -5,7 +5,7 @@ import "./globals.css";
 import { Providers } from "@/components/layout/providers";
 import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
-import { META_THEME_COLORS } from "@/config/site";
+import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
 
 import { Analytics } from "@vercel/analytics/next"
@@ -13,7 +13,7 @@ import { Analytics } from "@vercel/analytics/next"
 export const metadata: Metadata = {
   title: "Krish Bakshi - Data Scientist",
   description: "Yo! Thank you for coming to my portfolio!",
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL(SITE_INFO.url),
 };
 
 export const viewport: Viewport = {
