@@ -1,0 +1,167 @@
+---
+title: 'Open-Weight Voice AI Agent'
+slug: 'open-voice-ai-agent'
+id: 9
+description: 'A fully local voice agent pipeline built on open-weight models — Whisper STT, Gemma LLM, OmniVoice TTS, and browser-side Silero VAD — orchestrated via PipeCat with both live terminal and web UI modes.'
+github: 'https://github.com/KrishBakshi/voice-agent-pipeline'
+link: 'https://github.com/KrishBakshi/voice-agent-pipeline'
+videoPreview: '/assets/demo/preview/voice_ai.mp4'
+videoFull: '/assets/demo/full/voice_ai.mp4'
+technologies:
+  - Python
+  - PipeCat
+  - Whisper
+  - MLX
+  - HuggingFace
+  - Gemma
+  - OmniVoice
+  - Silero VAD
+  - Socket.io
+  - JavaScript
+  - YAML
+isWorking: true
+---
+
+## Overview
+
+Built a **fully local voice agent pipeline** using open-weight models, orchestrated through [PipeCat](https://github.com/pipecat-ai/pipecat). The system wires together speech-to-text, a language model, and text-to-speech into a continuous voice interaction loop — with no reliance on proprietary API-locked voice infrastructure.
+
+The pipeline runs two modes: a **live terminal session** using local mic and speakers, and a **browser UI** with push-to-talk and VAD-driven audio capture over Socket.IO.
+
+---
+
+## Why This Project
+
+Most voice agent demos depend on cloud-hosted STT and TTS APIs that are proprietary, rate-limited, or unsuitable for local experimentation. This project builds the full pipeline from open-weight components that can run on a Mac, making it possible to iterate on any part of the stack — VAD sensitivity, TTS voice design, LLM prompt tuning — without external dependencies.
+
+---
+
+## Pipeline Architecture
+
+```
+STT → User Context Aggregator → LLM → TTS → Assistant Context Aggregator
+```
+
+Each component is modular and independently configurable through YAML files in `config/`.
+
+---
+
+## Components
+
+### STT — Whisper (MLX / Faster Whisper)
+
+- Uses **MLX Whisper** on Apple Silicon for hardware-accelerated transcription.
+- Falls back to **Faster Whisper** on non-Apple hardware.
+- Backend selection is automatic via `config/stt.yaml` (`backend: auto`).
+- Supports live mic transcription and batch file transcription from CLI.
+
+### LLM — Gemma 4 (open-weight via Google API)
+
+- Uses **gemma-4-26b-a4b-it** as the reasoning layer through PipeCat's Google LLM service.
+- System prompt in `config/llm.yaml` is tuned for TTS-friendly output: short sentences, spoken phrasing, minimal formatting, and light use of non-verbal expression tags.
+- Supported tags baked into the prompt include: `[laughter]`, `[sigh]`, `[confirmation-en]`, `[question-en]`, `[surprise-ah]`, and others.
+
+### TTS — OmniVoice
+
+- Custom PipeCat `TTSService` backed by **OmniVoice** for voice synthesis.
+- Supports voice design through the `instruct` field in `config/tts.yaml` using attribute strings like `female, low pitch, indian accent, young adult`.
+- OmniVoice instruct syntax uses comma-space separators and must be composed from supported items only — not free-form prose.
+- Currently pinned to CPU due to MPS instability on Mac; MPS path exists in code.
+
+### VAD — Silero (Browser + Server)
+
+Two separate VAD implementations depending on mode:
+
+**Web mode (browser-side)**
+- Uses [`@ricky0123/vad-web@0.0.29`](https://github.com/ricky0123/vad) loaded from jsDelivr CDN alongside `onnxruntime-web@1.22.0`.
+- Silero model runs as ONNX WASM entirely inside the browser — no server VAD compute involved.
+- `onSpeechEnd` fires when silence is detected; the complete Float32Array segment (16 kHz) is converted to 16-bit PCM and emitted over Socket.IO as `vad_speech_end`.
+
+**Live terminal mode (server-side)**
+- Uses PipeCat's `SileroVADAnalyzer` (`pipecat.audio.vad.silero`) wrapped in a `VADProcessor`.
+- Bundled inside `pipecat-ai`; no separate install required.
+- Parameters configurable via `config/session.yaml`: `vad_confidence`, `vad_start_secs`, `vad_stop_secs`, `vad_min_volume`.
+
+---
+
+## Modes
+
+### Live Terminal Session
+
+```
+microphone → VAD → STT → Gemma LLM → OmniVoice TTS → speakers
+```
+
+Uses PipeCat's local audio transport with PyAudio. Interruptions are disabled by default to avoid speaker-to-mic bleed on Mac.
+
+### Browser UI
+
+Two tabs with separate audio paths:
+
+**Whole Talk (push-to-talk)**
+```
+browser mic → ScriptProcessorNode → Socket.IO → STT → Gemma → OmniVoice → browser playback
+```
+
+**Live Detection (VAD-driven)**
+```
+browser mic → vad-web (Silero WASM) → Socket.IO → STT → Gemma → OmniVoice → browser playback
+```
+
+Backend sends a single base64-encoded WAV back over Socket.IO per turn. Not full-duplex streaming — one complete response per utterance.
+
+---
+
+## Mac Runtime Notes
+
+| Component | Accelerator |
+|-----------|------------|
+| Whisper STT | MLX on Apple Silicon |
+| OmniVoice TTS | CPU (MPS path exists but unstable) |
+| VAD (web) | Browser WASM — no server compute |
+| VAD (live) | Server CPU via PipeCat Silero |
+| Gemma LLM | Google API (open-weight, not locally run) |
+
+---
+
+## Config System
+
+All service configuration is driven by YAML files:
+
+- `config/stt.yaml` — backend selection, model settings
+- `config/llm.yaml` — system prompt, model name
+- `config/tts.yaml` — voice instruct, device pin
+- `config/session.yaml` — VAD parameters, transport settings
+- `config/web.yaml` — browser UI host/port
+
+Environment variables override sensitive values: `GEMINI_API_KEY`, `GEMINI_MODEL`, `VOICE_AGENT_LANGUAGE`.
+
+---
+
+## CLI Commands
+
+```bash
+# Describe the configured stack
+uv run python main.py --describe
+
+# Synthesize a TTS sample
+uv run python main.py --synthesize "Hello, this is a local Pipecat voice agent." --output out.wav
+
+# Transcribe an audio file
+uv run python main.py --config-dir config --transcribe path/to/audio.wav
+
+# Live mic STT test
+uv run python main.py --config-dir config --live-stt
+
+# Start a live local session
+uv run python main.py --config-dir config --live
+
+# Start the browser UI
+uv run python main.py --config-dir config --web
+```
+
+---
+
+## Status
+
+The pipeline is **working end-to-end** in both live and web modes. The current transport is interactive but not full-duplex streaming — upstream is PCM chunks over Socket.IO, downstream is one complete WAV response per turn. Streaming TTS playback and barge-in support are the natural next extensions.
