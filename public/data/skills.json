@@ -174,9 +174,9 @@
     ]
   },
   {
-    "key": "langgraph",
-    "title": "LangGraph",
-    "href": "https://langchain-ai.github.io/langgraph/",
+    "key": "pipecat",
+    "title": "Pipecat",
+    "href": "https://pipecat.ai/",
     "categories": [
       "Library",
       "AI/ML"
