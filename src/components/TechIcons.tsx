@@ -54,6 +54,7 @@ import OpenAI from './technologies/OpenAI';
 import Terminal from './technologies/Terminal';
 import LinkedIn from './technologies/LinkedIn';
 import Perplexity from './technologies/Perplexity';
+import Pipecat from './technologies/Pipecat';
 
 export const TechIcons: Record<string, React.ComponentType<any>> = {
     'AWS': AWS,
@@ -107,6 +108,7 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'GoogleGemini': GoogleGemini,
     'Gemini': GoogleGemini,
     'Google Gemini': GoogleGemini,
+    'Gemma': GoogleGemini,
     'OpenCV': OpenCV,
     'NumPy': NumPy,
     'Numpy': NumPy,
@@ -119,6 +121,9 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'LinkedIn': LinkedIn,
     'Linkedin': LinkedIn,
     'Perplexity': Perplexity,
+    'Whisper': OpenAI,
+    'PipeCat': Pipecat,
+    'Pipecat': Pipecat,
 };
 
 export function getTechIcon(name: string) {
