@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectFrontmatter } from "@/types/project";
 import { CollapsibleList } from "@/components/ui/collapsible-list";
@@ -6,9 +7,12 @@ interface ProjectsProps {
     projects: { slug: string; frontmatter: ProjectFrontmatter }[];
     max?: number;
     showToggle?: boolean;
+    showAllHref?: string;
 }
 
-export function Projects({ projects, max, showToggle = true }: ProjectsProps) {
+export function Projects({ projects, max, showToggle = true, showAllHref }: ProjectsProps) {
+    const visibleProjects = showAllHref && max ? projects.slice(0, max) : projects;
+
     return (
         <div className="space-y-6 px-4 sm:py-4">
             <div className="flex flex-col gap-2">
@@ -19,17 +23,36 @@ export function Projects({ projects, max, showToggle = true }: ProjectsProps) {
             </div>
 
             <div className="bg-background">
-                <CollapsibleList
-                    items={projects}
-                    max={max}
-                    listClassName="grid grid-cols-1 md:grid-cols-2 gap-4"
-                    keyExtractor={(project) => project.slug}
-                    renderItem={(project) => (
-                        <ProjectCard project={project.frontmatter} className="h-full" />
-                    )}
-                    showToggle={showToggle}
-                />
+                {showAllHref ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {visibleProjects.map((project) => (
+                            <ProjectCard key={project.slug} project={project.frontmatter} className="h-full" />
+                        ))}
+                    </div>
+                ) : (
+                    <CollapsibleList
+                        items={projects}
+                        max={max}
+                        listClassName="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        keyExtractor={(project) => project.slug}
+                        renderItem={(project) => (
+                            <ProjectCard project={project.frontmatter} className="h-full" />
+                        )}
+                        showToggle={showToggle}
+                    />
+                )}
             </div>
+
+            {showAllHref && (
+                <div className="flex h-12 items-center justify-center pt-2">
+                    <Link
+                        href={showAllHref}
+                        className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    >
+                        Show All Projects
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

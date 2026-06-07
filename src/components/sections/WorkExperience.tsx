@@ -66,6 +66,7 @@ export type ExperienceItemType = {
     isCurrentEmployer?: boolean;
 };
 
+import Link from "next/link";
 import { CollapsibleList } from "@/components/ui/collapsible-list";
 
 export function WorkExperience({
@@ -73,28 +74,51 @@ export function WorkExperience({
     experiences,
     max = 2,
     showToggle = true,
+    showAllHref,
 }: {
     className?: string;
     experiences: ExperienceItemType[];
     max?: number;
     showToggle?: boolean;
+    showAllHref?: string;
 }) {
+    const visibleExperiences = showAllHref ? experiences.slice(0, max) : experiences;
+
     return (
         <section className={cn("bg-background px-4 sm:py-4", className)}>
             <header className="mb-4">
                 <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">Work Experience</h2>
             </header>
             <div className="bg-background">
-                <CollapsibleList
-                    items={experiences}
-                    max={max}
-                    keyExtractor={(item) => item.id}
-                    renderItem={(experience) => (
-                        <ExperienceItem experience={experience} />
-                    )}
-                    showToggle={showToggle}
-                />
+                {showAllHref ? (
+                    <div className="flex flex-col">
+                        {visibleExperiences.map((experience) => (
+                            <ExperienceItem key={experience.id} experience={experience} />
+                        ))}
+                    </div>
+                ) : (
+                    <CollapsibleList
+                        items={experiences}
+                        max={max}
+                        keyExtractor={(item) => item.id}
+                        renderItem={(experience) => (
+                            <ExperienceItem experience={experience} />
+                        )}
+                        showToggle={showToggle}
+                    />
+                )}
             </div>
+
+            {showAllHref && (
+                <div className="flex h-12 items-center justify-center pt-4">
+                    <Link
+                        href={showAllHref}
+                        className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    >
+                        Show All Experiences
+                    </Link>
+                </div>
+            )}
         </section>
     );
 }

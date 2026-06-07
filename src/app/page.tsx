@@ -58,12 +58,12 @@ export default function Home() {
 
             {/* Work Experience Section */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 md:py-0 md:px-2 py-4 mb-6">
-              <WorkExperience experiences={WORK_EXPERIENCE_DATA} />
+              <WorkExperience experiences={WORK_EXPERIENCE_DATA} showAllHref="/work" />
             </div>
 
             {/* Projects Section */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 md:py-0 md:px-2 py-4 mb-6">
-              <Projects projects={projects} max={4} />
+              <Projects projects={projects} max={4} showAllHref="/projects" />
             </div>
 
             {/* Skills Section */}
@@ -73,7 +73,7 @@ export default function Home() {
 
             {/* Blog Section */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 md:py-0 md:px-2 py-4 mb-6">
-              <Blog posts={posts} max={2} />
+              <Blog posts={posts} max={2} showAllHref="/blog" />
             </div>
 
             {/* Call To Action Section */}
