@@ -19,7 +19,7 @@ export function BlogCard({ post }: BlogCardProps) {
             href={`/blog/${post.slug}`}
             className="flex flex-col sm:flex-row sm:items-center justify-between p-4 -mx-4 hover:bg-accent transition-colors group"
         >
-            <h3 className="text-sm font-medium group-hover:text-primary transition-colors font-sans">
+            <h3 className="text-base font-medium group-hover:text-primary transition-colors font-sans">
                 {post.title}
             </h3>
             <time className="text-xs text-muted-foreground shrink-0 sm:ml-4 font-mono">
