@@ -9,10 +9,8 @@ import { Blog } from "@/components/blog/Blog";
 import { Skills } from "@/components/sections/Skills";
 import { getAllProjects } from "@/lib/projects";
 import { getAllBlogPosts } from "@/lib/blog";
-import CallToAction from "@/components/CallToAction";
 import LetsConnect from "@/components/LetsConnect";
 import Footer from "@/components/Footer";
-import styles from "@/components/ui/dashed-border.module.css";
 
 export default function Home() {
   const projects = getAllProjects();
@@ -73,12 +71,6 @@ export default function Home() {
             {/* Blog Section */}
             <div className="bg-background border border-gray-300/50 dark:border-white/10 md:py-0 md:px-2 py-4 mb-6">
               <Blog posts={posts} max={2} showAllHref="/blog" />
-            </div>
-
-            {/* Call To Action Section */}
-            <div className={`bg-background ${styles.dashedBorder} md:py-2 md:px-2 py-4 mt-6`}>
-              {/* <div className={`bg-background border border-dashed border-gray dark:border-white/10 md:py-0 md:px-2 py-4 mt-6`}> */}
-              <CallToAction />
             </div>
 
             {/* Let's Connect Section */}
