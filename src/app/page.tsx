@@ -12,7 +12,6 @@ import { getAllBlogPosts } from "@/lib/blog";
 import CallToAction from "@/components/CallToAction";
 import LetsConnect from "@/components/LetsConnect";
 import Footer from "@/components/Footer";
-
 import styles from "@/components/ui/dashed-border.module.css";
 
 export default function Home() {
@@ -20,7 +19,7 @@ export default function Home() {
   const posts = getAllBlogPosts();
 
   return (
-    <div className="min-h-screen transition-colors duration-300 relative">
+    <div className="relative min-h-screen transition-colors duration-300">
       <div className="relative mx-auto max-w-3xl">
 
 

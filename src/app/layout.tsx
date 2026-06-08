@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 
 import { Providers } from "@/components/layout/providers";
+import { PageBottomBlur } from "@/components/layout/page-bottom-blur";
 import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
 import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
@@ -59,6 +60,7 @@ export default function RootLayout({
               <Analytics />
             </div>
           </div>
+          <PageBottomBlur />
           <ScrollToTopButton />
         </Providers>
       </body>
