@@ -1,0 +1,568 @@
+---
+title: "My Terminal Setup for Work and Productivity"
+slug: "how-do-i-customize-my-terminal"
+description: "Copy-paste my Ghostty config and Zsh setup — Tokyo Night theme, glass blur, Starship, Zinit, FZF, zoxide, and a random Pokémon sprite via pokeget + fastfetch."
+image: "/data/blog/how-do-i-customize-my-terminal/shot_terminal_header.png"
+tags: ["ghostty", "zsh", "terminal", "dotfiles", "starship", "fastfetch", "pokeget"]
+date: "2026-06-04"
+author: "Krish Bakshi"
+readTime: "6 min read"
+isPublished: true
+---
+
+I run [Ghostty](https://ghostty.org) as the terminal and [Zsh](https://www.zsh.org) as the shell. Copy the config files below, paste, reload — plus a random Pokémon on every new tab.
+
+**References:** [Ghostty docs](https://ghostty.org/docs/config) · [Zinit](https://github.com/zdharma-continuum/zinit) · [Starship](https://starship.rs) · [FZF](https://github.com/junegunn/fzf) · [zoxide](https://github.com/ajeetdsouza/zoxide) · [fastfetch](https://github.com/fastfetch-cli/fastfetch) · [pokeget](https://github.com/talwat/pokeget-rs) · [Tokyo Night](https://github.com/enkia/tokyo-night-vscode-theme)
+
+## Why this setup
+
+Most terminal stacks bury you in nested config or lock you into cloud tooling. I wanted the opposite: **open files I can read, edit, and move across machines**.
+
+- **[Ghostty](https://ghostty.org)** — plain `key = value` config, fast rendering, live reload. Tokyo Night palette + light glass blur keeps long sessions easy on the eyes.
+- **Zsh + [Zinit](https://github.com/zdharma-continuum/zinit)** — syntax highlighting, autosuggestions, fzf-tab, and history search without the weight of a full Oh My Zsh install.
+- **[Starship](https://starship.rs)** — one prompt config that works everywhere.
+- **[FZF](https://github.com/junegunn/fzf) + [zoxide](https://github.com/ajeetdsouza/zoxide)** — fuzzy find and smart `cd` so navigation stays in the keyboard flow.
+- **Two files** — `~/.config/ghostty/config` for how the terminal looks, `~/.zshrc` for how the shell behaves. That split makes the setup portable and easy to share.
+- **[pokeget](https://github.com/talwat/pokeget-rs) + [fastfetch](https://github.com/fastfetch-cli/fastfetch)** — a random Pokémon sprite on every new shell, piped into fastfetch as the logo beside your system info.
+
+If you live in the terminal for dev, GPU jobs, or remote SSH work, this combo stays out of your way while still feeling polished.
+
+## Step 1 — Install your tools
+
+Install [Ghostty](https://ghostty.org), Zsh, and the shell tools used in the config below: [Starship](https://starship.rs), [FZF](https://github.com/junegunn/fzf), [zoxide](https://github.com/ajeetdsouza/zoxide), [eza](https://github.com/eza-community/eza), [fd](https://github.com/sharkdp/fd), [fastfetch](https://github.com/fastfetch-cli/fastfetch), and [pokeget](https://github.com/talwat/pokeget-rs). Zinit plugins install automatically on first shell open.
+
+Run this to install everything in one go — toggle **macOS** or **Linux** at the top:
+
+[[platform]]
+[[mac lang="bash"]]
+brew install zsh starship fzf zoxide eza fd fastfetch && \
+brew install --cask ghostty && \
+cargo install pokeget
+[[/mac]]
+[[linux lang="bash"]]
+sudo apt update && \
+sudo apt install -y zsh fzf eza fastfetch fd-find curl zoxide build-essential && \
+curl -sS https://starship.rs/install.sh | sh -s -- -y && \
+cargo install pokeget
+# Ghostty on Linux: https://ghostty.org/docs/install
+[[/linux]]
+[[/platform]]
+
+## Step 2 — Create the config paths
+
+Run this in your terminal:
+
+```bash
+mkdir -p ~/.config/ghostty ~/.config/fastfetch
+touch ~/.zshrc
+```
+
+## Step 3 — Paste your Ghostty config
+
+Expand the file, copy the full block, and paste it into `~/.config/ghostty/config`.
+
+[[dropdown path="~/.config/ghostty/config" lang="ini"]]
+# ============ THEME & COLORS ============
+
+background-opacity = 0.85
+background-blur = 20
+
+background = #1a1b26
+foreground = #c0caf5
+
+palette = 0=#15161e
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#a9b1d6
+palette = 8=#414868
+palette = 9=#f7768e
+palette = 10=#9ece6a
+palette = 11=#e0af68
+palette = 12=#7aa2f7
+palette = 13=#bb9af7
+palette = 14=#7dcfff
+palette = 15=#c0caf5
+
+cursor-color = #bb9af7
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 0.9
+
+selection-background = #33467c
+selection-foreground = #c0caf5
+
+# ============ TYPOGRAPHY ============
+
+font-family = "JetBrains Mono Nerd Font"
+font-family = "JetBrains Mono"
+font-family = "Fira Code"
+font-family = "SF Mono"
+font-size = 12
+
+font-feature = +calt,+liga,+dlig
+font-thicken = true
+adjust-cell-height = 2
+
+# ============ WINDOW STYLING ============
+
+window-padding-x = 20
+window-padding-y = 16
+window-padding-balance = true
+window-padding-color = extend
+
+window-width = 120
+window-height = 30
+
+window-decoration = true
+window-theme = dark
+window-colorspace = srgb
+window-inherit-working-directory = true
+window-inherit-font-size = true
+window-save-state = always
+
+# ============ SHELL INTEGRATION ============
+
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# ============ ADVANCED AESTHETICS ============
+
+alpha-blending = linear-corrected
+minimum-contrast = 1.5
+
+unfocused-split-opacity = 0.7
+split-divider-color = #414868
+
+term = xterm-256color
+
+# ============ PERFORMANCE ============
+
+window-vsync = true
+resize-overlay = after-first
+resize-overlay-position = center
+[[/dropdown]]
+
+Validate with `ghostty +validate-config` ([docs](https://ghostty.org/docs/config)).
+
+## Step 4 — Paste your Zsh config
+
+Expand the file, copy the full block, and paste it into `~/.zshrc`. Put machine-specific overrides in `~/.zshrc.local` so the main file stays portable.
+
+[[dropdown path="~/.zshrc" lang="zsh"]]
+#!/usr/bin/env zsh
+
+# ============================================
+# ENVIRONMENT SETUP
+# ============================================
+
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-$(brew --prefix 2>/dev/null)}"
+BUN_INSTALL="$HOME/.bun"
+LOCAL_BIN="$HOME/.local/bin"
+
+mkdir -p "$XDG_CONFIG_HOME/zsh"
+mkdir -p "$LOCAL_BIN"
+
+# ============================================
+# HISTORY CONFIGURATION
+# ============================================
+
+HISTSIZE=10000
+SAVEHIST=$HISTSIZE
+HISTFILE="$XDG_CONFIG_HOME/zsh/.zsh_history"
+
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_VERIFY
+
+# ============================================
+# ZINIT PLUGIN MANAGER
+# ============================================
+
+ZINIT_HOME="$XDG_DATA_HOME/zinit/zinit.git"
+
+install_zinit() {
+    echo "Installing Zinit..."
+    mkdir -p "$(dirname "$ZINIT_HOME")"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+}
+
+if [[ ! -d "$ZINIT_HOME" ]]; then
+    install_zinit
+fi
+
+source "$ZINIT_HOME/zinit.zsh"
+
+# ============================================
+# ZSH PLUGINS
+# ============================================
+
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+zinit light zsh-users/zsh-history-substring-search
+zinit light trapd00r/LS_COLORS
+
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::extract
+zinit snippet OMZP::copyfile
+zinit snippet OMZP::copypath
+
+# ============================================
+# PLUGIN CONFIGURATION
+# ============================================
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+export AUTO_NOTIFY_THRESHOLD=10
+export AUTO_NOTIFY_EXPIRE_TIME=3000
+export YSU_MESSAGE_POSITION="after"
+export YSU_HARDCORE=0
+
+# ============================================
+# COMPLETION SYSTEM
+# ============================================
+
+autoload -Uz compinit
+compinit -i
+zinit cdreplay -q
+
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
+zstyle ':completion::complete:*' gain-privileges 1
+
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --color=always --icons $realpath 2>/dev/null || ls --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always --icons $realpath 2>/dev/null || ls --color=always $realpath'
+
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+
+# ============================================
+# KEYBINDINGS
+# ============================================
+
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '\ew' backward-kill-line
+bindkey '^H' backward-kill-word
+bindkey '^[[3~' delete-char
+
+# ============================================
+# CUSTOM FUNCTIONS
+# ============================================
+
+remaining_days() {
+    local CUSTOM_DATE=$1
+
+    if [[ ! $CUSTOM_DATE =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+        echo "Error: Invalid date format. Use YYYY-MM-DD" >&2
+        return 1
+    fi
+
+    local TODAY=$(date +%s)
+    local TARGET
+
+    if date --version >/dev/null 2>&1; then
+        TARGET=$(date -d "$CUSTOM_DATE" +%s 2>/dev/null)
+    else
+        TARGET=$(date -j -f "%Y-%m-%d" "$CUSTOM_DATE" +%s 2>/dev/null)
+    fi
+
+    if [[ -z "$TARGET" ]]; then
+        echo "Error: Invalid date '$CUSTOM_DATE'" >&2
+        return 1
+    fi
+
+    local SECONDS_REMAINING=$(( TARGET - TODAY ))
+    local DAYS_REMAINING=$(( SECONDS_REMAINING / 86400 ))
+
+    if (( DAYS_REMAINING < 0 )); then
+        DAYS_REMAINING=0
+    fi
+}
+
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+extract() {
+    if [ -f "$1" ]; then
+        case "$1" in
+            *.tar.bz2) tar xjf "$1" ;;
+            *.tar.gz) tar xzf "$1" ;;
+            *.bz2) bunzip2 "$1" ;;
+            *.rar) unrar x "$1" ;;
+            *.gz) gunzip "$1" ;;
+            *.tar) tar xf "$1" ;;
+            *.tbz2) tar xjf "$1" ;;
+            *.tgz) tar xzf "$1" ;;
+            *.zip) unzip "$1" ;;
+            *.Z) uncompress "$1" ;;
+            *.7z) 7z x "$1" ;;
+            *) echo "'$1' cannot be extracted" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# ============================================
+# SHELL INTEGRATIONS
+# ============================================
+
+if command_exists starship; then
+    eval "$(starship init zsh)"
+else
+    PROMPT='%F{blue}%~%f %# '
+fi
+
+if command_exists fzf; then
+    eval "$(fzf --zsh)"
+
+    export FZF_DEFAULT_OPTS="
+        --height 40%
+        --layout=reverse
+        --border
+        --inline-info
+        --color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9
+        --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9
+        --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6
+        --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4"
+
+    if command_exists fd; then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    fi
+fi
+
+if command_exists zoxide; then
+    eval "$(zoxide init --cmd cd zsh)"
+fi
+
+# ============================================
+# PATH CONFIGURATION
+# ============================================
+
+add_to_path() {
+    if [[ -d "$1" ]] && [[ ":$PATH:" != *":$1:"* ]]; then
+        export PATH="$1:$PATH"
+    fi
+}
+
+add_to_path "$LOCAL_BIN"
+add_to_path "$BUN_INSTALL/bin"
+[[ -n "$HOMEBREW_PREFIX" ]] && add_to_path "$HOMEBREW_PREFIX/opt/node@22/bin"
+add_to_path "$HOME/.spicetify"
+add_to_path "$HOME/.antigravity/antigravity/bin"
+
+# ============================================
+# BUN CONFIGURATION
+# ============================================
+
+if [[ -s "$BUN_INSTALL/_bun" ]]; then
+    source "$BUN_INSTALL/_bun"
+fi
+
+# ============================================
+# NVM CONFIGURATION (Lazy Loading)
+# ============================================
+
+export NVM_DIR="$HOME/.nvm"
+
+if [[ -n "$HOMEBREW_PREFIX" && -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
+    lazy_load_nvm() {
+        unset -f nvm node npm npx
+        source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+        [[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]] && \
+            source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+    }
+
+    nvm() { lazy_load_nvm; nvm "$@" }
+    node() { lazy_load_nvm; node "$@" }
+    npm() { lazy_load_nvm; npm "$@" }
+    npx() { lazy_load_nvm; npx "$@" }
+fi
+
+# ============================================
+# ALIASES
+# ============================================
+
+alias c='clear'
+alias cls='clear'
+alias zshrc='${EDITOR:-nano} ~/.zshrc'
+alias reload='source ~/.zshrc && echo "ZSH configuration reloaded"'
+
+if command_exists eza; then
+    alias ls='eza --icons'
+    alias ll='eza -la --icons --git'
+    alias lt='eza --tree --icons --level=2'
+    alias lta='eza --tree --icons --level=3 --all'
+else
+    alias ll='ls -lah'
+    alias lt='tree -L 2'
+fi
+
+if command_exists bun; then
+    alias bro='bun run dev'
+    alias bro-cook='bun run build'
+    alias bi='bun install'
+    alias ba='bun add'
+    alias br='bun remove'
+fi
+
+alias gst='git status'
+alias gco='git checkout'
+alias gp='git push'
+alias gl='git pull'
+alias glog='git log --oneline --graph --decorate'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+alias ports='netstat -tulanp'
+alias update='brew update && brew upgrade'
+
+# ============================================
+# STARTUP DISPLAY
+# ============================================
+
+if [[ -t 1 ]]; then
+    if command_exists fastfetch; then
+        pokeget random --hide-name | fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo-padding-left 3 --logo -
+    fi
+
+    remaining_days "2026-08-13"
+    echo ""
+fi
+
+# ============================================
+# LOCAL CONFIGURATION
+# ============================================
+
+LOCAL_ZSHRC="$HOME/.zshrc.local"
+if [[ -f "$LOCAL_ZSHRC" ]]; then
+    source "$LOCAL_ZSHRC"
+fi
+
+# ============================================
+# END OF CONFIGURATION
+# ============================================
+
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt CORRECT
+setopt INTERACTIVE_COMMENTS
+unsetopt BEEP
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[[/dropdown]]
+
+## Step 5 — Pokémon startup with fastfetch
+
+Every time you open a new terminal, a **random Pokémon sprite** shows up next to your system info. [pokeget](https://github.com/talwat/pokeget-rs) renders the sprite, [fastfetch](https://github.com/fastfetch-cli/fastfetch) prints the stats — the sprite is piped in as the logo.
+
+![Random Pokémon sprite next to fastfetch system info](/data/blog/how-do-i-customize-my-terminal/shot_pokemon.png)
+
+**How it loads:** the last block in `~/.zshrc` runs only in interactive shells (`[[ -t 1 ]]`), pipes `pokeget random --hide-name` into fastfetch, and passes `-` as the logo source (stdin). See the [fastfetch logo docs](https://github.com/fastfetch-cli/fastfetch/wiki/Logo-options).
+
+Paste the fastfetch config below into `~/.config/fastfetch/config-compact.jsonc`:
+
+[[dropdown path="~/.config/fastfetch/config-compact.jsonc" lang="json"]]
+{
+"$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+"logo": {
+  "height": 5,
+  "width": 10,
+  "padding": {
+    "top": 1
+  }
+},
+"display": {
+  "separator": " -> "
+},
+"modules": [
+  "break",
+  "break",
+  "os",
+  "host",
+  "uptime",
+  "packages",
+  "shell",
+  "terminal",
+  "memory",
+  "disk",
+  "battery",
+  "break"
+]
+}
+[[/dropdown]]
+
+The startup command is already at the bottom of the `~/.zshrc` block in Step 4:
+
+```bash
+pokeget random --hide-name | fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo-padding-left 3 --logo -
+```
+
+- `pokeget random --hide-name` — picks a random Pokémon and skips the name label above the sprite
+- `--logo-type file-raw` — tells fastfetch the logo is raw terminal image data from stdin
+- `--logo -` — `-` is fastfetch's alias for stdin ([docs](https://github.com/fastfetch-cli/fastfetch/wiki/Logo-options))
+
+Open a new terminal tab to see it. Want a specific Pokémon? Swap `random` for a name, e.g. `pokeget pikachu --hide-name`.
+
+## Step 6 — Reload
+
+Run this to apply the shell config:
+
+```bash
+source ~/.zshrc
+```
+
+Ghostty reloads most settings when you save the config file. Open a new tab if something does not apply.
+
+## Conclusion
+
+That is the full stack — Ghostty for the look, Zsh for the behavior, fastfetch and pokeget for the small details that make a new tab worth opening.
+
+Once it is running, the friction mostly disappears. The theme holds up through long sessions, autosuggestions and fzf-tab cut seconds off routine commands, and the random Pokémon sprite is a nice touch without getting in the way. You could strip this down to Ghostty + Zsh and still be productive — but this is the environment I actually want when I am debugging, SSH-ing into a GPU box, or jumping between projects.
+
+I treat both config files as living documents. Font too small, blur too heavy, a plugin slowing startup — change one line, reload, move on. The terminal should bend to how you work, not the other way around.
+
+If you are trying this yourself, start with the Ghostty colors and the Zsh plugins. Get those right first, then layer in fastfetch and pokeget when you want personality. Keep machine-specific tweaks in `~/.zshrc.local` so the main files stay clean and easy to share.
+
+This is what I run every day — not perfect, but dialed in enough that opening a terminal never feels like a chore. Two files, paste, tweak until it fits you.
+
+Hope you like my setup. See you soon!
