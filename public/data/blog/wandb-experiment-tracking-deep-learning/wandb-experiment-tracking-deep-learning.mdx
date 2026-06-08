@@ -1,0 +1,330 @@
+---
+title: "How I Use Weights & Biases to Track My Experiments"
+slug: "wandb-experiment-tracking-deep-learning"
+description: "How I use Weights & Biases to log and monitor deep learning training runs — wired up in a PPO LunarLander-v3 experiment with stable-baselines3."
+image: "/data/blog/wandb-experiment-tracking-deep-learning/shot_wandb_header.png"
+tags: ["Weights & Biases", "Deep Learning", "Reinforcement Learning", "MLOps", "PPO"]
+date: "2026-06-07"
+author: "Krish Bakshi"
+readTime: "6 min read"
+isPublished: true
+---
+
+Once your experiment count grows past a handful of runs, tracking becomes the job. You start asking the same questions every time you come back to a project:
+
+- Which run actually worked?
+- What changed between that run and the one before it?
+- Which config produced that result?
+- Which checkpoint is worth keeping?
+
+I use [Weights & Biases](https://wandb.ai) to answer those questions. Here's exactly how I set it up.
+
+---
+
+## What Changes When You Switch
+
+> TensorBoard is logs. WandB is memory.
+
+WandB isn't just a prettier version of the same thing. The mental model is different.
+
+TensorBoard reads from files your training job writes to disk and shows you curves. WandB tracks each run as a first-class object — config, metrics, artifacts, gradients, system stats, and source code are all attached to it and queryable later.
+
+The practical difference shows up when you have five runs with different hyperparameters and you want to know which one to build on. With TensorBoard, you're eyeballing folder names and trying to remember what `run_47_final_v2` was about. With WandB, you open the project table, sort by `test/mean_reward`, and the answer is right there.
+
+That said, TensorBoard isn't bad. For a single experiment with a clean hypothesis, it's perfectly fine. The gap opens when your experiment count grows and you need to compare, revisit, and reproduce.
+
+---
+
+## Prerequisites: Set Up Your W&B Project
+
+Before the training code runs, you need a W&B account, an API key, and a project to log into. This takes about five minutes.
+
+![My W&B Dashboard](/data/blog/wandb-experiment-tracking-deep-learning/shot_wandb_dashboard.png "width:80%")
+
+### 1. Create an account
+
+Sign up at [wandb.ai](https://wandb.ai). The free tier is enough to track personal experiments.
+
+### 2. Create an API key
+
+W&B needs an API key to authenticate your machine. Follow the [quickstart guide](https://docs.wandb.ai/models/quickstart) or go straight to [User Settings](https://wandb.ai/settings) → **Create new API key**. Copy it immediately — W&B only shows the full key once.
+
+Install `wandb`, set your API key, then log in — toggle **uv** or **pip** at the top:
+
+[[install]]
+[[uv lang="bash"]]
+uv pip install wandb
+export WANDB_API_KEY=<your_api_key>
+wandb login
+[[/uv]]
+[[pip lang="bash"]]
+pip install wandb
+export WANDB_API_KEY=<your_api_key>
+wandb login
+[[/pip]]
+[[/install]]
+
+See [environment variables](https://docs.wandb.ai/models/track/environment-variables) for the full list (`WANDB_API_KEY`, `WANDB_ENTITY`, `WANDB_PROJECT`, and more). For `uv`, see the [uv docs](https://docs.astral.sh/uv/).
+
+### 3. Create a project
+
+A **project** is the folder where all your runs live — configs, metrics, artifacts, and videos grouped together.
+
+You do not need to create it manually in the dashboard. W&B creates the project on the first `wandb.init()` call. Pick a clear name (e.g. `rl-exp` or `ppo-lunar-lander`) and reuse it across runs so everything stays in one table.
+
+Your **entity** is your username (personal account) or team name (shared workspace). Find it in the top-left of the W&B dashboard after login.
+
+### 4. Set `ENTITY` and `PROJECT` in your environment
+
+The LunarLander script reads these from a `.env` file via `python-dotenv`:
+
+```bash
+ENTITY=your-wandb-username-or-team
+PROJECT=your-project-name
+WANDB_API_KEY=your-api-key-here
+```
+
+`ENTITY` maps to `wandb.init(entity=...)` and `PROJECT` maps to `wandb.init(project=...)`. If you set `WANDB_ENTITY` and `WANDB_PROJECT` as environment variables instead, W&B picks them up automatically — see the [env var docs](https://docs.wandb.ai/models/track/environment-variables).
+
+Once this is in place, `wandb.init()` in the training script will create (or attach to) your project and start logging runs.
+
+**Useful links**
+
+- [W&B Quickstart](https://docs.wandb.ai/models/quickstart) — install, login, first run
+- [User Settings & API keys](https://docs.wandb.ai/platform/app/settings-page/user-settings) — create and manage keys
+- [Python SDK reference](https://docs.wandb.ai/models/ref/python) — `wandb.init()`, `wandb.log()`, and more
+- [Stable Baselines3 integration](https://docs.wandb.ai/models/integrations/stable-baselines-3) — `WandbCallback` docs used in this post
+- [TensorBoard sync](https://docs.wandb.ai/models/integrations/tensorboard) — how `sync_tensorboard=True` works
+
+---
+
+## My Setup: PPO on LunarLander-v3
+
+Here's a concrete example. I'm training a PPO agent on `LunarLander-v3` using `stable-baselines3`. Even for something this focused, there's a fair amount to track: mean reward across episodes, episode length, gradient behaviour, the best checkpoint, and final test performance after training. The full code is on [GitHub](https://github.com/KrishBakshi/rl-exp/tree/master/ppo/lunar_lander_v3).
+
+![lunar_lander_v3](/data/blog/wandb-experiment-tracking-deep-learning/inference-episode-0.gif "width:70%")
+
+Here's how the WandB integration is wired in.
+
+### Initialising the Run With Config
+
+The first thing I do before any environment or model setup is initialise the WandB run and pass in the full training config:
+
+```python
+run = wandb.init(
+    entity=ENTITY,
+    project=PROJECT,
+    name="ppo-lunar-lander-v3_mk2",
+    config=dict(
+        env_id="LunarLander-v3",
+        n_envs=16,
+        n_epochs=4,
+        batch_size=64,
+        total_timesteps=1_000_000,
+        algorithm="PPO",
+        policy="MlpPolicy",
+    ),
+    sync_tensorboard=True,
+    monitor_gym=False,
+    save_code=True,
+)
+```
+
+`sync_tensorboard=True` means anything SB3 writes to TensorBoard automatically syncs to WandB. You get both without managing two systems separately.
+
+`save_code=True` snapshots your training script at the start of the run. When you come back three weeks later, you can see exactly what code produced a given result — not just the metrics.
+
+### The WandB Callback
+
+```python
+wandb_callback = WandbCallback(
+    gradient_save_freq=1_000,
+    model_save_path=os.path.join(BASE_DIR, "model", "wandb"),
+    verbose=2,
+)
+```
+
+`gradient_save_freq=1_000` logs gradient histograms every 1000 steps. This is where silent training problems show up — vanishing gradients, weight saturation — before they kill a run. It's the kind of thing you'd miss entirely if you were only watching reward curves.
+
+This runs alongside SB3's `EvalCallback`, which handles best-model checkpointing on a separate eval environment:
+
+```python
+eval_callback = EvalCallback(
+    eval_env,
+    best_model_save_path=BEST_MODEL_DIR,
+    log_path=LOG_DIR,
+    eval_freq=max(10_000 // N_ENVS, 1),
+    n_eval_episodes=5,
+    deterministic=True,
+)
+```
+
+Both callbacks are passed to `model.learn()` together. WandB gets metrics every step; eval runs every `eval_freq` steps and saves the best checkpoint.
+
+### Logging Final Test Metrics
+
+After training, I run 10 inference episodes on a clean environment and log the results back to the same run:
+
+```python
+mean_reward, std_reward = evaluate_policy(
+    model,
+    test_env,
+    n_eval_episodes=10,
+    deterministic=True,
+)
+
+wandb.log({"test/mean_reward": mean_reward, "test/std_reward": std_reward})
+run.finish()
+```
+
+Attaching the test result to the training run means every experiment in the project table has a `test/mean_reward` to sort by. You're not correlating folder names to results — the connection is already there.
+
+---
+
+## What a Finished Run Contains
+
+By the time training ends, a single WandB run has everything in one place:
+
+| What | Where |
+| :--- | :--- |
+| Training curves (reward, episode length) | Charts — synced from TensorBoard |
+| Gradient histograms | Charts — logged every 1000 steps |
+| Hyperparameter config | Overview — queryable across all runs |
+| Best model checkpoint | Artifacts |
+| Training and test videos | Artifacts |
+| Final test reward | Summary — sortable in the project table |
+| Source code snapshot | Files |
+
+---
+
+## Full Training Script
+
+The complete `agent.py` for this experiment is below. It's also on [GitHub](https://github.com/KrishBakshi/rl-exp/tree/master/ppo/lunar_lander_v3) if you want to see the rest of the folder including the eval and upload scripts.
+
+[[dropdown path="ppo/lunar_lander_v3/agent.py" lang="python"]]
+import os
+from token import NAME
+import gymnasium as gym
+import wandb
+from wandb.integration.sb3 import WandbCallback
+from stable_baselines3 import PPO
+from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.evaluation import evaluate_policy
+from stable_baselines3.common.callbacks import EvalCallback
+from gymnasium.wrappers import RecordVideo
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ENTITY = os.getenv("ENTITY")
+PROJECT = os.getenv("PROJECT")
+NAME = "ppo-lunar-lander-v3_mk2"
+
+ENV_ID      = "LunarLander-v3"
+N_ENVS      = 16
+N_EPOCHS    = 4
+BATCH_SIZE  = 64
+TOTAL_STEPS = 1_000_000
+
+BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH      = os.path.join(BASE_DIR, "model", "ppo_lunar_lander")
+BEST_MODEL_DIR  = os.path.join(BASE_DIR, "model", "best")
+TRAIN_VIDEO_DIR = os.path.join(BASE_DIR, "videos", "training")
+TEST_VIDEO_DIR  = os.path.join(BASE_DIR, "videos", "test")
+LOG_DIR         = os.path.join(BASE_DIR, "logs")
+TB_LOG_DIR      = os.path.join(BASE_DIR, "tb_logs")
+
+for d in [MODEL_PATH, BEST_MODEL_DIR, TRAIN_VIDEO_DIR, TEST_VIDEO_DIR, LOG_DIR, TB_LOG_DIR]:
+    os.makedirs(d, exist_ok=True)
+
+run = wandb.init(
+    entity=ENTITY,
+    project=PROJECT,
+    name=NAME,
+    config=dict(
+        env_id=ENV_ID,
+        n_envs=N_ENVS,
+        n_epochs=N_EPOCHS,
+        batch_size=BATCH_SIZE,
+        total_timesteps=TOTAL_STEPS,
+        algorithm="PPO",
+        policy="MlpPolicy",
+    ),
+    sync_tensorboard=True,
+    monitor_gym=False,
+    save_code=True,
+)
+
+train_env = make_vec_env(ENV_ID, n_envs=N_ENVS)
+
+eval_env = RecordVideo(
+    Monitor(gym.make(ENV_ID, render_mode="rgb_array")),
+    video_folder=TRAIN_VIDEO_DIR,
+    name_prefix="eval",
+    episode_trigger=lambda _: True,
+)
+
+model = PPO(
+    "MlpPolicy",
+    train_env,
+    n_epochs=N_EPOCHS,
+    batch_size=BATCH_SIZE,
+    verbose=1,
+    tensorboard_log=TB_LOG_DIR,
+)
+
+eval_callback = EvalCallback(
+    eval_env,
+    best_model_save_path=BEST_MODEL_DIR,
+    log_path=LOG_DIR,
+    eval_freq=max(10_000 // N_ENVS, 1),
+    n_eval_episodes=5,
+    deterministic=True,
+    verbose=1,
+)
+
+wandb_callback = WandbCallback(
+    gradient_save_freq=1_000,
+    model_save_path=os.path.join(BASE_DIR, "model", "wandb"),
+    verbose=2,
+)
+
+model.learn(
+    total_timesteps=TOTAL_STEPS,
+    callback=[eval_callback, wandb_callback],
+    progress_bar=True,
+)
+
+model.save(MODEL_PATH)
+train_env.close()
+eval_env.close()
+
+test_env = RecordVideo(
+    Monitor(gym.make(ENV_ID, render_mode="rgb_array")),
+    video_folder=TEST_VIDEO_DIR,
+    name_prefix="test",
+    episode_trigger=lambda _: True,
+)
+
+mean_reward, std_reward = evaluate_policy(
+    model,
+    test_env,
+    n_eval_episodes=10,
+    deterministic=True,
+)
+test_env.close()
+
+wandb.log({"test/mean_reward": mean_reward, "test/std_reward": std_reward})
+run.finish()
+[[/dropdown]]
+
+---
+
+## Where I'd Go From Here
+
+This setup covers a single experiment cleanly. Where it starts paying off compoundly is when you run sweeps — WandB has a built-in sweep agent that will grid-search or Bayesian-search over your config, spin up multiple runs, and populate your project table automatically. That's the next step I'd add to this workflow.
+
+For now, even without sweeps, the difference is tangible. Every run I've done on this project is searchable, reproducible, and attached to the code that produced it. The checkpoint I shipped was one click to find. The config that worked is sitting in the run overview, not buried in a comment or a filename I'd eventually forget.
+
+The overhead to get there is maybe 20 lines. It's worth it from the first run.
