@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectFrontmatter } from "@/types/project";
 import { CollapsibleList } from "@/components/ui/collapsible-list";
+import { ShowAllLink } from "@/components/ui/show-all-link";
 
 interface ProjectsProps {
     projects: { slug: string; frontmatter: ProjectFrontmatter }[];
@@ -43,16 +43,11 @@ export function Projects({ projects, max, showToggle = true, showAllHref }: Proj
                 )}
             </div>
 
-            {showAllHref && (
+            {showAllHref ? (
                 <div className="flex h-12 items-center justify-center pt-2">
-                    <Link
-                        href={showAllHref}
-                        className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                    >
-                        Show All Projects
-                    </Link>
+                    <ShowAllLink href={showAllHref} label="Show All Projects" />
                 </div>
-            )}
+            ) : null}
         </div>
     );
 }
