@@ -180,6 +180,102 @@ html.light {
   [data-line] {
     @apply py-0.5;
   }
+
+  .blog-code-block {
+    @apply relative overflow-hidden border border-border bg-code text-code-foreground;
+  }
+
+  .blog-code-block pre {
+    @apply m-0 overflow-x-auto bg-transparent p-3;
+  }
+
+  .blog-code-block .hljs {
+    background: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+  }
+
+  /* Light mode syntax (github) */
+  .blog-code-block .hljs-comment,
+  .blog-code-block .hljs-quote {
+    color: #6a737d;
+  }
+
+  .blog-code-block .hljs-keyword,
+  .blog-code-block .hljs-selector-tag,
+  .blog-code-block .hljs-subst {
+    color: #d73a49;
+  }
+
+  .blog-code-block .hljs-string,
+  .blog-code-block .hljs-meta,
+  .blog-code-block .hljs-symbol,
+  .blog-code-block .hljs-bullet {
+    color: #032f62;
+  }
+
+  .blog-code-block .hljs-title,
+  .blog-code-block .hljs-section,
+  .blog-code-block .hljs-attribute {
+    color: #6f42c1;
+  }
+
+  .blog-code-block .hljs-number,
+  .blog-code-block .hljs-literal {
+    color: #005cc5;
+  }
+
+  .blog-code-block .hljs-built_in,
+  .blog-code-block .hljs-type {
+    color: #e36209;
+  }
+
+  .blog-code-block .hljs-variable,
+  .blog-code-block .hljs-template-variable,
+  .blog-code-block .hljs-params {
+    color: #24292e;
+  }
+
+  /* Dark mode syntax (github-dark) */
+  .dark .blog-code-block .hljs-comment,
+  .dark .blog-code-block .hljs-quote {
+    color: #8b949e;
+  }
+
+  .dark .blog-code-block .hljs-keyword,
+  .dark .blog-code-block .hljs-selector-tag,
+  .dark .blog-code-block .hljs-subst {
+    color: #ff7b72;
+  }
+
+  .dark .blog-code-block .hljs-string,
+  .dark .blog-code-block .hljs-meta,
+  .dark .blog-code-block .hljs-symbol,
+  .dark .blog-code-block .hljs-bullet {
+    color: #a5d6ff;
+  }
+
+  .dark .blog-code-block .hljs-title,
+  .dark .blog-code-block .hljs-section,
+  .dark .blog-code-block .hljs-attribute {
+    color: #d2a8ff;
+  }
+
+  .dark .blog-code-block .hljs-number,
+  .dark .blog-code-block .hljs-literal {
+    color: #79c0ff;
+  }
+
+  .dark .blog-code-block .hljs-built_in,
+  .dark .blog-code-block .hljs-type {
+    color: #ffa657;
+  }
+
+  .dark .blog-code-block .hljs-variable,
+  .dark .blog-code-block .hljs-template-variable,
+  .dark .blog-code-block .hljs-params {
+    color: #c9d1d9;
+  }
 }
 
 @keyframes shimmer {

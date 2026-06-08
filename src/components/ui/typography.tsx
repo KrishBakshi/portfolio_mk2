@@ -22,7 +22,7 @@ function Prose({
         "prose max-w-none prose-zinc dark:prose-invert",
         "prose-headings:text-balance",
         "prose-a:font-medium prose-a:wrap-break-word prose-a:text-foreground prose-a:underline prose-a:underline-offset-4",
-        "prose-code:rounded-md prose-code:border prose-code:bg-muted/50 prose-code:px-[0.3rem] prose-code:py-[0.2rem] prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none",
+        "prose-code:rounded-md prose-code:border prose-code:bg-muted/50 prose-code:px-[0.3rem] prose-code:py-[0.2rem] prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-code:text-violet-600 dark:prose-code:text-violet-400",
         "prose-hr:border-border",
         "prose-blockquote:border-s-border prose-blockquote:[&_p:first-of-type]:before:content-none prose-blockquote:[&_p:last-of-type]:after:content-none",
         className
@@ -41,7 +41,7 @@ function Code({ className, ...props }: React.ComponentProps<"code">) {
       data-slot={isCodeBlock ? "code-block" : "code-inline"}
       className={cn(
         !isCodeBlock &&
-          "not-prose rounded-md border bg-muted/50 px-1.5 py-0.5 font-mono text-sm",
+          "not-prose rounded-md border bg-muted/50 px-1.5 py-0.5 font-mono text-sm text-violet-600 dark:text-violet-400",
         className
       )}
       {...props}
