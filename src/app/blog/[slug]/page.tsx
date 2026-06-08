@@ -148,8 +148,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             {previous ? (
                                 <Button
-                                    variant="outline"
-                                    className="h-auto flex-col items-start gap-1 p-4 whitespace-normal text-left"
+                                    variant="link"
+                                    className="h-auto flex-col items-start gap-1 p-4 mb-4 whitespace-normal text-left"
                                     asChild
                                 >
                                     <Link href={`/blog/${previous.slug}`}>
@@ -168,8 +168,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             
                             {next ? (
                                 <Button
-                                    variant="outline"
-                                    className="h-auto flex-col items-end gap-1 p-4 whitespace-normal text-right"
+                                    variant="link"
+                                    className="h-auto flex-col items-end gap-1 p-4 mb-4 whitespace-normal text-right"
                                     asChild
                                 >
                                     <Link href={`/blog/${next.slug}`}>
