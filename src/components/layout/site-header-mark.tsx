@@ -44,7 +44,7 @@ function KrishMarkMotion() {
       data-visible={visible}
       className="font-mono text-sm font-medium text-foreground translate-y-2 opacity-0 transition-[opacity,translate] duration-300 data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
     >
-      krish
+      Krish
     </Link>
   );
 }
@@ -59,7 +59,7 @@ export function SiteHeaderMark() {
   
   return (
     <Link href="/" aria-label="Home" className="font-mono text-sm font-medium text-foreground">
-      krish
+      Krish
     </Link>
   );
 }
