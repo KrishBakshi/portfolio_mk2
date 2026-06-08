@@ -31,6 +31,8 @@ export type ExperienceItemType = {
   id: string;
   companyName: string;
   companyLogo?: string;
+  /** Zoom within the logo square. 1 = default, <1 = smaller, >1 = zoom in (clipped by rounded box). */
+  companyLogoScale?: number;
   positions: ExperiencePositionItemType[];
   isCurrentEmployer?: boolean;
 };

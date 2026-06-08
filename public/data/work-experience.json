@@ -2,7 +2,7 @@
   {
     "id": "nasiwak",
     "companyName": "Nasiwak Services India Private Limited",
-    "companyLogo": "/assets/companies/nasiwak_services_pvt_ltd_logo.jpg",
+    "companyLogo": "/assets/companies/Nasiwak-mini.png",
     "positions": [
       {
         "id": "nasiwak-ds",
@@ -18,8 +18,7 @@
           "C++",
           "React",
           "Next.js"
-        ],
-        "isExpanded": true
+        ]
       },
       {
         "id": "nasiwak-intern",

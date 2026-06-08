@@ -60,14 +60,16 @@ export type ExperienceItemType = {
     companyName: string;
     /** URL or path to the company's logo image */
     companyLogo?: string;
+    /** Zoom within the logo square. 1 = default, <1 = smaller, >1 = zoom in. */
+    companyLogoScale?: number;
     /** List of positions held at the company */
     positions: ExperiencePositionItemType[];
     /** Indicates if this is the user's current employer */
     isCurrentEmployer?: boolean;
 };
 
-import Link from "next/link";
 import { CollapsibleList } from "@/components/ui/collapsible-list";
+import { ShowAllLink } from "@/components/ui/show-all-link";
 
 export function WorkExperience({
     className,
@@ -75,12 +77,15 @@ export function WorkExperience({
     max = 2,
     showToggle = true,
     showAllHref,
+    expandLatestPositions = false,
 }: {
     className?: string;
     experiences: ExperienceItemType[];
     max?: number;
     showToggle?: boolean;
     showAllHref?: string;
+    /** When true, opens only the first (most recent) role per company. */
+    expandLatestPositions?: boolean;
 }) {
     const visibleExperiences = showAllHref ? experiences.slice(0, max) : experiences;
 
@@ -93,7 +98,11 @@ export function WorkExperience({
                 {showAllHref ? (
                     <div className="flex flex-col">
                         {visibleExperiences.map((experience) => (
-                            <ExperienceItem key={experience.id} experience={experience} />
+                            <ExperienceItem
+                                key={experience.id}
+                                experience={experience}
+                                expandLatestPositions={expandLatestPositions}
+                            />
                         ))}
                     </div>
                 ) : (
@@ -102,47 +111,52 @@ export function WorkExperience({
                         max={max}
                         keyExtractor={(item) => item.id}
                         renderItem={(experience) => (
-                            <ExperienceItem experience={experience} />
+                            <ExperienceItem
+                                experience={experience}
+                                expandLatestPositions={expandLatestPositions}
+                            />
                         )}
                         showToggle={showToggle}
                     />
                 )}
             </div>
 
-            {showAllHref && (
+            {showAllHref ? (
                 <div className="flex h-12 items-center justify-center pt-4">
-                    <Link
-                        href={showAllHref}
-                        className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                    >
-                        Show All Experiences
-                    </Link>
+                    <ShowAllLink href={showAllHref} label="Show All Experiences" />
                 </div>
-            )}
+            ) : null}
         </section>
     );
 }
 
+const COMPANY_LOGO_SIZE = 24;
+
 export function ExperienceItem({
     experience,
+    expandLatestPositions = false,
 }: {
     experience: ExperienceItemType;
+    expandLatestPositions?: boolean;
 }) {
+    const logoScale = experience.companyLogoScale ?? 1;
+
     return (
         <div className="space-y-4 py-4 rounded-lg">
             <div className="not-prose flex items-center gap-3">
                 <div
-                    className="flex size-6 shrink-0 items-center justify-center"
+                    className="flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background"
                     aria-hidden
                 >
                     {experience.companyLogo ? (
                         <Image
                             src={experience.companyLogo}
                             alt={experience.companyName}
-                            width={24}
-                            height={24}
+                            width={COMPANY_LOGO_SIZE}
+                            height={COMPANY_LOGO_SIZE}
                             quality={100}
-                            className="rounded-lg"
+                            className="size-full object-contain"
+                            style={{ transform: `scale(${logoScale})` }}
                             unoptimized
                         />
                     ) : (
@@ -164,8 +178,12 @@ export function ExperienceItem({
             </div>
 
             <div className="relative space-y-4 before:absolute before:left-3 before:h-full before:w-px before:bg-border">
-                {experience.positions.map((position) => (
-                    <ExperiencePositionItem key={position.id} position={position} />
+                {experience.positions.map((position, index) => (
+                    <ExperiencePositionItem
+                        key={position.id}
+                        position={position}
+                        defaultOpen={expandLatestPositions && index === 0}
+                    />
                 ))}
             </div>
         </div>
@@ -174,13 +192,15 @@ export function ExperienceItem({
 
 export function ExperiencePositionItem({
     position,
+    defaultOpen = false,
 }: {
     position: ExperiencePositionItemType;
+    defaultOpen?: boolean;
 }) {
     const ExperienceIcon = iconMap[position.icon || "business"];
 
     return (
-        <CollapsibleWithContext defaultOpen={position.isExpanded} asChild>
+        <CollapsibleWithContext defaultOpen={defaultOpen} asChild>
             <div className="relative last:before:absolute last:before:h-full last:before:w-4 last:before:bg-background">
                 <CollapsibleTrigger
                     className="group/experience not-prose block w-full text-left select-none"
