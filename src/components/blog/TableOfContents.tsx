@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
+import { getTocMarkdownContent } from '@/lib/blog-dropdown';
 
 interface TableOfContentsProps {
     content: string;
@@ -20,14 +20,12 @@ export function TableOfContents({ content, title }: TableOfContentsProps) {
     const [activeId, setActiveId] = useState<string>('');
 
     useEffect(() => {
-        // Extract headings from markdown content
-        // This is a simple regex extraction. For more complex cases, we might need a parser.
-        // Matches # Heading, ## Heading, ### Heading
+        const proseContent = getTocMarkdownContent(content);
         const headingRegex = /^(#{1,3})\s+(.+)$/gm;
         const extractedHeadings: Heading[] = [];
         let match;
 
-        while ((match = headingRegex.exec(content)) !== null) {
+        while ((match = headingRegex.exec(proseContent)) !== null) {
             const level = match[1].length;
             const text = match[2].trim();
             // Generate a simple slug for the ID (must match rehype-slug logic roughly)
