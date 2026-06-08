@@ -24,7 +24,6 @@ export function CollapsibleList<T>({
   listClassName?: string;
   showToggle?: boolean;
 }) {
-  // If items count is less than or equal to max, just render them all without collapsible wrapper logic
   if (items.length <= max) {
     return (
       <div className={listClassName}>
@@ -39,7 +38,6 @@ export function CollapsibleList<T>({
     );
   }
 
-  // If showToggle is false, show all items without collapsible
   if (!showToggle) {
     return (
       <div className={listClassName}>
@@ -65,7 +63,9 @@ export function CollapsibleList<T>({
           </Slot>
         ))}
 
-        <CollapsibleContent className={listClassName === "flex flex-col" ? "" : "col-span-full"}>
+        <CollapsibleContent
+          className={listClassName === "flex flex-col" ? "" : "col-span-full"}
+        >
           <div className={listClassName}>
             {items.slice(max).map((item, index) => (
               <Slot
@@ -84,10 +84,7 @@ export function CollapsibleList<T>({
 
       <div className="flex h-12 items-center justify-center pt-4">
         <CollapsibleTrigger asChild>
-          <Button
-            className="group/collapsible-trigger flex"
-            variant="outline"
-          >
+          <Button className="group/collapsible-trigger flex" variant="outline">
             <span className="hidden group-data-[state=closed]/collapsible-trigger:block">
               Show More
             </span>
@@ -106,4 +103,3 @@ export function CollapsibleList<T>({
     </Collapsible>
   );
 }
-
