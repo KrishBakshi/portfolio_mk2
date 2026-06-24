@@ -113,6 +113,17 @@
   color: var(--selection-foreground);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Radix scroll lock adds padding-right; gutter already reserves scrollbar space. */
+html[data-scroll-locked],
+body[data-scroll-locked] {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
