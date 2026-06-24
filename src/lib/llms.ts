@@ -55,7 +55,13 @@ export const PROFILE = {
       { type: "text", value: ", with quantified impact." },
     ],
     [
-      { type: "text", value: "I enjoy automating mundane tasks with agents. Built " },
+      { type: "text", value: "I enjoy automating mundane tasks with " },
+      {
+        type: "link",
+        label: "agents",
+        href: "/projects?domain=AI%20Agents",
+      },
+      { type: "text", value: ". Built " },
       {
         type: "link",
         label: "AutoMailAI",
@@ -72,7 +78,10 @@ export const PROFILE = {
   about:
     "Building and deploying ML across computer vision, AI automation, and generative AI — from Databricks pipelines to production apps on FastAPI, Docker, and cloud.",
   profileImage: "/header/pfp.jpeg",
-  bannerImage: "/header/test.png",
+  bannerImages: {
+    light: "/header/light_2.png",
+    dark: "/header/dark.png",
+  },
   socialLinks: {
     twitter: "https://x.com/KrishBakshi_",
     github: "https://github.com/KrishBakshi",
