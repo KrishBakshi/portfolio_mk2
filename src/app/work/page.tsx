@@ -1,25 +1,21 @@
 import { WorkExperience } from "@/components/sections/WorkExperience";
 import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
-import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
+import { PageCanvas } from "@/components/PageCanvas";
 
 export default function WorkPage() {
   return (
-    <div className="min-h-screen transition-colors duration-300 relative">
-      <div className="relative mx-auto max-w-3xl">
-        <DiagonalPatternFrame>
-          <div className="mx-auto w-full max-w-3xl sm:px-0 mb-6">
-            <div id="js-cover-mark" className="absolute top-0 left-0 w-full h-32 pointer-events-none" />
-            <div className="bg-background border border-gray-300/50 dark:border-white/10 mt-6 p-4">
-              <WorkExperience
-                experiences={WORK_EXPERIENCE_DATA}
-                title="Work Experience"
-                max={50}
-                expandLatestPositions
-              />
-            </div>
-          </div>
-        </DiagonalPatternFrame>
+    <PageCanvas>
+      <div className="mx-auto mb-6 w-full max-w-3xl sm:px-0">
+        <div id="js-cover-mark" className="pointer-events-none absolute left-0 top-0 h-32 w-full" />
+        <div className="mt-6 border border-gray-300/50 bg-background p-4 dark:border-white/10">
+          <WorkExperience
+            experiences={WORK_EXPERIENCE_DATA}
+            title="Work Experience"
+            max={50}
+            expandLatestPositions
+          />
+        </div>
       </div>
-    </div>
+    </PageCanvas>
   );
 }

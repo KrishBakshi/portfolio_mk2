@@ -2,6 +2,9 @@
 
 import { cn } from "@/lib/utils";
 
+/** Viewport fill below sticky site header (pt-2 + h-12). */
+export const PAGE_CONTENT_MIN_HEIGHT = "min-h-[calc(100dvh-3.5rem)]";
+
 interface DiagonalPatternFrameProps {
     children: React.ReactNode;
     className?: string;
@@ -10,22 +13,19 @@ interface DiagonalPatternFrameProps {
 export default function DiagonalPatternFrame({ children, className }: DiagonalPatternFrameProps) {
     return (
         <div className={cn(
-            "relative w-full max-w-screen mx-auto overflow-visible",
+            "relative mx-auto w-full max-w-screen overflow-visible",
+            PAGE_CONTENT_MIN_HEIGHT,
             className
         )}>
-            {/* Single diagonal pattern canvas extending 60px beyond each side */}
             <div
-                className="absolute dark:opacity-[0.06] opacity-[0.06] inset-0 md:left-[-60px] md:right-[-60px] h-full pointer-events-none z-0 border border-gray dark:border-white border-t-0"
+                className="pointer-events-none absolute inset-0 z-0 border border-gray-300/50 border-t-0 opacity-[0.06] dark:border-white/10 md:-left-[60px] md:-right-[60px]"
                 style={{
                     backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, currentColor 2px, currentColor 3px, transparent 3px, transparent 6px)',
                     color: 'var(--foreground)'
                 }}
             />
 
-            {/* Single diagonal pattern canvas – side columns removed */}
-
-            {/* Content sections with gap instead of borders //add py-8 pb-8 and border border-gray-300 border-dashed fir debugging */}
-            <div className="relative flex flex-col gap-8 z-10">
+            <div className={cn("relative z-10 flex flex-col gap-8", PAGE_CONTENT_MIN_HEIGHT)}>
                 {children}
             </div>
         </div>

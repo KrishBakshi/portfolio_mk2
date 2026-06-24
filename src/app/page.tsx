@@ -1,6 +1,6 @@
 import BannerSection from "@/components/sections/BannerSection";
 import ProfileHeader from "@/components/sections/ProfileHeader";
-import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
+import { PageCanvas } from "@/components/PageCanvas";
 import { WorkExperience } from "@/components/sections/WorkExperience";
 import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 import { Projects } from "@/components/projects/Projects";
@@ -17,13 +17,8 @@ export default function Home() {
   const posts = getAllBlogPosts();
 
   return (
-    <div className="relative min-h-screen transition-colors duration-300">
-      <div className="relative mx-auto max-w-3xl">
-
-
-        {/* Main Content */}
-        <DiagonalPatternFrame>
-          <div className="mx-auto w-full max-w-3xl sm:px-0">
+    <PageCanvas>
+      <div className="mx-auto w-full max-w-3xl sm:px-0">
             {/* Banner and Profile Header - Combined */}
             <div
               id="js-cover-mark"
@@ -72,8 +67,6 @@ export default function Home() {
               <Footer />
             </div>
           </div>
-        </DiagonalPatternFrame>
-      </div>
-    </div>
+    </PageCanvas>
   );
 }

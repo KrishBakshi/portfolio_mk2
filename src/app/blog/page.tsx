@@ -1,4 +1,4 @@
-import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
+import { PageCanvas } from "@/components/PageCanvas";
 import { Blog } from "@/components/blog/Blog";
 import { getAllBlogPosts } from "@/lib/blog";
 
@@ -6,18 +6,14 @@ export default function BlogPage() {
   const posts = getAllBlogPosts();
 
   return (
-    <div className="min-h-screen transition-colors duration-300 relative">
-      <div className="relative mx-auto max-w-3xl">
-        <DiagonalPatternFrame>
-          <div className="mx-auto w-full max-w-3xl sm:px-0 mb-6">
-            <div id="js-cover-mark" className="absolute top-0 left-0 w-full h-32 pointer-events-none" />
+    <PageCanvas>
+      <div className="mx-auto mb-6 w-full max-w-3xl sm:px-0">
+        <div id="js-cover-mark" className="pointer-events-none absolute left-0 top-0 h-32 w-full" />
 
-            <div className="bg-background border border-gray-300/50 dark:border-white/10 mt-6 p-4">
-              <Blog posts={posts} max={5} />
-            </div>
-          </div>
-        </DiagonalPatternFrame>
+        <div className="mt-6 border border-gray-300/50 bg-background p-4 dark:border-white/10">
+          <Blog posts={posts} max={5} />
+        </div>
       </div>
-    </div>
+    </PageCanvas>
   );
 }

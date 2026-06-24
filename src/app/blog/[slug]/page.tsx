@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 
-import DiagonalPatternFrame from "@/components/DiagonalPatternFrame";
+import { PageCanvas } from "@/components/PageCanvas";
 import { BackButton } from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,10 +77,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     });
 
     return (
-        <div className="min-h-screen transition-colors duration-300 relative">
-            <div className="relative mx-auto max-w-3xl">
-                <DiagonalPatternFrame>
-                    <div className="mx-auto w-full max-w-3xl sm:px-0">
+        <PageCanvas>
+            <div className="mx-auto w-full max-w-3xl sm:px-0">
                         <div id="js-cover-mark" className="absolute top-0 left-0 w-full h-32 pointer-events-none" />
 
                         <div className="mt-6 mb-6 flex items-center justify-between">
@@ -187,8 +185,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             )}
                         </div>
                     </div>
-                </DiagonalPatternFrame>
-            </div>
-        </div>
+        </PageCanvas>
     );
 }
