@@ -3,23 +3,99 @@ import { getPublishedBlogPosts } from "@/lib/blog";
 import { getProjectBySlug, getPublishedProjects } from "@/lib/projects";
 import { TECH_STACK, WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 
+export type ProfileBulletPart =
+  | { type: "text"; value: string; italic?: boolean; semibold?: boolean }
+  | { type: "link"; label: string; href: string };
+
+export type ProfileBullet = ProfileBulletPart[];
+
+function formatProfileBullet(parts: ProfileBullet): string {
+  return parts
+    .map((part) => {
+      if (part.type === "link") {
+        const href = part.href.startsWith("/")
+          ? `${SITE_INFO.url}${part.href}`
+          : part.href;
+        return `[${part.label}](${href})`;
+      }
+      if (part.italic && part.semibold) {
+        return `***${part.value}***`;
+      }
+      if (part.italic) {
+        return `*${part.value}*`;
+      }
+      if (part.semibold) {
+        return `**${part.value}**`;
+      }
+      return part.value;
+    })
+    .join("");
+}
+
 export const PROFILE = {
   name: "Krish Bakshi",
   title: "Data Scientist",
   email: "business.krishb@gmail.com",
+  tagline: [
+    {
+      type: "text",
+      value: "Engineer who ships impactful AI systems, end-to-end at ",
+    },
+    { type: "text", value: "Speed!", italic: true },
+  ] satisfies ProfileBullet,
+  highlights: ["Vision", "AI agents", "Fine-tuning", "RL"],
+  bullets: [
+    [
+      { type: "text", value: "Data Scientist @" },
+      { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
+    ],
+    [
+      { type: "text", value: "Taking novel research: " },
+      { type: "text", value: "paper → production", semibold: true },
+      { type: "text", value: ", with quantified impact." },
+    ],
+    [
+      { type: "text", value: "I enjoy automating mundane tasks with agents. Built " },
+      {
+        type: "link",
+        label: "AutoMailAI",
+        href: "/projects/linkedin-research-agent",
+      },
+      { type: "text", value: " for personalized outbounds at " },
+      { type: "text", value: "100/day", semibold: true },
+      { type: "text", value: ", helping me reach " },
+      { type: "text", value: "10×", semibold: true },
+      { type: "text", value: " more prospects per week." },
+    ],
+  ] satisfies ProfileBullet[],
+  socialLabel: "Here are my socials",
   about:
-    "Hi there! I'm Krish. I enjoy building smart, AI-driven solutions that solve day-to-day and business problems. Whether it's forecasting sales, automating tasks, or generating content with AI, I turn ideas into working products using data, code, and creativity.",
-  socialLinks: [
-    { title: "X", href: "https://x.com/KrishBakshi_" },
-    { title: "GitHub", href: "https://github.com/KrishBakshi" },
-    { title: "LinkedIn", href: "https://linkedin.com/in/krish-bakshi-8b85b6314/" },
-    { title: "Resume", href: `${SITE_INFO.url}/resume.pdf` },
-    { title: "Email", href: "mailto:business.krishb@gmail.com" },
-  ],
+    "Building and deploying ML across computer vision, AI automation, and generative AI — from Databricks pipelines to production apps on FastAPI, Docker, and cloud.",
+  profileImage: "/header/pfp.jpeg",
+  bannerImage: "/header/test.png",
+  socialLinks: {
+    twitter: "https://x.com/KrishBakshi_",
+    github: "https://github.com/KrishBakshi",
+    linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
+    resume: "/resume.pdf",
+    mail: "mailto:business.krishb@gmail.com",
+  },
 } as const;
+
+const PROFILE_SOCIAL_LINKS = [
+  { title: "X", href: PROFILE.socialLinks.twitter },
+  { title: "GitHub", href: PROFILE.socialLinks.github },
+  { title: "LinkedIn", href: PROFILE.socialLinks.linkedin },
+  { title: "Resume", href: `${SITE_INFO.url}${PROFILE.socialLinks.resume}` },
+  { title: "Email", href: PROFILE.socialLinks.mail },
+] as const;
 
 export function getAboutMarkdown() {
   return `# About
+
+${formatProfileBullet(PROFILE.tagline)}
+
+${PROFILE.bullets.length > 0 ? `${PROFILE.bullets.map((item) => `- ${formatProfileBullet(item)}`).join("\n")}\n` : ""}${PROFILE.highlights.map((item) => `- ${item}`).join("\n")}
 
 ${PROFILE.about}
 
@@ -32,7 +108,7 @@ ${PROFILE.about}
 
 ## Social Links
 
-${PROFILE.socialLinks.map((item) => `- [${item.title}](${item.href})`).join("\n")}
+${PROFILE_SOCIAL_LINKS.map((item) => `- [${item.title}](${item.href})`).join("\n")}
 
 ## Tech Stack
 
