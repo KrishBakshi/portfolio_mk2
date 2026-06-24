@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectDomainFilters } from "@/components/projects/ProjectDomainFilters";
@@ -15,12 +16,18 @@ interface ProjectsPageContentProps {
 }
 
 export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
-  const [activeDomain, setActiveDomain] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const domainParam = searchParams.get("domain");
 
   const availableDomains = useMemo(
     () => getAvailableProjectDomains(projects),
     [projects]
   );
+
+  const initialDomain =
+    domainParam && availableDomains.includes(domainParam) ? domainParam : null;
+
+  const [activeDomain, setActiveDomain] = useState<string | null>(initialDomain);
 
   const filteredProjects = useMemo(
     () => filterProjectsByDomain(projects, activeDomain),
