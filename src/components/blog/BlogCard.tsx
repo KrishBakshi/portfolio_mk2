@@ -17,7 +17,7 @@ export function BlogCard({ post }: BlogCardProps) {
     return (
         <Link
             href={`/blog/${post.slug}`}
-            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 -mx-4 hover:bg-accent transition-colors group"
+            className="flex flex-col justify-between p-4 transition-colors hover:bg-accent sm:flex-row sm:items-center group"
         >
             <h3 className="text-base font-medium group-hover:text-primary transition-colors font-sans">
                 {post.title}
