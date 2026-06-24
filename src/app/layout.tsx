@@ -53,7 +53,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <div className="mx-auto max-w-[calc(48rem+120px)] relative px-2 md:px-0">
+          <div className="relative mx-auto w-full max-w-[calc(48rem+120px)] overflow-x-clip px-2 min-[765px]:px-4 min-[900px]:px-0">
             <SiteHeader />
             <div className="mx-auto w-full">
               {children}
