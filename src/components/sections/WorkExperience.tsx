@@ -260,7 +260,30 @@ export function ExperiencePositionItem({
                 <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     {position.description && (
                         <Prose className="pt-2 pl-9">
-                            <ReactMarkdown>{position.description}</ReactMarkdown>
+                            <ReactMarkdown
+                                components={{
+                                    a: ({ children, href }) => {
+                                        const isExternal =
+                                            href?.startsWith("https://");
+
+                                        return (
+                                        <a
+                                            href={href}
+                                            target={isExternal ? "_blank" : undefined}
+                                            rel={
+                                                isExternal
+                                                    ? "noopener noreferrer"
+                                                    : undefined
+                                            }
+                                        >
+                                            {children}
+                                        </a>
+                                        );
+                                    },
+                                }}
+                            >
+                                {position.description}
+                            </ReactMarkdown>
                         </Prose>
                     )}
 
