@@ -15,28 +15,25 @@ const BANNER_HEIGHT = "h-[180px] sm:h-[220px]";
 const FADE_TRANSITION = { duration: 0.45, ease: "easeInOut" as const };
 const INSTANT_TRANSITION = { duration: 0 };
 
-function resolveIsDark(resolvedTheme: string | undefined): boolean {
-  if (resolvedTheme === "dark") return true;
-  if (resolvedTheme === "light") return false;
-  if (typeof document !== "undefined") {
-    return document.documentElement.classList.contains("dark");
-  }
-  return false;
-}
-
 export default function BannerSection({
   quote = "",
   lightBanner,
   darkBanner,
 }: BannerSectionProps) {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const hasSyncedTheme = useRef(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  const showDark = resolveIsDark(resolvedTheme);
+  // Match SSR (light visible) until mounted; resolvedTheme is unavailable on server.
+  const showDark = mounted && resolvedTheme === "dark";
 
   useEffect(() => {
-    if (!resolvedTheme) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !resolvedTheme) return;
 
     if (!hasSyncedTheme.current) {
       hasSyncedTheme.current = true;
@@ -45,7 +42,7 @@ export default function BannerSection({
     }
 
     setShouldAnimate(true);
-  }, [resolvedTheme]);
+  }, [mounted, resolvedTheme]);
 
   const transition = shouldAnimate ? FADE_TRANSITION : INSTANT_TRANSITION;
 
