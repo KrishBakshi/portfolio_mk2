@@ -7,17 +7,20 @@
       {
         "id": "nasiwak-ds",
         "title": "Data Scientist",
-        "employmentPeriod": "August 2025 - Present",
+        "employmentPeriod": "July 2025 - Present",
         "employmentType": "Full-time",
         "icon": "code",
-        "description": "- Fine-tuning vision and language models, handling end-to-end deployment.\n- Developing advanced signal processing systems using models like OpenAI Whisper, and building low-latency C++ backends.\n- Showcasing AI solutions through full-stack applications with React and Next.js.",
+        "description": "- Shipped an end-to-end AI system to detect anomalies on floor plans, cutting manual effort **up to 80%** and processing **10×** more orders per month.\n- Built [**Nasiwak Studio**](https://nasiwakservices.com/portfolio/nasiwak-studio?lang=ja), an end-to-end vision AI system to detect **85+** small electrical symbols on blueprints, automating manual invoice generation up to **100%**.\n- Created an AI karaoke pipeline (yt-dlp, UVR, Whisper, FFmpeg) that renders videos in **<5s**; engineered a C++ autotune backend with **±1ms** latency and **80%** noise reduction for live audio.",
         "skills": [
-          "Vision Models",
-          "Language Models",
-          "OpenAI Whisper",
-          "C++",
+          "Object detection",
+          "Vision AI",
+          "Voice AI",
+          "AI Agents",
+          "FastAPI",
           "React",
-          "Next.js"
+          "Next.js",
+          "Docker",
+          "AWS EC2"
         ]
       },
       {
@@ -26,12 +29,13 @@
         "employmentPeriod": "April 2025 - July 2025",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Secured the role via LinkedIn outreach with support from AutoMailAI.\n- Delivered technical documentation for both technical and non-technical audiences in English and Japanese (backed by a Japanese organization).\n- Researched and developed object detection pipelines for niche tasks (e.g., floor plans) using YOLO & OpenCV.\n- Integrated custom ML/AI pipelines into various applications, including Selenium-based automation.",
+        "description": "- Landed the role through LinkedIn outreach powered by **AutoMailAI**, my AI agent for personalized outbound.\n- Developed floor-plan object detection pipelines (YOLO, OpenCV) that cut manual data extraction effort **60%** and reached **82.06% mAP@0.5** in production.\n- Delivered bilingual technical documentation (English & Japanese) for technical and non-technical stakeholders at a Japan-backed organization.\n- Integrated custom ML pipelines into Selenium automation for invoice generation, making billing workflows faster and more reliable.",
         "skills": [
-          "Documentation",
           "YOLO",
           "OpenCV",
           "Selenium",
+          "Documentation",
+          "AI Agents",
           "ML Pipelines"
         ]
       }
@@ -46,17 +50,18 @@
       {
         "id": "metafied-intern",
         "title": "Data Science Intern",
-        "employmentPeriod": "July 2024 - Feb 2025",
+        "employmentPeriod": "July 2024 - January 2025",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Mentored by ex-IIT and ex-Harvard leaders; incubated at Harvard Innovation Labs.\n- Designed and deployed scalable data pipelines for time series forecasting using Azure Databricks and PySpark.\n- Implemented and optimized auto-regression models (XGBoost, ARIMA, SARIMA) to improve sales predictions.\n- Built advanced queries to uncover trends and insights from large datasets.",
+        "description": "- Incubated at **Harvard Innovation Labs**, mentored by ex-IIT and ex-Harvard founders on production-grade ML delivery.\n- Engineered scalable time-series forecasting pipelines on **Azure Databricks** (PySpark, ETL) to ingest and model sales data in cloud data lakes.\n- Built an **XGBoost** model achieving **92.81%** accuracy on regular sales and **86.79%** on promotional sales, using features from inventory, logistics, historical sales, and regional weather.\n- Benchmarked **ARIMA** and **SARIMA** auto-regression baselines to strengthen forecast confidence for planning teams.\n- Wrote **BigQuery** analytics to surface trends from large datasets; contributed to time-series, computer vision, and LLM application prototypes.",
         "skills": [
           "Azure Databricks",
           "PySpark",
           "XGBoost",
           "ARIMA",
           "SARIMA",
-          "Data Analysis"
+          "BigQuery",
+          "Time-Series Forecasting"
         ]
       }
     ]
@@ -72,7 +77,7 @@
         "employmentPeriod": "December 2023 - January 2024",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Led a team to build robotic process automation (RPA) solutions for repetitive business tasks.\n- Automated workflows like web scraping, data collection, and Excel handling.\n- Improved task efficiency by 30% through smart process automation.",
+        "description": "- Led a team to design and deploy **RPA** solutions that replaced repetitive manual workflows across the business.\n- Automated web scraping, online data collection, and Excel reporting, improving task efficiency **30%**.\n- Reduced operational drag by turning fragile, hand-run processes into reliable, repeatable automations.",
         "skills": [
           "RPA",
           "Web Scraping",
@@ -90,10 +95,10 @@
       {
         "id": "rbtech-web",
         "title": "Web Development Intern",
-        "employmentPeriod": "January 2023 - April 2023",
+        "employmentPeriod": "July 2020 - September 2020",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Led a team to develop a dynamic website with full-stack responsibilities.\n- Managed frontend and backend development for smooth user experience.\n- Handled database design and real-time connectivity using phpMyAdmin and Wamp Server.",
+        "description": "- Led a developer team to deliver a dynamic full-stack website, owning frontend, backend, and release coordination.\n- Designed the database schema and real-time client-server connectivity with **phpMyAdmin** and **Wamp Server**.\n- Shipped a production-ready site that gave the business a stable digital presence instead of static brochure pages.",
         "skills": [
           "Full-stack Development",
           "PHP",
