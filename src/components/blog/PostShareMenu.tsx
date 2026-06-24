@@ -29,7 +29,7 @@ export function PostShareMenu({ url }: { url: string }) {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="secondary"
