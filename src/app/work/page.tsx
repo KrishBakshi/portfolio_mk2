@@ -12,6 +12,7 @@ export default function WorkPage() {
             <div className="bg-background border border-gray-300/50 dark:border-white/10 mt-6 p-4">
               <WorkExperience
                 experiences={WORK_EXPERIENCE_DATA}
+                title="Work Experience"
                 max={50}
                 expandLatestPositions
               />

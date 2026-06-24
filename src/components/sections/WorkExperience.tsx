@@ -78,6 +78,7 @@ export function WorkExperience({
     showToggle = true,
     showAllHref,
     expandLatestPositions = false,
+    title = "Work Experience",
 }: {
     className?: string;
     experiences: ExperienceItemType[];
@@ -86,13 +87,14 @@ export function WorkExperience({
     showAllHref?: string;
     /** When true, opens only the first (most recent) role per company. */
     expandLatestPositions?: boolean;
+    title?: string;
 }) {
     const visibleExperiences = showAllHref ? experiences.slice(0, max) : experiences;
 
     return (
         <section className={cn("bg-background px-4 sm:py-4", className)}>
             <header className="mb-4">
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">Work Experience</h2>
+                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">{title}</h2>
             </header>
             <div className="bg-background">
                 {showAllHref ? (
