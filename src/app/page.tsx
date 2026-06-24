@@ -24,7 +24,11 @@ export default function Home() {
               id="js-cover-mark"
               className="mb-6 border border-gray-300/50 border-t-0 bg-background dark:border-white/10"
             >
-              <BannerSection bannerImage={PROFILE.bannerImage} quote="" />
+              <BannerSection
+                lightBanner={PROFILE.bannerImages.light}
+                darkBanner={PROFILE.bannerImages.dark}
+                quote=""
+              />
               <ProfileHeader
                 name={PROFILE.name}
                 title={PROFILE.title}
