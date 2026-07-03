@@ -2,8 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import React, { useCallback, useEffect, useState } from "react";
-import { MoonIcon, SunIcon, MonitorIcon, SearchIcon } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+    ArrowUpRightIcon,
+    MoonIcon,
+    SunIcon,
+    MonitorIcon,
+    SearchIcon,
+} from "lucide-react";
 
 import {
     CommandDialog,
@@ -15,34 +21,30 @@ import {
     CommandSeparator,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {
+    COMMAND_SEARCH_GROUP_ORDER,
+    getCommandSearchGroupLabel,
+    type CommandSearchItem,
+} from "@/lib/search-index.types";
 
-type CommandLinkItem = {
-    title: string;
-    href: string;
-    icon?: React.ComponentType<{ className?: string }>;
-    keywords?: string[];
+type CommandMenuProps = {
+    searchItems: CommandSearchItem[];
 };
 
-const MENU_LINKS: CommandLinkItem[] = [
-    {
-        title: "Work",
-        href: "/work",
-    },
-    {
-        title: "Projects",
-        href: "/projects",
-    },
-    {
-        title: "Blog",
-        href: "/blog",
-    },
-];
-
-export function CommandMenu() {
+export function CommandMenu({ searchItems }: CommandMenuProps) {
     const router = useRouter();
     const { setTheme } = useTheme();
     const [open, setOpen] = useState(false);
+
+    const groupedItems = useMemo(
+        () =>
+            COMMAND_SEARCH_GROUP_ORDER.map((group) => ({
+                group,
+                label: getCommandSearchGroupLabel(group),
+                items: searchItems.filter((item) => item.group === group),
+            })).filter((section) => section.items.length > 0),
+        [searchItems]
+    );
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -65,10 +67,25 @@ export function CommandMenu() {
         return () => document.removeEventListener("keydown", down);
     }, []);
 
-    const handleOpenLink = useCallback(
-        (href: string) => {
+    const handleSelect = useCallback(
+        (item: CommandSearchItem) => {
             setOpen(false);
-            router.push(href);
+
+            const isExternal =
+                item.external ||
+                item.href.startsWith("http") ||
+                item.href.startsWith("mailto:");
+
+            if (isExternal) {
+                if (item.href.startsWith("mailto:")) {
+                    window.location.href = item.href;
+                } else {
+                    window.open(item.href, "_blank", "noopener,noreferrer");
+                }
+                return;
+            }
+
+            router.push(item.href);
         },
         [router]
     );
@@ -104,44 +121,74 @@ export function CommandMenu() {
                 </div>
             </Button>
 
-            <CommandDialog open={open} onOpenChange={setOpen}>
-                <CommandInput placeholder="Type a command or search..." />
+            <CommandDialog
+                open={open}
+                onOpenChange={setOpen}
+                title="Search portfolio"
+                description="Search pages, projects, blog posts, experience, and links."
+            >
+                <CommandInput placeholder="Search projects, posts, companies, roles..." />
 
-                <CommandList className="min-h-80">
+                <CommandList className="min-h-80 max-h-[min(28rem,70vh)]">
                     <CommandEmpty>No results found.</CommandEmpty>
 
-                    <CommandGroup heading="Navigation">
-                        {MENU_LINKS.map((link) => (
-                            <CommandItem
-                                key={link.href}
-                                keywords={link.keywords}
-                                onSelect={() => handleOpenLink(link.href)}
-                            >
-                                {link.icon && <link.icon className="h-4 w-4" />}
-                                {link.title}
-                            </CommandItem>
-                        ))}
-                    </CommandGroup>
+                    {groupedItems.map((section, index) => (
+                        <React.Fragment key={section.group}>
+                            {index > 0 && <CommandSeparator />}
+                            <CommandGroup heading={section.label}>
+                                {section.items.map((item) => (
+                                    <CommandItem
+                                        key={item.id}
+                                        value={item.title}
+                                        keywords={[
+                                            item.subtitle,
+                                            ...(item.keywords ?? []),
+                                        ].filter(
+                                            (keyword): keyword is string =>
+                                                Boolean(keyword)
+                                        )}
+                                        onSelect={() => handleSelect(item)}
+                                    >
+                                        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                            <span className="truncate">
+                                                {item.title}
+                                            </span>
+                                            {item.subtitle ? (
+                                                <span className="truncate text-xs text-muted-foreground">
+                                                    {item.subtitle}
+                                                </span>
+                                            ) : null}
+                                        </div>
+                                        {item.external ||
+                                        item.href.startsWith("http") ||
+                                        item.href.startsWith("mailto:") ? (
+                                            <ArrowUpRightIcon className="ml-auto size-3.5 shrink-0 opacity-50" />
+                                        ) : null}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </React.Fragment>
+                    ))}
 
                     <CommandSeparator />
 
                     <CommandGroup heading="Theme">
                         <CommandItem
-                            keywords={["theme"]}
+                            keywords={["theme", "appearance", "light"]}
                             onSelect={() => handleThemeChange("light")}
                         >
                             <SunIcon className="h-4 w-4" />
                             Light
                         </CommandItem>
                         <CommandItem
-                            keywords={["theme"]}
+                            keywords={["theme", "appearance", "dark"]}
                             onSelect={() => handleThemeChange("dark")}
                         >
                             <MoonIcon className="h-4 w-4" />
                             Dark
                         </CommandItem>
                         <CommandItem
-                            keywords={["theme"]}
+                            keywords={["theme", "appearance", "system"]}
                             onSelect={() => handleThemeChange("system")}
                         >
                             <MonitorIcon className="h-4 w-4" />

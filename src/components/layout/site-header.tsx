@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { DesktopNav } from "./desktop-nav";
 import { CommandMenu } from "./command-menu";
 import { MAIN_NAV } from "@/config/site";
+import { getCommandSearchItems } from "@/lib/search-index";
 import { cn } from "@/lib/utils";
 
 import { SiteHeaderMark } from "./site-header-mark";
@@ -14,6 +15,8 @@ const MobileNav = dynamic(() =>
 );
 
 export function SiteHeader() {
+  const searchItems = getCommandSearchItems();
+
   return (
     <SiteHeaderWrapper
       className={cn(
@@ -29,7 +32,7 @@ export function SiteHeader() {
         <DesktopNav items={MAIN_NAV} />
 
         <div className="flex items-center gap-2">
-          <CommandMenu />
+          <CommandMenu searchItems={searchItems} />
           <span className="mx-2 hidden h-4 w-px bg-border sm:flex" />
           <ThemeToggle />
           <MobileNav className="sm:hidden" items={MAIN_NAV} />
