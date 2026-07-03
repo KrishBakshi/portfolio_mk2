@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
-import { buildPageMetadata, isValidOgImage } from "@/config/metadata";
+import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 
@@ -53,16 +53,6 @@ export async function generateMetadata({
     publishedTime: post.frontmatter.date,
     authors: post.frontmatter.author ? [post.frontmatter.author] : undefined,
     tags: post.frontmatter.tags,
-    ...(isValidOgImage(post.frontmatter.image)
-      ? {
-          images: [
-            {
-              url: post.frontmatter.image,
-              alt: post.frontmatter.title,
-            },
-          ],
-        }
-      : {}),
   });
 }
 

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,12 +8,16 @@ import { PageBottomBlur } from "@/components/layout/page-bottom-blur";
 import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
 import { getRootMetadata } from "@/config/metadata";
-import { META_THEME_COLORS } from "@/config/site";
+import { getSiteUrl, getSiteUrlFromHeaders, META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
 
 import { Analytics } from "@vercel/analytics/next"
 
-export const metadata: Metadata = getRootMetadata();
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const siteUrl = getSiteUrlFromHeaders(headersList) ?? getSiteUrl();
+  return getRootMetadata(siteUrl);
+}
 
 export const viewport: Viewport = {
   themeColor: [

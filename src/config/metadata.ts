@@ -4,27 +4,19 @@ import { SITE_INFO } from "@/config/site";
 import { PROFILE } from "@/lib/llms";
 
 export const TWITTER_HANDLE = "@KrishBakshi_";
-
-export interface PageMetaInput {
-  title: string;
-  description: string;
-  path: string;
-  type?: "website" | "article";
-  images?: NonNullable<Metadata["openGraph"]>["images"];
-  publishedTime?: string;
-  authors?: string[];
-  tags?: string[];
-}
+export const SHARE_IMAGE = PROFILE.bannerImages.light;
 
 const TITLE_SEP = " - ";
 const DEFAULT_TITLE = `${PROFILE.name}${TITLE_SEP}${PROFILE.title}`;
 
-function getOgImagePath(path: string): string {
-  if (path === "/") return "/opengraph-image";
-  return `${path.replace(/\/$/, "")}/opengraph-image`;
-}
+const DEFAULT_OG_IMAGES = [
+  {
+    url: SHARE_IMAGE,
+    alt: DEFAULT_TITLE,
+  },
+] as NonNullable<Metadata["openGraph"]>["images"];
 
-export const PAGE_META: Record<string, Omit<PageMetaInput, "path">> = {
+export const PAGE_META: Record<string, { title: string; description: string }> = {
   "/": {
     title: DEFAULT_TITLE,
     description: PROFILE.about,
@@ -46,35 +38,26 @@ export const PAGE_META: Record<string, Omit<PageMetaInput, "path">> = {
   },
 };
 
-export function isValidOgImage(url?: string | null): url is string {
-  if (!url) return false;
-  if (url.endsWith(".svg")) return false;
-  return true;
-}
-
 export function buildPageMetadata({
   title,
   description,
   path,
   type = "website",
-  images,
   publishedTime,
   authors,
   tags,
-}: PageMetaInput): Metadata {
+}: {
+  title: string;
+  description: string;
+  path: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  authors?: string[];
+  tags?: string[];
+}): Metadata {
   const canonicalPath = path.startsWith("/") ? path : `/${path}`;
   const displayTitle =
     title === DEFAULT_TITLE ? DEFAULT_TITLE : `${title}${TITLE_SEP}${PROFILE.name}`;
-  const ogImages =
-    images ??
-    ([
-      {
-        url: getOgImagePath(canonicalPath),
-        width: 1200,
-        height: 630,
-        alt: displayTitle,
-      },
-    ] as NonNullable<Metadata["openGraph"]>["images"]);
 
   return {
     title,
@@ -90,7 +73,7 @@ export function buildPageMetadata({
       ...(publishedTime ? { publishedTime } : {}),
       ...(authors ? { authors } : {}),
       ...(tags ? { tags } : {}),
-      images: ogImages,
+      images: DEFAULT_OG_IMAGES,
     },
     twitter: {
       card: "summary_large_image",
@@ -98,7 +81,7 @@ export function buildPageMetadata({
       description,
       creator: TWITTER_HANDLE,
       site: TWITTER_HANDLE,
-      images: ogImages,
+      images: DEFAULT_OG_IMAGES,
     },
     alternates: {
       canonical: canonicalPath,
@@ -122,11 +105,12 @@ export function getStaticPageMetadata(path: keyof typeof PAGE_META): Metadata {
   return buildPageMetadata({ ...config, path });
 }
 
-export function getRootMetadata(): Metadata {
+export function getRootMetadata(siteUrl?: string): Metadata {
   const base = buildPageMetadata({ ...PAGE_META["/"], path: "/" });
+  const metadataBase = new URL(siteUrl ?? SITE_INFO.url);
 
   return {
-    metadataBase: new URL(SITE_INFO.url),
+    metadataBase,
     title: {
       default: DEFAULT_TITLE,
       template: `%s${TITLE_SEP}${PROFILE.name}`,

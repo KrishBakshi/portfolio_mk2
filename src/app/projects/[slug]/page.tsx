@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe } from "lucide-react";
 import type { Metadata } from "next";
-import { buildPageMetadata, isValidOgImage } from "@/config/metadata";
+import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 
@@ -49,16 +49,6 @@ export async function generateMetadata({
     description: project.frontmatter.description,
     path: `/projects/${slug}`,
     type: "article",
-    ...(isValidOgImage(project.frontmatter.image)
-      ? {
-          images: [
-            {
-              url: project.frontmatter.image,
-              alt: project.frontmatter.title,
-            },
-          ],
-        }
-      : {}),
   });
 }
 
