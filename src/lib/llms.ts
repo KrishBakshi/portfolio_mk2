@@ -1,5 +1,5 @@
 import { SITE_INFO } from "@/config/site";
-import { getPublishedBlogPosts } from "@/lib/blog";
+import { getPublishedBlogPosts, getBlogPostBySlug } from "@/lib/blog";
 import { getProjectBySlug, getPublishedProjects } from "@/lib/projects";
 import { TECH_STACK, WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 
@@ -177,14 +177,19 @@ export function getBlogMarkdown() {
 
 ${posts
   .map((post) => {
+    const fullPost = getBlogPostBySlug(post.slug);
     const { frontmatter, slug } = post;
+    const content = fullPost?.content.trim() ?? "";
+
     return `## ${frontmatter.title}
 
 Date: ${frontmatter.date}
 URL: ${SITE_INFO.url}/blog/${slug}
 Tags: ${frontmatter.tags.join(", ")}
 
-${frontmatter.description}`;
+${frontmatter.description}
+
+${content}`;
   })
   .join("\n\n")}
 `;
