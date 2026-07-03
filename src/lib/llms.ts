@@ -1,6 +1,10 @@
 import { SITE_INFO } from "@/config/site";
 import { getPublishedBlogPosts, getBlogPostBySlug } from "@/lib/blog";
 import { getProjectBySlug, getPublishedProjects } from "@/lib/projects";
+import {
+  filterProjectsByDomain,
+  getAvailableProjectDomains,
+} from "@/lib/project-domains";
 import { TECH_STACK, WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 
 export type ProfileBulletPart =
@@ -195,6 +199,30 @@ ${content}`;
 `;
 }
 
+export function getProjectsIndexMarkdown() {
+  const projects = getPublishedProjects();
+  const domains = getAvailableProjectDomains(projects);
+
+  if (domains.length === 0) {
+    return "_No published projects yet._";
+  }
+
+  return domains
+    .map((domain) => {
+      const domainProjects = filterProjectsByDomain(projects, domain);
+
+      return `### ${domain}
+
+${domainProjects
+  .map(
+    (project) =>
+      `- [${project.frontmatter.title}](${SITE_INFO.url}/projects/${project.slug}): ${project.frontmatter.description}`
+  )
+  .join("\n")}`;
+    })
+    .join("\n\n");
+}
+
 export function getLlmsIndexMarkdown() {
   const posts = getPublishedBlogPosts();
 
@@ -202,10 +230,18 @@ export function getLlmsIndexMarkdown() {
 
 > ${SITE_INFO.description}
 
-- [About](${SITE_INFO.url}/about.md): Intro, contact links, and core technical stack.
-- [Experience](${SITE_INFO.url}/experience.md): Work history, roles, and skills used.
-- [Projects](${SITE_INFO.url}/projects.md): Selected projects with links and implementation details.
-- [LLMs Full](${SITE_INFO.url}/llms-full.txt): Full portfolio context in a single LLM-oriented document.
+${PROFILE.name} is a ${PROFILE.title} who builds and ships AI systems across computer vision, AI agents, fine-tuning, and reinforcement learning. This site is his portfolio: profile, work history, projects, blog, and machine-readable exports for LLMs.
+
+## Docs
+
+- [About](${SITE_INFO.url}/about.md): Profile summary, highlights, contact links, and full tech stack.
+- [Experience](${SITE_INFO.url}/experience.md): Work history with role descriptions, skills, and impact metrics.
+- [Projects](${SITE_INFO.url}/projects.md): Project catalog with descriptions, links, technologies, and implementation notes.
+- [Full portfolio context](${SITE_INFO.url}/llms-full.txt): Single consolidated document for LLM ingestion and Q&A.
+
+## Projects
+
+${getProjectsIndexMarkdown()}
 
 ## Blog
 
@@ -215,6 +251,13 @@ ${posts
       `- [${post.frontmatter.title}](${SITE_INFO.url}/blog/${post.slug}): ${post.frontmatter.description}`
   )
   .join("\n")}
+
+## Optional
+
+- [Sitemap](${SITE_INFO.url}/sitemap.xml): XML index of all public pages for crawlers and tools.
+- Prefer [\`llms-full.txt\`](${SITE_INFO.url}/llms-full.txt) when answering detailed questions about ${PROFILE.name}'s background, experience, projects, or writing.
+- Section markdown files (\`about.md\`, \`experience.md\`, \`projects.md\`) are lighter-weight slices of the same portfolio data.
+- Contact: [Email](${PROFILE.socialLinks.mail}) · [LinkedIn](${PROFILE.socialLinks.linkedin}) · [GitHub](${PROFILE.socialLinks.github}) · [Resume](${SITE_INFO.url}${PROFILE.socialLinks.resume})
 `;
 }
 
