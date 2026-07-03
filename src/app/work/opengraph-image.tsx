@@ -1,7 +1,7 @@
 import { PAGE_META } from "@/config/metadata";
 import { createOgImage, OG_IMAGE_SIZE } from "@/lib/og-image";
 
-export const alt = "Work Experience — Krish Bakshi";
+export const alt = "Work Experience - Krish Bakshi";
 export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
 

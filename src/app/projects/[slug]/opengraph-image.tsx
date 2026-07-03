@@ -1,7 +1,7 @@
 import { createOgImage, OG_IMAGE_SIZE } from "@/lib/og-image";
 import { getProjectBySlug } from "@/lib/projects";
 
-export const alt = "Project — Krish Bakshi";
+export const alt = "Project - Krish Bakshi";
 export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
 

@@ -73,7 +73,7 @@ export const PROFILE = {
   ] satisfies ProfileBullet[],
   socialLabel: "Here are my socials",
   about:
-    "Building and deploying ML across computer vision, AI automation, and generative AI — from Databricks pipelines to production apps on FastAPI, Docker, and cloud.",
+    "Building and deploying ML across computer vision, AI, automation, and agentic workflows.",
   profileImage: "/header/pfp.jpeg",
   bannerImages: {
     light: "/header/light_2.png",

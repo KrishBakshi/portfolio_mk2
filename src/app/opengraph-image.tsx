@@ -1,11 +1,17 @@
 import { PAGE_META } from "@/config/metadata";
+import { PROFILE } from "@/lib/llms";
 import { createOgImage, OG_IMAGE_SIZE } from "@/lib/og-image";
 
-export const alt = "Krish Bakshi — Data Scientist";
+export const alt = "Krish Bakshi - Data Scientist";
 export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
 
 export default function Image() {
-  const { title, description } = PAGE_META["/"];
-  return createOgImage({ title, description });
+  const { description } = PAGE_META["/"];
+
+  return createOgImage({
+    title: PROFILE.title,
+    subtitle: PROFILE.name,
+    description,
+  });
 }

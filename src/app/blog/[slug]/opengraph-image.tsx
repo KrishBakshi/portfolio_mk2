@@ -1,7 +1,7 @@
 import { getBlogPostBySlug } from "@/lib/blog";
 import { createOgImage, OG_IMAGE_SIZE } from "@/lib/og-image";
 
-export const alt = "Blog Post — Krish Bakshi";
+export const alt = "Blog Post - Krish Bakshi";
 export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
 

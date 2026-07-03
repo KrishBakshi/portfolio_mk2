@@ -16,7 +16,13 @@ export interface PageMetaInput {
   tags?: string[];
 }
 
-const DEFAULT_TITLE = `${PROFILE.name} — ${PROFILE.title}`;
+const TITLE_SEP = " - ";
+const DEFAULT_TITLE = `${PROFILE.name}${TITLE_SEP}${PROFILE.title}`;
+
+function getOgImagePath(path: string): string {
+  if (path === "/") return "/opengraph-image";
+  return `${path.replace(/\/$/, "")}/opengraph-image`;
+}
 
 export const PAGE_META: Record<string, Omit<PageMetaInput, "path">> = {
   "/": {
@@ -26,12 +32,12 @@ export const PAGE_META: Record<string, Omit<PageMetaInput, "path">> = {
   "/work": {
     title: "Work Experience",
     description:
-      "Professional experience building and deploying data science and AI systems — from computer vision pipelines to production LLM applications.",
+      "Professional experience building and deploying data science and AI systems, from computer vision pipelines to production LLM applications.",
   },
   "/projects": {
     title: "Projects",
     description:
-      "Portfolio projects across Vision, AI Agents, LLM, RAG, Gen AI, and RL — from research prototypes to production systems.",
+      "Portfolio projects across Vision, AI Agents, LLM, RAG, Gen AI, and RL, from research prototypes to production systems.",
   },
   "/blog": {
     title: "Blog",
@@ -58,7 +64,17 @@ export function buildPageMetadata({
 }: PageMetaInput): Metadata {
   const canonicalPath = path.startsWith("/") ? path : `/${path}`;
   const displayTitle =
-    title === DEFAULT_TITLE ? DEFAULT_TITLE : `${title} | ${PROFILE.name}`;
+    title === DEFAULT_TITLE ? DEFAULT_TITLE : `${title}${TITLE_SEP}${PROFILE.name}`;
+  const ogImages =
+    images ??
+    ([
+      {
+        url: getOgImagePath(canonicalPath),
+        width: 1200,
+        height: 630,
+        alt: displayTitle,
+      },
+    ] as NonNullable<Metadata["openGraph"]>["images"]);
 
   return {
     title,
@@ -74,14 +90,15 @@ export function buildPageMetadata({
       ...(publishedTime ? { publishedTime } : {}),
       ...(authors ? { authors } : {}),
       ...(tags ? { tags } : {}),
-      ...(images ? { images } : {}),
+      images: ogImages,
     },
     twitter: {
       card: "summary_large_image",
       title: displayTitle,
       description,
       creator: TWITTER_HANDLE,
-      ...(images ? { images } : {}),
+      site: TWITTER_HANDLE,
+      images: ogImages,
     },
     alternates: {
       canonical: canonicalPath,
@@ -112,7 +129,7 @@ export function getRootMetadata(): Metadata {
     metadataBase: new URL(SITE_INFO.url),
     title: {
       default: DEFAULT_TITLE,
-      template: `%s | ${PROFILE.name}`,
+      template: `%s${TITLE_SEP}${PROFILE.name}`,
     },
     description: PROFILE.about,
     authors: base.authors,

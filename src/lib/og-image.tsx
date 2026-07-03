@@ -9,6 +9,7 @@ export const OG_IMAGE_SIZE = {
 
 export type OgImageOptions = {
   title: string;
+  subtitle?: string;
   description: string;
   label?: string;
   tags?: string[];
@@ -21,6 +22,7 @@ function truncate(text: string, maxLength: number): string {
 
 export function createOgImage({
   title,
+  subtitle,
   description,
   label,
   tags = [],
@@ -73,15 +75,19 @@ export function createOgImage({
             ) : (
               <div />
             )}
-            <div
-              style={{
-                fontSize: 22,
-                color: "#a1a1aa",
-                letterSpacing: "0.02em",
-              }}
-            >
-              {PROFILE.name}
-            </div>
+            {!subtitle ? (
+              <div
+                style={{
+                  fontSize: 22,
+                  color: "#a1a1aa",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {PROFILE.name}
+              </div>
+            ) : (
+              <div />
+            )}
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
@@ -96,6 +102,19 @@ export function createOgImage({
             >
               {truncate(title, 72)}
             </div>
+            {subtitle ? (
+              <div
+                style={{
+                  fontSize: 40,
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  color: "#e4e4e7",
+                  maxWidth: 980,
+                }}
+              >
+                {subtitle}
+              </div>
+            ) : null}
             <div
               style={{
                 fontSize: 30,
