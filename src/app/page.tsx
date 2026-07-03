@@ -1,3 +1,4 @@
+import { getStaticPageMetadata } from "@/config/metadata";
 import BannerSection from "@/components/sections/BannerSection";
 import ProfileHeader from "@/components/sections/ProfileHeader";
 import { PageCanvas } from "@/components/PageCanvas";
@@ -11,6 +12,8 @@ import { getAllBlogPosts } from "@/lib/blog";
 import { PROFILE } from "@/lib/llms";
 import LetsConnect from "@/components/LetsConnect";
 import Footer from "@/components/Footer";
+
+export const metadata = getStaticPageMetadata("/");
 
 export default function Home() {
   const projects = getAllProjects();

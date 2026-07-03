@@ -1,6 +1,9 @@
+import { getStaticPageMetadata } from "@/config/metadata";
 import { PageCanvas } from "@/components/PageCanvas";
 import { Blog } from "@/components/blog/Blog";
 import { getAllBlogPosts } from "@/lib/blog";
+
+export const metadata = getStaticPageMetadata("/blog");
 
 export default function BlogPage() {
   const posts = getAllBlogPosts();

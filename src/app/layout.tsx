@@ -6,16 +6,13 @@ import { Providers } from "@/components/layout/providers";
 import { PageBottomBlur } from "@/components/layout/page-bottom-blur";
 import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
-import { META_THEME_COLORS, SITE_INFO } from "@/config/site";
+import { getRootMetadata } from "@/config/metadata";
+import { META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
 
 import { Analytics } from "@vercel/analytics/next"
 
-export const metadata: Metadata = {
-  title: "Krish Bakshi - Data Scientist",
-  description: "Yo! Thank you for coming to my portfolio!",
-  metadataBase: new URL(SITE_INFO.url),
-};
+export const metadata: Metadata = getRootMetadata();
 
 export const viewport: Viewport = {
   themeColor: [

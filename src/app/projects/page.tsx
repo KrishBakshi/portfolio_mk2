@@ -1,8 +1,11 @@
 import { Suspense } from "react";
 
+import { getStaticPageMetadata } from "@/config/metadata";
 import { PageCanvas } from "@/components/PageCanvas";
 import { ProjectsPageContent } from "@/components/projects/ProjectsPageContent";
 import { getAllProjects } from "@/lib/projects";
+
+export const metadata = getStaticPageMetadata("/projects");
 
 export default function ProjectsPage() {
   const projects = getAllProjects();

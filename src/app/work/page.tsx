@@ -1,6 +1,9 @@
+import { getStaticPageMetadata } from "@/config/metadata";
 import { WorkExperience } from "@/components/sections/WorkExperience";
 import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 import { PageCanvas } from "@/components/PageCanvas";
+
+export const metadata = getStaticPageMetadata("/work");
 
 export default function WorkPage() {
   return (

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
+import { buildPageMetadata, isValidOgImage } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 
@@ -44,25 +45,25 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: `${post.frontmatter.title} | Blog`,
+  return buildPageMetadata({
+    title: post.frontmatter.title,
     description: post.frontmatter.description,
-    openGraph: {
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
-      type: "article",
-      publishedTime: post.frontmatter.date,
-      authors: post.frontmatter.author ? [post.frontmatter.author] : undefined,
-      tags: post.frontmatter.tags,
-      images: post.frontmatter.image ? [{ url: post.frontmatter.image }] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
-      images: post.frontmatter.image ? [post.frontmatter.image] : [],
-    },
-  };
+    path: `/blog/${slug}`,
+    type: "article",
+    publishedTime: post.frontmatter.date,
+    authors: post.frontmatter.author ? [post.frontmatter.author] : undefined,
+    tags: post.frontmatter.tags,
+    ...(isValidOgImage(post.frontmatter.image)
+      ? {
+          images: [
+            {
+              url: post.frontmatter.image,
+              alt: post.frontmatter.title,
+            },
+          ],
+        }
+      : {}),
+  });
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

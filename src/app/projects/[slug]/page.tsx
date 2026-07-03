@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe } from "lucide-react";
 import type { Metadata } from "next";
+import { buildPageMetadata, isValidOgImage } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 
@@ -43,24 +44,22 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: `${project.frontmatter.title} | Portfolio`,
+  return buildPageMetadata({
+    title: project.frontmatter.title,
     description: project.frontmatter.description,
-    openGraph: {
-      title: project.frontmatter.title,
-      description: project.frontmatter.description,
-      type: "article",
-      images: project.frontmatter.image
-        ? [{ url: project.frontmatter.image }]
-        : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: project.frontmatter.title,
-      description: project.frontmatter.description,
-      images: project.frontmatter.image ? [project.frontmatter.image] : [],
-    },
-  };
+    path: `/projects/${slug}`,
+    type: "article",
+    ...(isValidOgImage(project.frontmatter.image)
+      ? {
+          images: [
+            {
+              url: project.frontmatter.image,
+              alt: project.frontmatter.title,
+            },
+          ],
+        }
+      : {}),
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
