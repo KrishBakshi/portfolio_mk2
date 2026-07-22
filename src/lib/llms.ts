@@ -39,7 +39,7 @@ function formatProfileBullet(parts: ProfileBullet): string {
 export const PROFILE = {
   name: "Krish Bakshi",
   title: "Data Scientist",
-  email: "business.krishb@gmail.com",
+  email: "work.krishb@gmail.com",
   tagline: [
     {
       type: "text",
@@ -84,7 +84,7 @@ export const PROFILE = {
     github: "https://github.com/KrishBakshi",
     linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
     resume: "/resume.pdf",
-    mail: "mailto:business.krishb@gmail.com",
+    mail: "mailto:work.krishb@gmail.com",
   },
 } as const;
 
