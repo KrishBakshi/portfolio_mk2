@@ -9,6 +9,7 @@ import { CopyButton } from './CopyButton';
 import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
 import { BlogPlatformToggle } from './BlogPlatformToggle';
+import { NodeGraph } from './NodeGraph';
 import { Code, Heading, Prose } from '@/components/ui/typography';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { splitBlogContentWithDropdowns } from '@/lib/blog-dropdown';
@@ -163,6 +164,9 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
                 }
                 if (part.type === "install") {
                     return <BlogInstallToggle key={`install-${index}`} {...part.install} />;
+                }
+                if (part.type === "graph") {
+                    return <NodeGraph key={`graph-${index}`} {...part.graph} />;
                 }
                 return <MarkdownChunk key={`markdown-${index}`} content={part.content} />;
             })}
