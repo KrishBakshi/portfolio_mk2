@@ -1,0 +1,113 @@
+---
+title: 'WorldBench'
+slug: 'worldbench'
+id: 10
+description: 'A human-as-judge benchmark for whether a model can build a coherent world. One ~3,000 token prompt, one self-contained Three.js island per model, compared side by side.'
+image: '/file.svg'
+videoPreview: '/assets/demo/preview/worldbench.mp4'
+videoFull: '/assets/demo/full/worldbench.mp4'
+link: 'https://worldbench.krishb.tech/'
+github: 'https://github.com/KrishBakshi/worldbench'
+technologies:
+  - Next.js
+  - TypeScript
+  - Three.js
+  - Tailwind CSS
+  - MDX
+  - Vercel
+domains:
+  - LLM
+  - Gen AI
+isWorking: true
+---
+
+## Overview
+
+**WorldBench** asks one question: can a model build a world that holds together?
+
+Every model gets the same natural-language prompt, **~3,000 tokens**, and has to return a single self-contained `world.html` that renders a floating, multi-biome voxel island in **Three.js**. No image, no schema, no reference file, no build step. It has to open in a browser and run.
+
+It is a **human-as-judge benchmark**. No rubric, no automated scorer, because there is no single correct island: only a hand-tuned reference built by a human, and your own eyes to compare it against a range of very different automated attempts.
+
+---
+
+## Why It Is Hard
+
+The island is the visible part. What the prompt actually demands is that several kinds of reasoning hold at the same time:
+
+- **Spatial and relational placement**: the prompt encodes a placement graph, not a list. The model has to satisfy the whole adjacency structure, not place ten biomes wherever they fit.
+- **Ecological causality**: water has to behave like water. Mountain melt feeds a wet corridor. The desert is a rain-shadow basin with no through-river. Lava touching water quenches to obsidian. It is a small causal system to simulate, not decorate.
+- **Elevation and scale**: peaks dominate, shelves sit mid-height, plains stay low, and every biome still has to read as its own region from a high orbit instead of collapsing into its neighbor.
+- **Ecological grounding**: cacti in the desert, pines in the snow forest, deer at jungle edges. Placing life that matches its climate.
+- **Temporal systems**: a day/night cycle, a seasonal cycle, and cyclic weather that stays staggered by biome instead of blanketing the island at once.
+- **Interaction logic**: a clickable legend that flies the camera to each region, wiring 3D scene state to on-screen UI.
+
+All of it in one file, first try.
+
+---
+
+## The Placement Graph
+
+The ecology is a typed graph rather than prose. One perennial water corridor runs the length of it, and the edges that break that line carry the difficulty.
+
+[[graph]]
+{
+  "nodes": [
+    { "id": "mountains", "label": "Snow Mountains", "row": 0, "col": 1 },
+    { "id": "forest", "label": "Snowy Conifer Forest", "row": 1, "col": 1 },
+    { "id": "highlands", "label": "Highlands", "row": 2, "col": 0 },
+    { "id": "volcano", "label": "Volcano", "row": 2, "col": 3, "note": "lava, not water", "isolated": true },
+    { "id": "jungle", "label": "Dense Jungle", "row": 3, "col": 1 },
+    { "id": "swamp", "label": "Backwater Swamp", "row": 3, "col": 2, "note": "dead end", "isolated": true },
+    { "id": "grove", "label": "Flowering Grove", "row": 4, "col": 0 },
+    { "id": "grassland", "label": "Grassland Plateau", "row": 4, "col": 1 },
+    { "id": "desert", "label": "Desert Basin", "row": 4, "col": 3, "note": "rain shadow", "isolated": true },
+    { "id": "delta", "label": "Coastal Delta / Ocean", "row": 5, "col": 1 }
+  ],
+  "edges": [
+    { "from": "mountains", "to": "forest" },
+    { "from": "forest", "to": "highlands" },
+    { "from": "highlands", "to": "jungle" },
+    { "from": "jungle", "to": "grassland" },
+    { "from": "grassland", "to": "delta" },
+    { "from": "jungle", "to": "swamp" },
+    { "from": "highlands", "to": "grove", "kind": "dashed" },
+    { "from": "grassland", "to": "grove", "kind": "dashed", "label": "and/or", "labelDy": -12 },
+    { "from": "grassland", "to": "desert", "kind": "dotted", "label": "dry washes, fade out", "labelDy": -12 },
+    { "from": "jungle", "to": "volcano", "kind": "causal", "label": "water + lava to obsidian", "labelDy": -12 }
+  ],
+  "legend": [
+    { "kind": "solid", "label": "required water corridor" },
+    { "kind": "dashed", "label": "alternate feed" },
+    { "kind": "dotted", "label": "dry wash, never arrives" },
+    { "kind": "causal", "label": "causal contact" }
+  ],
+  "caption": "The prompt's ecology, drawn as edges rather than prose."
+}
+[[/graph]]
+
+The flowering grove has two valid sources, down the highland slope and/or across from the grassland plateau, which gives the graph its one real cycle. The desert touches the grassland only through dry washes that fade out before they arrive: a genuine relation, but never a through-river. The backwater swamp hangs off the jungle's wet side as a dead end. The volcano sits off the water system entirely, reached by a single causal rule.
+
+Holding that adjacency structure while laying out geometry is the benchmark.
+
+---
+
+## Results
+
+A growing roster, currently spanning `Claude`, `GPT`, `Gemini`, `Grok`, `Kimi`, `GLM` and `Qwen`, with new models added as they ship.
+
+Worlds render live and interactive on the site, and up to six can be compared side by side.
+
+---
+
+## What's Next
+
+Judgement today is **human** and whole-island: you look at it and decide whether it holds together. That resolves the question at only one level of detail.
+
+Next is to go finer, either an **LLM-as-judge** or a per-component breakdown scoring **logical alignment**, **rendering**, **flora and fauna** and **placement graph** separately, so a world can be strong in one and weak in another instead of collapsing to a single impression. Making those scores mean anything takes heavy iteration, so it is near-future rather than now.
+
+---
+
+## Try It
+
+Browse the results at [worldbench.krishb.tech](https://worldbench.krishb.tech/), or run it without the site: copy the prompt, paste it into any model, save the raw output as `world.html`, and open it in your browser.
