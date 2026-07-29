@@ -62,7 +62,8 @@ touch ~/.zshrc
 Expand the file, copy the full block, and paste it into `~/.config/ghostty/config`.
 
 [[dropdown path="~/.config/ghostty/config" lang="ini"]]
-# ============ THEME & COLORS ============
+# THEME & COLORS
+# --------------------------------------------
 
 background-opacity = 0.85
 background-blur = 20
@@ -95,7 +96,8 @@ cursor-opacity = 0.9
 selection-background = #33467c
 selection-foreground = #c0caf5
 
-# ============ TYPOGRAPHY ============
+# TYPOGRAPHY
+# --------------------------------------------
 
 font-family = "JetBrains Mono Nerd Font"
 font-family = "JetBrains Mono"
@@ -107,7 +109,8 @@ font-feature = +calt,+liga,+dlig
 font-thicken = true
 adjust-cell-height = 2
 
-# ============ WINDOW STYLING ============
+# WINDOW STYLING
+# --------------------------------------------
 
 window-padding-x = 20
 window-padding-y = 16
@@ -124,12 +127,14 @@ window-inherit-working-directory = true
 window-inherit-font-size = true
 window-save-state = always
 
-# ============ SHELL INTEGRATION ============
+# SHELL INTEGRATION
+# --------------------------------------------
 
 shell-integration = detect
 shell-integration-features = cursor,sudo,title
 
-# ============ ADVANCED AESTHETICS ============
+# ADVANCED AESTHETICS
+# --------------------------------------------
 
 alpha-blending = linear-corrected
 minimum-contrast = 1.5
@@ -139,7 +144,8 @@ split-divider-color = #414868
 
 term = xterm-256color
 
-# ============ PERFORMANCE ============
+# PERFORMANCE
+# --------------------------------------------
 
 window-vsync = true
 resize-overlay = after-first
@@ -155,9 +161,8 @@ Expand the file, copy the full block, and paste it into `~/.zshrc`. Put machine-
 [[dropdown path="~/.zshrc" lang="zsh"]]
 #!/usr/bin/env zsh
 
-# ============================================
 # ENVIRONMENT SETUP
-# ============================================
+# --------------------------------------------
 
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
@@ -170,9 +175,8 @@ LOCAL_BIN="$HOME/.local/bin"
 mkdir -p "$XDG_CONFIG_HOME/zsh"
 mkdir -p "$LOCAL_BIN"
 
-# ============================================
 # HISTORY CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 HISTSIZE=10000
 SAVEHIST=$HISTSIZE
@@ -188,9 +192,8 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_VERIFY
 
-# ============================================
 # ZINIT PLUGIN MANAGER
-# ============================================
+# --------------------------------------------
 
 ZINIT_HOME="$XDG_DATA_HOME/zinit/zinit.git"
 
@@ -206,9 +209,8 @@ fi
 
 source "$ZINIT_HOME/zinit.zsh"
 
-# ============================================
 # ZSH PLUGINS
-# ============================================
+# --------------------------------------------
 
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -224,9 +226,8 @@ zinit snippet OMZP::extract
 zinit snippet OMZP::copyfile
 zinit snippet OMZP::copypath
 
-# ============================================
 # PLUGIN CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -236,9 +237,8 @@ export AUTO_NOTIFY_EXPIRE_TIME=3000
 export YSU_MESSAGE_POSITION="after"
 export YSU_HARDCORE=0
 
-# ============================================
 # COMPLETION SYSTEM
-# ============================================
+# --------------------------------------------
 
 autoload -Uz compinit
 compinit -i
@@ -257,9 +257,8 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
-# ============================================
 # KEYBINDINGS
-# ============================================
+# --------------------------------------------
 
 bindkey -e
 bindkey '^p' history-search-backward
@@ -268,39 +267,8 @@ bindkey '\ew' backward-kill-line
 bindkey '^H' backward-kill-word
 bindkey '^[[3~' delete-char
 
-# ============================================
 # CUSTOM FUNCTIONS
-# ============================================
-
-remaining_days() {
-    local CUSTOM_DATE=$1
-
-    if [[ ! $CUSTOM_DATE =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-        echo "Error: Invalid date format. Use YYYY-MM-DD" >&2
-        return 1
-    fi
-
-    local TODAY=$(date +%s)
-    local TARGET
-
-    if date --version >/dev/null 2>&1; then
-        TARGET=$(date -d "$CUSTOM_DATE" +%s 2>/dev/null)
-    else
-        TARGET=$(date -j -f "%Y-%m-%d" "$CUSTOM_DATE" +%s 2>/dev/null)
-    fi
-
-    if [[ -z "$TARGET" ]]; then
-        echo "Error: Invalid date '$CUSTOM_DATE'" >&2
-        return 1
-    fi
-
-    local SECONDS_REMAINING=$(( TARGET - TODAY ))
-    local DAYS_REMAINING=$(( SECONDS_REMAINING / 86400 ))
-
-    if (( DAYS_REMAINING < 0 )); then
-        DAYS_REMAINING=0
-    fi
-}
+# --------------------------------------------
 
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -331,9 +299,8 @@ extract() {
     fi
 }
 
-# ============================================
 # SHELL INTEGRATIONS
-# ============================================
+# --------------------------------------------
 
 if command_exists starship; then
     eval "$(starship init zsh)"
@@ -364,9 +331,8 @@ if command_exists zoxide; then
     eval "$(zoxide init --cmd cd zsh)"
 fi
 
-# ============================================
 # PATH CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 add_to_path() {
     if [[ -d "$1" ]] && [[ ":$PATH:" != *":$1:"* ]]; then
@@ -380,17 +346,14 @@ add_to_path "$BUN_INSTALL/bin"
 add_to_path "$HOME/.spicetify"
 add_to_path "$HOME/.antigravity/antigravity/bin"
 
-# ============================================
 # BUN CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 if [[ -s "$BUN_INSTALL/_bun" ]]; then
     source "$BUN_INSTALL/_bun"
 fi
 
-# ============================================
 # NVM CONFIGURATION (Lazy Loading)
-# ============================================
 
 export NVM_DIR="$HOME/.nvm"
 
@@ -408,9 +371,8 @@ if [[ -n "$HOMEBREW_PREFIX" && -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
     npx() { lazy_load_nvm; npx "$@" }
 fi
 
-# ============================================
 # ALIASES
-# ============================================
+# --------------------------------------------
 
 alias c='clear'
 alias cls='clear'
@@ -427,57 +389,28 @@ else
     alias lt='tree -L 2'
 fi
 
-if command_exists bun; then
-    alias bro='bun run dev'
-    alias bro-cook='bun run build'
-    alias bi='bun install'
-    alias ba='bun add'
-    alias br='bun remove'
-fi
-
-alias gst='git status'
-alias gco='git checkout'
-alias gp='git push'
-alias gl='git pull'
-alias glog='git log --oneline --graph --decorate'
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias ~='cd ~'
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-
-alias ports='netstat -tulanp'
-alias update='brew update && brew upgrade'
-
-# ============================================
 # STARTUP DISPLAY
-# ============================================
+# authored krishb.tech
+# --------------------------------------------
 
 if [[ -t 1 ]]; then
     if command_exists fastfetch; then
         pokeget random --hide-name | fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo-padding-left 3 --logo -
     fi
 
-    remaining_days "2026-08-13"
     echo ""
 fi
 
-# ============================================
 # LOCAL CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 LOCAL_ZSHRC="$HOME/.zshrc.local"
 if [[ -f "$LOCAL_ZSHRC" ]]; then
     source "$LOCAL_ZSHRC"
 fi
 
-# ============================================
 # END OF CONFIGURATION
-# ============================================
+# --------------------------------------------
 
 setopt AUTO_CD
 setopt AUTO_PUSHD
