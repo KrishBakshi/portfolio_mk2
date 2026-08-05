@@ -115,12 +115,35 @@
 
 html {
   scrollbar-gutter: stable;
+  overflow-y: scroll;
 }
 
-/* Radix scroll lock adds padding-right; gutter already reserves scrollbar space. */
-html[data-scroll-locked],
-body[data-scroll-locked] {
+/*
+ * react-remove-scroll-bar injects a late stylesheet with the same selectors and
+ * !important. Beat it with higher specificity so dialogs don't shove the layout
+ * sideways (scrollbar-gutter already reserves the gutter).
+ */
+html body[data-scroll-locked] {
+  --removed-body-scroll-bar-size: 0px !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
   padding-right: 0 !important;
+  padding-left: 0 !important;
+  padding-top: 0 !important;
+}
+
+html body .with-scroll-bars-hidden,
+html .with-scroll-bars-hidden {
+  padding-right: 0 !important;
+}
+
+html body .right-scroll-bar-position,
+html .right-scroll-bar-position {
+  right: 0 !important;
+}
+
+html body .width-before-scroll-bar,
+html .width-before-scroll-bar {
   margin-right: 0 !important;
 }
 

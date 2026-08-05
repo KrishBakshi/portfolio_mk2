@@ -20,7 +20,7 @@ export function SiteHeader() {
   return (
     <SiteHeaderWrapper
       className={cn(
-        "sticky top-0 z-50 max-w-screen overflow-x-hidden bg-background pt-2",
+        "sticky top-0 z-50 w-full overflow-x-hidden bg-background pt-2",
         "transition-shadow duration-300"
       )}
     >

@@ -13,7 +13,7 @@ interface DiagonalPatternFrameProps {
 export default function DiagonalPatternFrame({ children, className }: DiagonalPatternFrameProps) {
     return (
         <div className={cn(
-            "relative mx-auto w-full max-w-screen overflow-visible",
+            "relative mx-auto w-full overflow-visible",
             PAGE_CONTENT_MIN_HEIGHT,
             className
         )}>
