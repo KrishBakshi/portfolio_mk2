@@ -149,7 +149,7 @@ export function ViewOptions({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 rounded-l-none border-l border-gray-300/50 dark:border-white/10 px-2 text-muted-foreground hover:text-foreground active:scale-95"
+            className="h-6 rounded-l-none border-l border-gray-300/50 dark:border-white/10 px-2 text-muted-foreground hover:text-foreground active:scale-95 focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             <span className="sr-only">View options</span>
             <ChevronDown className="h-3 w-3" />
@@ -180,6 +180,11 @@ export function ViewOptions({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-xs"
+                  onClick={() => {
+                    requestAnimationFrame(() => {
+                      (document.activeElement as HTMLElement | null)?.blur();
+                    });
+                  }}
                 >
                   <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
                   {item.title}
@@ -191,7 +196,14 @@ export function ViewOptions({
       </DropdownMenu>
 
       <Dialog open={isMarkdownDialogOpen} onOpenChange={setIsMarkdownDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+        <DialogContent
+          className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col"
+          onOpenAutoFocus={(event) => {
+            // Keep focus in the dialog without scrolling the page behind it.
+            event.preventDefault();
+            (event.currentTarget as HTMLElement | null)?.focus({ preventScroll: true });
+          }}
+        >
           <DialogHeader>
             <DialogTitle>View as Markdown</DialogTitle>
             <DialogDescription>
