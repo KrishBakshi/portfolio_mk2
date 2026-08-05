@@ -267,5 +267,41 @@
       "Tool",
       "Version Control"
     ]
+  },
+  {
+    "key": "cursor",
+    "title": "Cursor",
+    "href": "https://cursor.com/",
+    "categories": [
+      "Tool",
+      "AI Agents"
+    ]
+  },
+  {
+    "key": "claude-code",
+    "title": "Claude Code",
+    "href": "https://docs.anthropic.com/en/docs/claude-code",
+    "categories": [
+      "Tool",
+      "AI Agents"
+    ]
+  },
+  {
+    "key": "codex",
+    "title": "Codex",
+    "href": "https://openai.com/codex/",
+    "categories": [
+      "Tool",
+      "AI Agents"
+    ]
+  },
+  {
+    "key": "agent-skills",
+    "title": "Agent Skills",
+    "href": "https://agentskills.io/",
+    "categories": [
+      "Tool",
+      "AI Agents"
+    ]
   }
 ]

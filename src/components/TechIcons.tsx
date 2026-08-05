@@ -55,6 +55,10 @@ import Terminal from './technologies/Terminal';
 import LinkedIn from './technologies/LinkedIn';
 import Perplexity from './technologies/Perplexity';
 import Pipecat from './technologies/Pipecat';
+import Cursor from './technologies/Cursor';
+import ClaudeCode from './technologies/ClaudeCode';
+import Codex from './technologies/Codex';
+import AgentSkills from './technologies/AgentSkills';
 
 export const TechIcons: Record<string, React.ComponentType<any>> = {
     'AWS': AWS,
@@ -124,6 +128,12 @@ export const TechIcons: Record<string, React.ComponentType<any>> = {
     'Whisper': OpenAI,
     'PipeCat': Pipecat,
     'Pipecat': Pipecat,
+    'Cursor': Cursor,
+    'Claude Code': ClaudeCode,
+    'ClaudeCode': ClaudeCode,
+    'Codex': Codex,
+    'Agent Skills': AgentSkills,
+    'AgentSkills': AgentSkills,
 };
 
 export function getTechIcon(name: string) {
