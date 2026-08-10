@@ -38,6 +38,35 @@ It also separates discovery from enrichment: Comet navigation collects candidate
 
 ---
 
+## How a Search Runs
+
+[[graph]]
+{
+  "nodes": [
+    { "id": "intent", "label": "Hiring intent", "row": 0, "col": 0 },
+    { "id": "boolean", "label": "Boolean query builder", "row": 0, "col": 1, "note": "includes/excludes, title, location" },
+    { "id": "search", "label": "People search", "row": 0, "col": 2, "note": "MCP browser control" },
+    { "id": "urls", "label": "Profile URLs", "row": 0, "col": 3 },
+    { "id": "extract", "label": "Profile extraction", "row": 1, "col": 3, "note": "optional, Chrome DevTools MCP" },
+    { "id": "runs", "label": "runs/*.json", "row": 0, "col": 4, "isolated": true }
+  ],
+  "edges": [
+    { "from": "intent", "to": "boolean" },
+    { "from": "boolean", "to": "search" },
+    { "from": "search", "to": "urls" },
+    { "from": "urls", "to": "extract", "kind": "dotted", "label": "if enrichment" },
+    { "from": "urls", "to": "runs", "kind": "dashed" },
+    { "from": "extract", "to": "runs", "kind": "dashed" }
+  ],
+  "legend": [
+    { "kind": "solid", "label": "default path" },
+    { "kind": "dotted", "label": "optional step" },
+    { "kind": "dashed", "label": "saved artifact" }
+  ],
+  "caption": "Discovery always runs; enrichment only fires when profile extraction is requested."
+}
+[[/graph]]
+
 ## Key Capabilities
 
 - **Boolean Query Builder**
