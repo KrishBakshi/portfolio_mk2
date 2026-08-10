@@ -57,23 +57,26 @@ Traditional analysis of SEC filings is labor-intensive: filings often exceed hun
 
 ## How It Works
 
-1. **Metadata Collection**  
-   Fetch filing metadata using SEC APIs and organize document info.
-
-2. **Preprocessing**  
-   Clean and flatten raw metadata, preparing documents for embeddings.
-
-3. **Chunking & Embedding**  
-   Split filings into manageable text chunks and generate embeddings for vector retrieval.
-
-4. **Database Indexing**  
-   Store embeddings in ChromaDB for fast similarity search.
-
-5. **QA Pipeline**  
-   Use LangChain + Gemini 2.0 Flash to generate answers based on retrieved content.
-
-6. **Interactive Querying**  
-   Deploy a Streamlit app to let users ask questions and receive attributed answers in real time. :contentReference[oaicite:1]{index=1}
+[[graph]]
+{
+  "nodes": [
+    { "id": "meta", "label": "Metadata collection", "row": 0, "col": 0, "note": "SEC APIs" },
+    { "id": "prep", "label": "Preprocessing", "row": 0, "col": 1, "note": "clean + flatten" },
+    { "id": "chunk", "label": "Chunk & embed", "row": 0, "col": 2, "note": "sentence-transformers" },
+    { "id": "index", "label": "ChromaDB index", "row": 0, "col": 3 },
+    { "id": "qa", "label": "QA pipeline", "row": 0, "col": 4, "note": "LangChain + Gemini Flash" },
+    { "id": "ui", "label": "Streamlit UI", "row": 0, "col": 5, "note": "attributed answers" }
+  ],
+  "edges": [
+    { "from": "meta", "to": "prep" },
+    { "from": "prep", "to": "chunk" },
+    { "from": "chunk", "to": "index" },
+    { "from": "index", "to": "qa", "label": "retrieval" },
+    { "from": "qa", "to": "ui" }
+  ],
+  "caption": "Filings move through ingestion once; every user question only re-runs retrieval and generation."
+}
+[[/graph]]
 
 ---
 
