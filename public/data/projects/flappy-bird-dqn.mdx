@@ -68,23 +68,36 @@ This experiment solidifies understanding of RL algorithms in environments with v
 
 ## How It Works
 
-1. **Game Environment**
-   - Built on a Flappy Bird Gym wrapper providing pixel frames and reward signals.
-
-2. **Preprocessing**
-   - Frames are grayscaled, resized, and stacked to form state tensors.
-
-3. **Neural Q-Approximation**
-   - CNN model predicts Q-values for possible actions (flap vs do nothing).
-
-4. **Training Loop**
-   - For every step:
-     - Store (state, action, reward, next_state) in replay buffer.
-     - Sample mini-batch and update network via Bellman targets.
-     - Update target network periodically.
-
-5. **Policy & Exploration**
-   - ε starts high for exploration and decays over episodes to favor learned policy.
+[[graph]]
+{
+  "nodes": [
+    { "id": "env", "label": "Gym env", "row": 0, "col": 0, "note": "pixel frames, reward" },
+    { "id": "prep", "label": "Preprocess", "row": 0, "col": 1, "note": "grayscale, resize, stack" },
+    { "id": "policy", "label": "ε-greedy policy", "row": 0, "col": 2, "note": "decays over episodes" },
+    { "id": "action", "label": "Action", "row": 0, "col": 3, "note": "flap / no-op" },
+    { "id": "buffer", "label": "Replay buffer", "row": 1, "col": 1, "note": "(s, a, r, s')" },
+    { "id": "cnn", "label": "DQN (CNN)", "row": 1, "col": 2, "note": "Q-value approximation" },
+    { "id": "target", "label": "Target network", "row": 1, "col": 3, "isolated": true }
+  ],
+  "edges": [
+    { "from": "env", "to": "prep" },
+    { "from": "prep", "to": "cnn" },
+    { "from": "cnn", "to": "policy" },
+    { "from": "policy", "to": "action" },
+    { "from": "action", "to": "env", "kind": "dotted", "label": "next step" },
+    { "from": "prep", "to": "buffer", "kind": "dashed", "label": "store transition" },
+    { "from": "buffer", "to": "cnn", "label": "mini-batch sample" },
+    { "from": "target", "to": "cnn", "kind": "dashed", "label": "Bellman target" },
+    { "from": "cnn", "to": "target", "kind": "dotted", "label": "periodic sync" }
+  ],
+  "legend": [
+    { "kind": "solid", "label": "forward pass" },
+    { "kind": "dashed", "label": "storage / target" },
+    { "kind": "dotted", "label": "feedback loop" }
+  ],
+  "caption": "Every step both acts in the environment and trains from a sampled batch; the target network only updates periodically to keep learning stable."
+}
+[[/graph]]
 
 ---
 

@@ -41,11 +41,24 @@ Most voice agent demos depend on cloud-hosted STT and TTS APIs that are propriet
 
 ## Pipeline Architecture
 
-```
-STT → User Context Aggregator → LLM → TTS → Assistant Context Aggregator
-```
-
-Each component is modular and independently configurable through YAML files in `config/`.
+[[graph]]
+{
+  "nodes": [
+    { "id": "stt", "label": "STT", "row": 0, "col": 0, "note": "Whisper" },
+    { "id": "userctx", "label": "User context aggregator", "row": 0, "col": 1 },
+    { "id": "llm", "label": "LLM", "row": 0, "col": 2, "note": "Gemma" },
+    { "id": "tts", "label": "TTS", "row": 0, "col": 3, "note": "OmniVoice" },
+    { "id": "asstctx", "label": "Assistant context aggregator", "row": 0, "col": 4 }
+  ],
+  "edges": [
+    { "from": "stt", "to": "userctx" },
+    { "from": "userctx", "to": "llm" },
+    { "from": "llm", "to": "tts" },
+    { "from": "tts", "to": "asstctx" }
+  ],
+  "caption": "Each stage is a modular PipeCat service, independently configurable through YAML files in config/."
+}
+[[/graph]]
 
 ---
 
@@ -89,29 +102,53 @@ Two separate VAD implementations depending on mode:
 
 ## Modes
 
-### Live Terminal Session
+[[graph]]
+{
+  "nodes": [
+    { "id": "mic", "label": "microphone", "row": 0, "col": 0 },
+    { "id": "vad-live", "label": "Silero VAD", "row": 0, "col": 1, "note": "server, PipeCat" },
+    { "id": "stt-live", "label": "STT", "row": 0, "col": 2 },
+    { "id": "llm-live", "label": "Gemma LLM", "row": 0, "col": 3 },
+    { "id": "tts-live", "label": "OmniVoice TTS", "row": 0, "col": 4 },
+    { "id": "speakers", "label": "speakers", "row": 0, "col": 5 },
 
-```
-microphone → VAD → STT → Gemma LLM → OmniVoice TTS → speakers
-```
+    { "id": "bmic1", "label": "browser mic", "row": 1, "col": 0 },
+    { "id": "spn", "label": "ScriptProcessorNode", "row": 1, "col": 1, "note": "push-to-talk" },
+    { "id": "sio1", "label": "Socket.IO", "row": 1, "col": 2 },
+    { "id": "backend1", "label": "STT → Gemma → OmniVoice", "row": 1, "col": 3 },
+    { "id": "playback1", "label": "browser playback", "row": 1, "col": 4 },
 
-Uses PipeCat's local audio transport with PyAudio. Interruptions are disabled by default to avoid speaker-to-mic bleed on Mac.
+    { "id": "bmic2", "label": "browser mic", "row": 2, "col": 0 },
+    { "id": "vadweb", "label": "vad-web", "row": 2, "col": 1, "note": "Silero WASM, live detection" },
+    { "id": "sio2", "label": "Socket.IO", "row": 2, "col": 2 },
+    { "id": "backend2", "label": "STT → Gemma → OmniVoice", "row": 2, "col": 3 },
+    { "id": "playback2", "label": "browser playback", "row": 2, "col": 4 }
+  ],
+  "edges": [
+    { "from": "mic", "to": "vad-live" },
+    { "from": "vad-live", "to": "stt-live" },
+    { "from": "stt-live", "to": "llm-live" },
+    { "from": "llm-live", "to": "tts-live" },
+    { "from": "tts-live", "to": "speakers" },
 
-### Browser UI
+    { "from": "bmic1", "to": "spn" },
+    { "from": "spn", "to": "sio1" },
+    { "from": "sio1", "to": "backend1" },
+    { "from": "backend1", "to": "playback1" },
 
-Two tabs with separate audio paths:
+    { "from": "bmic2", "to": "vadweb" },
+    { "from": "vadweb", "to": "sio2" },
+    { "from": "sio2", "to": "backend2" },
+    { "from": "backend2", "to": "playback2" }
+  ],
+  "caption": "Row 1: live terminal session. Row 2: browser push-to-talk. Row 3: browser VAD-driven. All three share the same STT → Gemma → OmniVoice core."
+}
+[[/graph]]
 
-**Whole Talk (push-to-talk)**
-```
-browser mic → ScriptProcessorNode → Socket.IO → STT → Gemma → OmniVoice → browser playback
-```
-
-**Live Detection (VAD-driven)**
-```
-browser mic → vad-web (Silero WASM) → Socket.IO → STT → Gemma → OmniVoice → browser playback
-```
-
-Backend sends a single base64-encoded WAV back over Socket.IO per turn. Not full-duplex streaming — one complete response per utterance.
+Live terminal uses PipeCat's local audio transport with PyAudio; interruptions
+are disabled by default to avoid speaker-to-mic bleed on Mac. Both browser
+modes send a single base64-encoded WAV back over Socket.IO per turn — not
+full-duplex streaming, one complete response per utterance.
 
 ---
 

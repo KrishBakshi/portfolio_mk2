@@ -1,0 +1,237 @@
+---
+title: 'Wingmate'
+slug: 'wingmate'
+id: 11
+description: 'An open-source, local-first outbound agent you drive by talking to a coding agent. It finds a prospect signal, verifies it, maps it to your own project ledger, and drafts outreach through a template that encodes your voice, never its own.'
+image: '/file.svg'
+link: 'https://wingmate.krishb.tech/'
+videoPreview: '/assets/demo/preview/wingmate.mp4'
+videoFull: '/assets/demo/full/wingmate.mp4'
+github: 'https://github.com/KrishBakshi/wingmate'
+technologies:
+  - Python
+  - Terminal
+  - Google Cloud Platform
+  - Cursor
+  - Claude Code
+  - Codex
+  - Agent Skills
+domains:
+  - AI Agents
+isWorking: true
+---
+
+## Overview
+
+**Wingmate** is a research-led outbound agent with an unusual constraint: it never
+lets a language model write the sentence.
+
+```
+find prospects → verify signals → identify credible fit → draft in your voice → review and send
+```
+
+There is no model API key anywhere in the repo. Rendering is deterministic
+placeholder substitution. The intelligence is whichever coding agent you already
+have open, Claude Code, Codex, Cursor, or a human typing the CLI directly,
+reading a plain instruction file (`AGENTS.md`) and a set of skills. Wingmate
+supplies the parts that keep that agent honest: a ledger it cannot invent facts
+around, and a template it cannot paraphrase out from under you.
+
+## The Problem It Actually Solves
+
+Cold outreach written by an LLM fails in two specific, predictable ways: it
+invents things about you, and it sounds like it was written by an LLM. Both
+failures come from the same design mistake, letting the model author the
+message. Wingmate's whole architecture is one move: split *facts*, *wording*,
+and *judgement* into three places that only one of them, the agent, is allowed
+to connect.
+
+| Layer | Owns | Lives in |
+|---|---|---|
+| Facts | your projects, metrics, links | `data/identity.yaml` |
+| Wording | the actual sentences | `templates/*.yaml` |
+| Judgement | which template, which project, what to say | the agent, reading `AGENTS.md` |
+
+The agent substitutes declared placeholders into a template it did not write,
+using facts it did not invent. What is left for it to decide is *which*
+template and *which* project entry are the right fit for this prospect, which
+is exactly the kind of judgement a template can't encode and a static rule
+can't automate either.
+
+## How a Draft Actually Gets Made
+
+A request like *"draft an intro to the founder of Acme about their inference
+work"* runs through one path every time, whether it's typed by a person or an
+agent acting on their behalf. The two checkpoints on the right are not
+suggestions the agent can skip. They sit inside `GmailService` itself, so even
+an inline script that imports the service directly still has to clear them.
+
+[[graph]]
+{
+  "nodes": [
+    { "id": "templates", "label": "templates/*.yaml", "row": 0, "col": 1, "note": "fixed wording" },
+    { "id": "identity", "label": "identity.yaml", "row": 0, "col": 2, "note": "public section only" },
+    { "id": "request", "label": "NL request", "row": 1, "col": 0 },
+    { "id": "select", "label": "Select template", "row": 1, "col": 1, "note": "channel + relevance" },
+    { "id": "render", "label": "Render", "row": 1, "col": 2, "note": "placeholder substitution" },
+    { "id": "tgate", "label": "Template gate", "row": 1, "col": 3, "note": "guard_send" },
+    { "id": "dgate", "label": "Disclosure gate", "row": 1, "col": 4, "note": "guard_disclosure" },
+    { "id": "draft", "label": "Gmail draft", "row": 1, "col": 5, "note": "send is opt-in" },
+    { "id": "ask1", "label": "Ask user: still draft it?", "row": 2, "col": 3, "isolated": true },
+    { "id": "ask2", "label": "Ask user: still send it?", "row": 2, "col": 4, "isolated": true }
+  ],
+  "edges": [
+    { "from": "request", "to": "select" },
+    { "from": "templates", "to": "select", "kind": "dashed", "label": "channel prefix" },
+    { "from": "select", "to": "render" },
+    { "from": "templates", "to": "render", "kind": "dashed", "label": "fixed wording" },
+    { "from": "identity", "to": "render", "label": "facts" },
+    { "from": "render", "to": "tgate" },
+    { "from": "tgate", "to": "dgate", "label": "score ≥ 0.75" },
+    { "from": "tgate", "to": "ask1", "kind": "dotted", "label": "score < 0.75" },
+    { "from": "dgate", "to": "draft", "label": "clean" },
+    { "from": "dgate", "to": "ask2", "kind": "dotted", "label": "private data hit" }
+  ],
+  "legend": [
+    { "kind": "solid", "label": "normal path" },
+    { "kind": "dashed", "label": "static input" },
+    { "kind": "dotted", "label": "blocked, needs a yes" }
+  ],
+  "caption": "Every render passes both gates before a Gmail write, whether the caller is the CLI or an inline script."
+}
+[[/graph]]
+
+**The template gate** does not check the message is *true*, it checks the message
+is *this template*. `src/services/template_matcher.py` strips HTML and
+whitespace from the body, then measures how much of the template's fixed
+wording, everything outside `{placeholders}`, survives inside it, using a
+`SequenceMatcher` recall score with a minimum block size so stray short matches
+can't accumulate a pass. A rendered template scores `1.0`. Free-form prose
+written from scratch usually lands under `0.5`. Below the threshold (`0.75` by
+default) nothing goes out; the service returns a `requires_confirmation`
+payload with the exact question to relay to the user, verbatim, and only a
+`yes` unlocks `--allow-unmatched`.
+
+**The disclosure gate** sits between retrieval and generation for a different
+reason: `identity.yaml` has a `public` section outbound is built from and a
+`private` section it never is. `load_private()` refuses without an explicit
+override and withholds the *values* even while refusing, it hands back only the
+field names, so the agent knows what's being asked for without ever holding the
+secret. The gate then re-checks the *finished body* too, because a private
+value that arrived some other way, typed from memory, copied from an old
+thread, still has to be caught before it reaches Gmail. It fires on exact
+values from `private` and on pattern rules, phone numbers, CTC figures, notice
+periods, government IDs, that hold even with an empty `private` section, so a
+fresh clone with no data on disk still fails closed.
+
+Both gates are code, not agent discipline. What is still agent discipline is
+everything upstream of them, picking the right template, mapping the right
+project by relevance rather than by whichever metric is biggest, phrasing the
+override question honestly. A capable agent gets that right; the gates exist
+for the failure mode where it doesn't.
+
+## The Outbound Pipeline
+
+Single drafts are the simple path. Campaigns, scrape a job board, build a
+prospect list, personalize at volume, track replies, run through four layers in
+a fixed order, each with a defined data shape, so an agent picking the work up
+mid-campaign can reconstruct state from disk instead of from memory.
+
+[[graph]]
+{
+  "nodes": [
+    { "id": "scrape", "label": "Scrape", "row": 0, "col": 0, "note": "Scrapling" },
+    { "id": "store", "label": "Store", "row": 0, "col": 1, "note": "runs/ + Notion" },
+    { "id": "render", "label": "Render", "row": 0, "col": 2, "note": "cli.py render" },
+    { "id": "track", "label": "Track", "row": 0, "col": 3, "note": "Notion status" },
+    { "id": "f1", "label": "prospects_raw.json", "row": 1, "col": 0, "isolated": true },
+    { "id": "f2", "label": "Notion: Researched", "row": 1, "col": 1, "isolated": true },
+    { "id": "f3", "label": "Notion: Draft Ready", "row": 1, "col": 2, "isolated": true },
+    { "id": "f4", "label": "Sent → Replied/Closed", "row": 1, "col": 3, "isolated": true }
+  ],
+  "edges": [
+    { "from": "scrape", "to": "store", "label": "prospects_raw.json" },
+    { "from": "store", "to": "render", "label": "prospects_enriched.json" },
+    { "from": "render", "to": "track", "label": "outbounds.json" },
+    { "from": "scrape", "to": "f1", "kind": "dashed" },
+    { "from": "store", "to": "f2", "kind": "dashed" },
+    { "from": "render", "to": "f3", "kind": "dashed" },
+    { "from": "track", "to": "f4", "kind": "dashed" }
+  ],
+  "legend": [
+    { "kind": "solid", "label": "pipeline handoff" },
+    { "kind": "dashed", "label": "on-disk / Notion state" }
+  ],
+  "caption": "Fixed order, fixed shape per layer. An agent resuming a campaign reads state instead of re-deriving it."
+}
+[[/graph]]
+
+Scraping escalates only as far as the page requires, a static `extract get`
+before a JS-rendering `fetch` before an anti-bot `stealthy-fetch`. Layer 2
+splits system of record from working copy on purpose: Notion carries status and
+follow-up dates for a human to see, `prospects_enriched.json` is the shape an
+agent actually reads from. Layer 3 never touches Notion or the scrape files
+directly, it maps one enriched record to `--field` values and renders, so
+render stays a pure, side-effect-free function you can preview before any Gmail
+call. Layer 4 is a fixed status machine, `Prospect → Researched → Draft Ready →
+Sent → Replied | Closed`, with follow-ups computed by query rather than by a
+human remembering to check.
+
+LinkedIn notes never get automated. They're rendered like everything else, but
+sending one is a manual, human action in the LinkedIn UI, because the channel
+doesn't offer an API for it and Wingmate isn't going to pretend otherwise.
+
+## It Learns, On Purpose, In the Right Place
+
+The interesting design decision isn't that Wingmate improves. It's *where* a
+correction goes, because writing it in the wrong place is how most
+personalization systems rot:
+
+- A correction about **wording** goes into the template.
+- A correction about **facts** goes into `identity.yaml`.
+- A correction about **how the agent should work** goes into `AGENTS.md §12.5`,
+  a section that ships empty by design, the seed file only carries defaults
+  that are true for everyone.
+- A one-off worth remembering but not yet worth committing to lives in a
+  skill's git-ignored `SCRATCHPAD.md`.
+
+The enforcement mechanism for actually noticing a pattern instead of drifting
+past it is the **3rd-time rule**: every draft is recorded to
+`runs/draft_monitor.json`, keyed by template and recipient, and the third
+generation of the same email trips an `over_threshold` flag in the draft's own
+output. That's the signal to stop regenerating and work a short checklist,
+missed pattern, hallucination, identity drift, wrong template, rather than
+trying a fourth time on instinct. Three retries of the same email is the system
+telling you the problem is upstream, not in this draft.
+
+## Why It's Structured This Way, Not As a SaaS Agent
+
+Wingmate is deliberately not a hosted platform. A few consequences fall out of
+that:
+
+- **No model vendor lock-in.** There's no API key to configure because there's
+  no call to make; whatever agent you already pay for supplies the reasoning.
+- **Local-first and inspectable.** `data/`, `templates/`, and `runs/` are plain
+  files. You can read exactly what will be said before it's said, and diff what
+  changed between drafts.
+- **Drafts by default, everywhere.** `draft` is the verb every code path
+  reaches for; `send` is a separate command, requires an explicit recipient,
+  and is still gated the same way `draft` is. Nothing leaves the account
+  without a human choosing it.
+- **It doesn't try to be a CRM.** No pipeline board, no sequencer, no built-in
+  sender identity beyond your own Gmail account. Notion is optional tracking,
+  not a dependency.
+
+## Try It
+
+The repo ships as a seed, `data/` describes a fictional developer and
+`templates/` holds one email and its LinkedIn counterpart. The first session
+with any agent on a fresh clone is an interview: replace that seed identity
+with your own, rewrite the seed template until you'd actually send it, then
+point Gmail at your own OAuth client and start drafting.
+
+> Wingmate started as a way to stop dreading cold outreach, not as a product.
+> If it saves you the same afternoon it saved me, or you just want to poke at
+> the gates and see where they hold, I'd genuinely love to hear about it.
+>
+> — Krish

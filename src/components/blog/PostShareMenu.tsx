@@ -34,7 +34,7 @@ export function PostShareMenu({ url }: { url: string }) {
         <Button
           variant="secondary"
           size="icon"
-          className="h-7 w-7 rounded-lg active:scale-95"
+          className="h-7 w-7 rounded-lg active:scale-95 focus-visible:ring-0 focus-visible:ring-offset-0"
         >
           <Share className="h-3.5 w-3.5" />
         </Button>
@@ -52,6 +52,11 @@ export function PostShareMenu({ url }: { url: string }) {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center"
+            onClick={() => {
+              requestAnimationFrame(() => {
+                (document.activeElement as HTMLElement | null)?.blur();
+              });
+            }}
           >
             <SiX className="mr-2 h-4 w-4" />
             Share on X
@@ -64,6 +69,11 @@ export function PostShareMenu({ url }: { url: string }) {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center"
+            onClick={() => {
+              requestAnimationFrame(() => {
+                (document.activeElement as HTMLElement | null)?.blur();
+              });
+            }}
           >
             <SiLinkedin className="mr-2 h-4 w-4" />
             Share on LinkedIn
