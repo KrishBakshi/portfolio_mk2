@@ -38,42 +38,26 @@ function formatProfileBullet(parts: ProfileBullet): string {
 
 export const PROFILE = {
   name: "Krish Bakshi",
-  title: "Data Scientist",
+  title: "Data Scientist · AI Engineer",
   email: "work.krishb@gmail.com",
-  tagline: [
-    {
-      type: "text",
-      value: "Engineer who ships impactful AI systems, end-to-end at ",
-    },
-    { type: "text", value: "Speed!", italic: true },
-  ] satisfies ProfileBullet,
   highlights: ["Vision", "AI agents", "Fine-tuning", "RL"],
   bullets: [
     [
-      { type: "text", value: "Data Scientist @" },
+      { type: "text", value: "Currently a Data Scientist at " },
       { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
-    ],
-    [
-      { type: "text", value: "Taking novel research: " },
-      { type: "text", value: "paper → production", semibold: true },
-      { type: "text", value: ", with quantified impact." },
-    ],
-    [
-      { type: "text", value: "I enjoy working with " },
+      { type: "text", value: ", working across " },
       {
         type: "link",
-        label: "agents",
+        label: "AI agents",
         href: "/projects?domain=AI%20Agents",
       },
       {
-        type: "text",
-        value: " and training neural networks on GPU clusters.",
+        type: "text", value: ", computer vision, and neural network training on GPU clusters.",
       },
     ],
   ] satisfies ProfileBullet[],
-  socialLabel: "Here are my socials",
   about:
-    "Building and deploying ML across computer vision, AI, automation, and agentic workflows.",
+    "Data scientist and AI engineer turning applied research into reliable systems across computer vision, agents, and model training.",
   profileImage: "/header/pfp.jpeg",
   bannerImages: {
     light: "/header/light_2.png",
@@ -99,7 +83,7 @@ const PROFILE_SOCIAL_LINKS = [
 export function getAboutMarkdown() {
   return `# About
 
-${formatProfileBullet(PROFILE.tagline)}
+${PROFILE.about}
 
 ${PROFILE.bullets.length > 0 ? `${PROFILE.bullets.map((item) => `- ${formatProfileBullet(item)}`).join("\n")}\n` : ""}${PROFILE.highlights.map((item) => `- ${item}`).join("\n")}
 
@@ -177,7 +161,7 @@ ${content.trim()}`;
 export function getBlogMarkdown() {
   const posts = getPublishedBlogPosts();
 
-  return `# Blog
+  return `# Writing
 
 ${posts
   .map((post) => {
@@ -243,7 +227,7 @@ ${PROFILE.name} is a ${PROFILE.title} who builds and ships AI systems across com
 
 ${getProjectsIndexMarkdown()}
 
-## Blog
+## Writing
 
 ${posts
   .map(
