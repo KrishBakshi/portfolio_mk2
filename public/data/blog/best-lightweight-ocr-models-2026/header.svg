@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Document with OCR detection boxes">
+  <rect width="1600" height="900" fill="#fafafa"/>
+
+  <!-- Page -->
+  <rect x="430" y="80" width="740" height="740" fill="#ffffff" stroke="#171717" stroke-width="1.5"/>
+
+  <!-- Title block -->
+  <rect x="490" y="140" width="280" height="18" fill="#171717"/>
+  <rect x="490" y="176" width="520" height="8" fill="#d4d4d4"/>
+  <rect x="490" y="196" width="460" height="8" fill="#d4d4d4"/>
+
+  <!-- Paragraph -->
+  <g fill="#e5e5e5">
+    <rect x="490" y="250" width="620" height="7"/>
+    <rect x="490" y="270" width="600" height="7"/>
+    <rect x="490" y="290" width="580" height="7"/>
+    <rect x="490" y="310" width="540" height="7"/>
+  </g>
+
+  <!-- Detected text region -->
+  <rect x="478" y="236" width="656" height="100" fill="none" stroke="#171717" stroke-width="1.5"/>
+  <rect x="478" y="236" width="8" height="8" fill="#171717"/>
+
+  <!-- Table -->
+  <g fill="none" stroke="#171717" stroke-width="1.25">
+    <rect x="490" y="380" width="620" height="168"/>
+    <line x1="490" y1="422" x2="1110" y2="422"/>
+    <line x1="490" y1="464" x2="1110" y2="464"/>
+    <line x1="490" y1="506" x2="1110" y2="506"/>
+    <line x1="696" y1="380" x2="696" y2="548"/>
+    <line x1="902" y1="380" x2="902" y2="548"/>
+  </g>
+  <rect x="478" y="368" width="644" height="192" fill="none" stroke="#171717" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- Signature / stamp region -->
+  <rect x="490" y="600" width="220" height="120" fill="none" stroke="#d4d4d4" stroke-width="1.25"/>
+  <path d="M520 680 C560 640, 620 720, 680 660" fill="none" stroke="#171717" stroke-width="1.5"/>
+  <rect x="478" y="588" width="244" height="144" fill="none" stroke="#171717" stroke-width="1.5"/>
+</svg>

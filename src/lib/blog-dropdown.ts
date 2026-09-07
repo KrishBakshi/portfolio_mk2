@@ -2,13 +2,15 @@ import type { BlogConfigDropdownProps } from "@/components/blog/BlogConfigDropdo
 import type { BlogInstallToggleProps } from "@/components/blog/BlogInstallToggle";
 import type { BlogPlatformToggleProps } from "@/components/blog/BlogPlatformToggle";
 import type { NodeGraphProps } from "@/components/blog/NodeGraph";
+import type { ImageGalleryProps } from "@/components/blog/ImageGallery";
 
 export type BlogContentPart =
   | { type: "markdown"; content: string }
   | { type: "dropdown"; dropdown: BlogConfigDropdownProps }
   | { type: "platform"; platform: BlogPlatformToggleProps }
   | { type: "install"; install: BlogInstallToggleProps }
-  | { type: "graph"; graph: NodeGraphProps };
+  | { type: "graph"; graph: NodeGraphProps }
+  | { type: "gallery"; gallery: ImageGalleryProps };
 
 export const DROPDOWN_REGEX =
   /\[\[dropdown\s+path="([^"]+)"\s+lang="([^"]+)"\s*\]\]\n([\s\S]*?)\n\[\[\/dropdown\]\]/g;
@@ -23,6 +25,11 @@ export const INSTALL_REGEX =
   /\[\[install\]\]\n\[\[uv(?:\s+lang="([^"]*)")?\]\]\n([\s\S]*?)\n\[\[\/uv\]\]\n\[\[pip(?:\s+lang="([^"]*)")?\]\]\n([\s\S]*?)\n\[\[\/pip\]\]\n\[\[\/install\]\]/g;
 
 export const GRAPH_REGEX = /\[\[graph\]\]\n([\s\S]*?)\n\[\[\/graph\]\]/g;
+
+export const GALLERY_REGEX = /\[\[gallery\]\]\n([\s\S]*?)\n\[\[\/gallery\]\]/g;
+
+const GALLERY_IMAGE_REGEX =
+  /!\[([^\]]*)\]\(((?:[^()\s]|\([^()]*\))+)(?:\s+"[^"]*")?\)/g;
 
 const FENCED_CODE_REGEX = /```[\s\S]*?```/g;
 
@@ -50,6 +57,12 @@ type SpecialMatch =
       index: number;
       end: number;
       graph: NodeGraphProps;
+    }
+  | {
+      kind: "gallery";
+      index: number;
+      end: number;
+      gallery: ImageGalleryProps;
     };
 
 function findSpecialMatches(content: string): SpecialMatch[] {
@@ -117,6 +130,26 @@ function findSpecialMatches(content: string): SpecialMatch[] {
     });
   }
 
+  for (const match of content.matchAll(new RegExp(GALLERY_REGEX.source, "g"))) {
+    if (match.index === undefined) continue;
+
+    const images = Array.from(match[1].matchAll(GALLERY_IMAGE_REGEX)).map(
+      (image) => ({
+        alt: image[1],
+        src: image[2],
+      })
+    );
+
+    if (images.length === 0) continue;
+
+    matches.push({
+      kind: "gallery",
+      index: match.index,
+      end: match.index + match[0].length,
+      gallery: { images },
+    });
+  }
+
   return matches.sort((a, b) => a.index - b.index);
 }
 
@@ -144,6 +177,8 @@ export function splitBlogContentWithDropdowns(content: string): BlogContentPart[
       parts.push({ type: "platform", platform: match.platform });
     } else if (match.kind === "graph") {
       parts.push({ type: "graph", graph: match.graph });
+    } else if (match.kind === "gallery") {
+      parts.push({ type: "gallery", gallery: match.gallery });
     } else {
       parts.push({ type: "install", install: match.install });
     }
@@ -169,5 +204,6 @@ export function getTocMarkdownContent(content: string): string {
     .replace(PLATFORM_REGEX, "")
     .replace(INSTALL_REGEX, "")
     .replace(GRAPH_REGEX, "")
+    .replace(GALLERY_REGEX, "")
     .replace(FENCED_CODE_REGEX, "");
 }

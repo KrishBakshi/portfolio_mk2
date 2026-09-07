@@ -2,7 +2,7 @@
 title: "The only OCR models you will need in 2026"
 slug: "best-lightweight-ocr-models-2026"
 description: "The best lightweight (<3B parameter), locally-runnable OCR models in 2026 — Falcon-OCR, GLM-OCR, MinerU2.5-Pro, Surya-OCR-2, and PaddleOCR-VL — plus a few tricks to improve extraction accuracy."
-image: "/data/blog/best-lightweight-ocr-models-2026/Built-in_Retina_Display_(Area)_2026-09-02_0111_PM.jpg"
+image: "/data/blog/best-lightweight-ocr-models-2026/header.svg"
 tags: ["OCR", "Document AI", "Vision Language Models", "Data Extraction", "MLOps"]
 date: "2026-09-05"
 author: "Krish Bakshi"
@@ -41,6 +41,14 @@ Here are several common examples:
 5. Unstructured data such as tables, charts, and graphs
 6. Handwritten literature/documents
 
+[[gallery]]
+![Research paper](/data/blog/best-lightweight-ocr-models-2026/document-research-paper.jpg)
+![Invoice](/data/blog/best-lightweight-ocr-models-2026/document-invoice.jpg)
+![Form](/data/blog/best-lightweight-ocr-models-2026/document-form.jpg)
+![Financial document](/data/blog/best-lightweight-ocr-models-2026/document-financial.jpg)
+![Table and chart](/data/blog/best-lightweight-ocr-models-2026/document-chart.jpg)
+![Handwritten document](/data/blog/best-lightweight-ocr-models-2026/document-handwritten.jpg)
+[[/gallery]]
 
 # Major extraction bottlenecks
 
@@ -117,6 +125,13 @@ Falcon-OCR is actually part of a broader family called Falcon Perception. The sa
 
 OCR and perception are two applications of the same underlying recipe, just fine-tuned and released as separate checkpoints.
 
+[[gallery]]
+![Falcon-OCR table reconstruction: sparse and dense multi-column headers](/data/blog/best-lightweight-ocr-models-2026/image.jpg)
+![Falcon-OCR equation reconstruction across printed and handwritten math](/data/blog/best-lightweight-ocr-models-2026/image%201.jpg)
+![Falcon-OCR on mixed formula, table, and handwriting inputs](/data/blog/best-lightweight-ocr-models-2026/Built-in_Retina_Display_(Area)_2026-09-02_0140_PM.jpg)
+![Falcon-OCR equation reconstruction across printed, dense, handwritten, and piecewise math](/data/blog/best-lightweight-ocr-models-2026/image%202.jpg)
+[[/gallery]]
+
 On olmOCR-Bench it scores 80.3% average, competitive with models several times its size (Mistral OCR 3 at 81.7, Chandra at 82.0, Gemini 3 Pro at 80.2), and it actually leads on tables (90.3) and multi-column documents (87.1), all while being roughly 3x smaller than 0.9B-class OCR VLMs like PaddleOCR-VL, with a serving stack (paged inference engine, vLLM Docker image) built for high-throughput deployment.
 
 For a 0.3B model, Falcon OCR punches well above its weight, especially on tables and multi-column docs. It's a solid default if you're optimizing for cost and latency without giving up much accuracy.
@@ -162,6 +177,12 @@ What makes it different is philosophy, not architecture. The team deliberately k
 It's a case study in how far a fixed-size model can go on training-data quality alone.
 
 It has reduced category misclassification during layout detection (particularly missed image blocks) and meaningfully improved recognition on charts, flowcharts, and seals, while leaving overall benchmark numbers close to the prior version.
+
+[[gallery]]
+![MinerU2.5-Pro on handwritten and vertical text](/data/blog/best-lightweight-ocr-models-2026/image%208.jpg)
+![MinerU2.5-Pro on printed and handwritten formulas](/data/blog/best-lightweight-ocr-models-2026/image%209.jpg)
+![MinerU2.5-Pro image analysis: flowcharts, posters, and charts](/data/blog/best-lightweight-ocr-models-2026/image%2010.jpg)
+[[/gallery]]
 
 [MinerU2.5-Pro paper](https://arxiv.org/html/2604.04771v2)
 

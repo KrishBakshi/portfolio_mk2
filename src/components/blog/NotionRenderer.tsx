@@ -10,6 +10,7 @@ import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
 import { BlogPlatformToggle } from './BlogPlatformToggle';
 import { NodeGraph } from './NodeGraph';
+import { ImageGallery } from './ImageGallery';
 import { Code, Heading, Prose } from '@/components/ui/typography';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { splitBlogContentWithDropdowns } from '@/lib/blog-dropdown';
@@ -108,7 +109,7 @@ const markdownComponents = {
             {children}
         </a>
     ),
-    img: ({ src, alt, title, ...props }: React.ComponentProps<'img'>) => {
+    img: ({ src, alt, title }: React.ComponentProps<'img'>) => {
         const imageSource = typeof src === "string" ? src : undefined;
         const { src: imageSrc, width } = parseImageSize(imageSource, title);
 
@@ -119,7 +120,6 @@ const markdownComponents = {
             >
                 <div className="overflow-hidden rounded-lg">
                     <img
-                        {...props}
                         src={imageSrc}
                         alt={alt || ""}
                         className="block h-auto w-full max-w-full"
@@ -167,6 +167,9 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
                 }
                 if (part.type === "graph") {
                     return <NodeGraph key={`graph-${index}`} {...part.graph} />;
+                }
+                if (part.type === "gallery") {
+                    return <ImageGallery key={`gallery-${index}`} {...part.gallery} />;
                 }
                 return <MarkdownChunk key={`markdown-${index}`} content={part.content} />;
             })}
