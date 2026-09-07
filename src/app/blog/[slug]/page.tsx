@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
@@ -101,12 +100,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </header>
 
           <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
-            <Image
+            {/* SVG cover; invert in dark mode so the line-art stays legible. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={frontmatter.image}
-              alt={frontmatter.title}
-              fill
-              className="object-cover"
-              priority
+              alt=""
+              className="size-full object-cover dark:invert"
             />
           </div>
 
