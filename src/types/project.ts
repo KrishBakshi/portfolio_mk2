@@ -2,7 +2,7 @@ export interface ProjectFrontmatter {
     title: string;
     slug: string;
     description: string;
-    image: string;
+    image?: string;
     videoPreview?: string;
     videoFull?: string;
     link: string;

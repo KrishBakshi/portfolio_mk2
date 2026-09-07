@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { META_THEME_COLORS } from "@/config/site";
 import { useMetaColor } from "@/hooks/use-meta-color";
@@ -14,34 +14,42 @@ import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const { setMetaColor } = useMetaColor();
 
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   // Note: Uncomment when you add the audio file
   // const playClick = useSound("/audio/ui-sounds/click.wav");
-  const playClick = useCallback((volume: number = 0.5) => {
+  const playClick = useCallback(() => {
     // Sound will be enabled when audio file is added
   }, []);
 
   const switchTheme = useCallback(() => {
-    playClick(0.5);
+    if (!mounted) return;
+    playClick();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
     setMetaColor(
       resolvedTheme === "dark"
         ? META_THEME_COLORS.light
         : META_THEME_COLORS.dark
     );
-  }, [resolvedTheme, setTheme, setMetaColor, playClick]);
+  }, [mounted, resolvedTheme, setTheme, setMetaColor, playClick]);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={switchTheme}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      <MoonIcon size={16} className="relative hidden h-4 w-4 after:absolute after:-inset-2 [html.dark_&]:block" />
-      <SunMediumIcon size={16} className="relative hidden h-4 w-4 after:absolute after:-inset-2 [html.light_&]:block" />
-      <span className="sr-only">Theme Toggle</span>
+      {isDark ? <SunMediumIcon size={16} className="h-4 w-4" /> : <MoonIcon size={16} className="h-4 w-4" />}
     </Button>
   );
 }

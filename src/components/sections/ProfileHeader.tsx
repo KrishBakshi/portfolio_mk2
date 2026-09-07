@@ -1,18 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { FaLinkedin, FaXTwitter, FaGithub, FaPaperclip, FaEnvelope } from "react-icons/fa6";
+import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
 
 interface ProfileHeaderProps {
   name?: string;
-  age?: string;
   title?: string;
   profileImage?: string;
-  tagline?: ProfileBullet;
   bullets?: ProfileBullet[];
-  highlights?: string[];
-  socialLabel?: string;
   socialLinks?: {
     twitter?: string;
     resume?: string;
@@ -22,15 +18,8 @@ interface ProfileHeaderProps {
   };
 }
 
-const tapStyle = {
-  WebkitTapHighlightColor: "transparent",
-  WebkitTouchCallout: "none",
-  WebkitUserSelect: "none",
-  userSelect: "none",
-} as const;
-
 const socialLinkClassName =
-  "text-foreground hover:opacity-80 active:opacity-75 touch-manipulation transition-opacity duration-200";
+  "inline-flex min-h-10 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline active:opacity-75 touch-manipulation transition-colors";
 
 const inlineLinkClassName =
   "font-semibold text-inherit no-underline transition-colors hover:text-foreground hover:underline hover:decoration-foreground hover:underline-offset-2";
@@ -86,13 +75,9 @@ function ProfileBulletContent({ parts }: { parts: ProfileBullet }) {
 
 export default function ProfileHeader({
   name = "",
-  age = "",
   title = "",
   profileImage = "",
-  tagline,
   bullets = [],
-  highlights = [],
-  socialLabel = "Here are my socials",
   socialLinks = {
     twitter: "",
     github: "",
@@ -102,71 +87,38 @@ export default function ProfileHeader({
   },
 }: ProfileHeaderProps) {
   return (
-    <div className="flex flex-col px-4 pb-6 pt-4 sm:px-6 sm:pt-5">
-      <div className="mb-6 flex items-end gap-2">
-        <div
-          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-300 bg-cover bg-center shadow-sm dark:border-gray-600"
-          role="img"
-          aria-label={name}
-          style={{ backgroundImage: `url("${profileImage}")` }}
-        />
+    <header className="px-5 sm:px-8">
+      <div className="grid grid-cols-[minmax(0,1fr)_4.5rem] items-start gap-6 sm:grid-cols-[minmax(0,1fr)_5.5rem]">
         <div className="min-w-0">
-          <h1 className="mb-1 font-sans text-2xl font-semibold tracking-tight sm:text-3xl">
+          <p className="mb-2 text-sm text-muted-foreground">{title}</p>
+          <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
             {name}
           </h1>
-          <p className="font-mono text-xs text-muted-foreground sm:text-sm">
-            {age && `${age} • `}
-            {title}
-          </p>
+        </div>
+
+        <div className="relative aspect-square overflow-hidden rounded-xl">
+          <Image
+            src={profileImage}
+            alt={`${name} profile photo`}
+            fill
+            priority
+            sizes="88px"
+            className="object-cover"
+          />
         </div>
       </div>
 
-      {(tagline?.length || bullets.length > 0 || highlights.length > 0) && (
-        <div className="mb-6 space-y-3">
-          {tagline && tagline.length > 0 && (
-            <p className="max-w-prose font-sans text-[15px] leading-relaxed text-foreground/90 sm:text-base">
-              <ProfileBulletContent parts={tagline} />
+      {bullets.length > 0 && (
+        <div className="mt-7 max-w-[64ch] space-y-2 text-[15px] leading-relaxed text-muted-foreground">
+          {bullets.map((parts, index) => (
+            <p key={index}>
+              <ProfileBulletContent parts={parts} />
             </p>
-          )}
-
-          {bullets.length > 0 && (
-            <ul className="space-y-2">
-              {bullets.map((parts, index) => (
-                <li
-                  key={index}
-                  className="flex gap-2.5 font-mono text-xs leading-relaxed text-foreground/90 sm:text-sm"
-                >
-                  <span aria-hidden className="shrink-0 text-muted-foreground">
-                    •
-                  </span>
-                  <span>
-                    <ProfileBulletContent parts={parts} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {highlights.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {highlights.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-md border border-border/60 bg-muted/30 px-2.5 py-1 font-mono text-xs text-foreground/85"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
+          ))}
         </div>
       )}
 
-      <div className="space-y-3 border-t border-border/50 pt-5">
-        <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
-          {socialLabel}
-        </p>
-        <div className="flex flex-wrap gap-4">
+      <nav aria-label="Profile links" className="mt-7 flex flex-wrap gap-x-5 gap-y-1">
           {socialLinks.github && (
             <a
               className={socialLinkClassName}
@@ -174,9 +126,8 @@ export default function ProfileHeader({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              style={tapStyle}
             >
-              <FaGithub size={18} />
+              <span>GitHub</span>
             </a>
           )}
           {socialLinks.twitter && (
@@ -186,9 +137,8 @@ export default function ProfileHeader({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="X"
-              style={tapStyle}
             >
-              <FaXTwitter size={18} />
+              <span>X</span>
             </a>
           )}
           {socialLinks.linkedin && (
@@ -198,21 +148,17 @@ export default function ProfileHeader({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              style={tapStyle}
             >
-              <FaLinkedin size={18} />
+              <span>LinkedIn</span>
             </a>
           )}
           {socialLinks.mail && (
             <a
               className={socialLinkClassName}
               href={socialLinks.mail}
-              target="_blank"
-              rel="noopener noreferrer"
               aria-label="Email"
-              style={tapStyle}
             >
-              <FaEnvelope size={18} />
+              <span>Email</span>
             </a>
           )}
           {socialLinks.resume && (
@@ -222,13 +168,11 @@ export default function ProfileHeader({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Resume"
-              style={tapStyle}
             >
-              <FaPaperclip size={18} />
+              <span>Resume</span>
             </a>
           )}
-        </div>
-      </div>
-    </div>
+      </nav>
+    </header>
   );
 }

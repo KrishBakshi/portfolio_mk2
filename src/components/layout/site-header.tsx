@@ -4,10 +4,7 @@ import { DesktopNav } from "./desktop-nav";
 import { CommandMenu } from "./command-menu";
 import { MAIN_NAV } from "@/config/site";
 import { getCommandSearchItems } from "@/lib/search-index";
-import { cn } from "@/lib/utils";
-
 import { SiteHeaderMark } from "./site-header-mark";
-import { SiteHeaderWrapper } from "./site-header-wrapper";
 import { ThemeToggle } from "./theme-toggle";
 
 const MobileNav = dynamic(() =>
@@ -18,27 +15,22 @@ export function SiteHeader() {
   const searchItems = getCommandSearchItems();
 
   return (
-    <SiteHeaderWrapper
-      className={cn(
-        "sticky top-0 z-50 w-full overflow-x-hidden bg-background pt-2",
-        "transition-shadow duration-300"
-      )}
-    >
-      <div className="mx-auto flex h-12 items-center justify-between gap-2 px-2 sm:gap-4 border border-gray-300/50 dark:border-white/10">
+    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-2 px-5 sm:gap-4 sm:px-8">
         <SiteHeaderMark />
 
         <div className="flex-1" />
 
         <DesktopNav items={MAIN_NAV} />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <CommandMenu searchItems={searchItems} />
-          <span className="mx-2 hidden h-4 w-px bg-border sm:flex" />
           <ThemeToggle />
-          <MobileNav className="sm:hidden" items={MAIN_NAV} />
+          <MobileNav className="min-[765px]:hidden" items={MAIN_NAV} />
         </div>
       </div>
-    </SiteHeaderWrapper>
+      <div aria-hidden="true" className="absolute right-5 bottom-0 left-5 h-px bg-border sm:right-8 sm:left-8" />
+    </header>
   );
 }
 

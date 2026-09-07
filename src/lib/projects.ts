@@ -4,6 +4,15 @@ import matter from 'gray-matter';
 import path from 'path';
 
 const projectsDirectory = path.join(process.cwd(), 'public/data/projects');
+const publicDirectory = path.join(process.cwd(), 'public');
+
+function existingAsset(asset?: string): string | undefined {
+    if (!asset) return undefined;
+    if (/^https?:\/\//.test(asset)) return asset;
+
+    const relativePath = asset.split(/[?#]/)[0].replace(/^\/+/, "");
+    return fs.existsSync(path.join(publicDirectory, relativePath)) ? asset : undefined;
+}
 
 /**
  * Get all project files from the projects directory
@@ -34,7 +43,13 @@ export function getProjectBySlug(slug: string): Project | null {
         const { data, content } = matter(fileContents);
 
         // Validate frontmatter
-        const frontmatter = data as ProjectFrontmatter;
+        const parsedFrontmatter = data as ProjectFrontmatter;
+        const frontmatter: ProjectFrontmatter = {
+            ...parsedFrontmatter,
+            image: existingAsset(parsedFrontmatter.image),
+            videoPreview: existingAsset(parsedFrontmatter.videoPreview),
+            videoFull: existingAsset(parsedFrontmatter.videoFull),
+        };
         if (!frontmatter.title || !frontmatter.description) {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
         }

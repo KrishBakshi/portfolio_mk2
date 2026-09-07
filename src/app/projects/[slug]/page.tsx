@@ -1,23 +1,25 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Globe } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ReadingProgress } from "@/components/blog/ReadingProgress";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  getAllProjects,
+  getPublishedProjects,
   getProjectBySlug,
   getRawProjectMdxContent,
 } from "@/lib/projects";
 import { PostShareMenu } from "@/components/blog/PostShareMenu";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
+import { getProjectPrimaryLink } from "@/lib/project-links";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -26,7 +28,7 @@ interface ProjectPageProps {
 }
 
 export async function generateStaticParams() {
-  const projects = getAllProjects();
+  const projects = getPublishedProjects();
   return projects.map((project) => ({
     slug: project.slug,
   }));
@@ -38,7 +40,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProjectBySlug(slug);
 
-  if (!project) {
+  if (!project || project.frontmatter.isWorking === false) {
     return {
       title: "Project Not Found",
     };
@@ -49,6 +51,7 @@ export async function generateMetadata({
     description: project.frontmatter.description,
     path: `/projects/${slug}`,
     type: "article",
+    image: project.frontmatter.image,
   });
 }
 
@@ -56,21 +59,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
 
-  if (!project) {
+  if (!project || project.frontmatter.isWorking === false) {
     notFound();
   }
 
   const { frontmatter, content } = project;
   const rawMdxContent = getRawProjectMdxContent(slug);
+  const primaryLink = getProjectPrimaryLink(frontmatter.link, frontmatter.github);
 
   return (
     <PageDetailShell>
-      <div className="mt-6 mb-6 flex items-center justify-between">
+      <ReadingProgress />
+      <div className="flex items-center justify-between border-b border-border py-4">
         <BackButton href="/projects" label="Back to Projects" />
 
         <div className="flex items-center gap-2">
           <LLMCopyButtonWithViewOptions
-            markdownUrl={`/projects/${slug}.mdx`}
+            markdownUrl={`/data/projects/${slug}.mdx`}
             mdxContent={rawMdxContent || undefined}
           />
           <PostShareMenu url={`/projects/${slug}`} />
@@ -79,59 +84,61 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <TableOfContents content={content} title={frontmatter.title} />
 
-      <article className="relative border border-gray-300/50 bg-background p-6 sm:p-8 dark:border-white/10">
-        <div className="space-y-8">
-          <header className="space-y-4">
-            <div className="flex items-start justify-between gap-4">
-              <h1 className="flex-1 font-sans text-3xl font-bold tracking-tight sm:text-4xl">
-                {frontmatter.title}
-              </h1>
-              <div className="flex shrink-0 items-center gap-2">
-                <Button asChild size="icon" variant="outline">
-                  <Link
-                    href={frontmatter.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Globe className="size-4" />
-                    <span className="sr-only">Visit Website</span>
-                  </Link>
-                </Button>
-                {frontmatter.github && (
-                  <Button asChild size="icon" variant="outline">
-                    <Link
-                      href={frontmatter.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github className="size-4" />
-                      <span className="sr-only">View Source</span>
-                    </Link>
-                  </Button>
-                )}
-              </div>
+      <article data-reading-scope className="relative py-10 sm:py-14">
+        <div className="mx-auto max-w-[720px] space-y-10">
+          <header>
+            <div className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+              {(frontmatter.domains ?? []).map((domain) => (
+                <Link key={domain} href={`/projects?domain=${encodeURIComponent(domain)}`} className="hover:text-foreground">
+                  {domain}
+                </Link>
+              ))}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+              {frontmatter.title}
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              {frontmatter.description}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
               {frontmatter.technologies.map((tech) => (
-                <Badge key={tech} variant="secondary" className="font-mono">
+                <Badge key={tech} variant="secondary" className="text-xs font-normal text-muted-foreground">
                   {tech}
                 </Badge>
               ))}
             </div>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {primaryLink ? (
+                <Button asChild variant="outline" className="min-h-10">
+                  <Link href={primaryLink.href} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 size-4" />
+                    {primaryLink.label}
+                  </Link>
+                </Button>
+              ) : null}
+              {frontmatter.github ? (
+                <Button asChild variant="outline" className="min-h-10">
+                  <Link href={frontmatter.github} target="_blank" rel="noopener noreferrer">
+                    <Github className="mr-2 size-4" />
+                    Source
+                  </Link>
+                </Button>
+              ) : null}
+            </div>
           </header>
 
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-gray-300/50 bg-muted dark:border-white/10">
+          {frontmatter.videoFull || frontmatter.image ? (
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
             {frontmatter.videoFull ? (
               <video
                 src={frontmatter.videoFull}
                 controls
-                autoPlay
                 muted
-                loop
                 playsInline
+                aria-label={`${frontmatter.title} project demo`}
                 className="h-full w-full object-cover"
               />
-            ) : (
+            ) : frontmatter.image ? (
               <Image
                 src={frontmatter.image}
                 alt={frontmatter.title}
@@ -139,35 +146,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 className="object-cover"
                 priority
               />
-            )}
+            ) : null}
           </div>
+          ) : null}
 
           <NotionRenderer content={content} />
-
-          <div className="flex flex-wrap gap-4 border-t pt-4">
-            <Button asChild>
-              <Link
-                href={frontmatter.link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Globe className="mr-2 size-4" />
-                Visit Website
-              </Link>
-            </Button>
-            {frontmatter.github && (
-              <Button variant="outline" asChild>
-                <Link
-                  href={frontmatter.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="mr-2 size-4" />
-                  View Source
-                </Link>
-              </Button>
-            )}
-          </div>
         </div>
       </article>
     </PageDetailShell>

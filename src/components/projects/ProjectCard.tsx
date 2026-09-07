@@ -1,25 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Github, Globe } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ProjectFrontmatter } from "@/types/project";
-import { getTechIcon } from "@/components/TechIcons";
+import { getProjectPrimaryLink } from "@/lib/project-links";
 
 interface ProjectCardProps {
     project: ProjectFrontmatter;
@@ -31,122 +16,57 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         title,
         slug,
         description,
-        image,
-        videoPreview,
-        videoFull,
         link,
         github,
         technologies,
-        isWorking,
+        domains,
     } = project;
+    const primaryLink = getProjectPrimaryLink(link, github);
 
     return (
-        <Card
+        <article
             className={cn(
-                "flex flex-col overflow-hidden border border-gray-300/50 dark:border-white/10 hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all duration-300 ease-out h-full bg-background",
+                "group relative flex h-full flex-col border-b border-border py-5 last:border-b-0",
                 className
             )}
         >
-            <Link
-                href={`/projects/${slug}`}
-                className="block cursor-pointer"
-            >
-                {videoPreview ? (
-                    <video
-                        src={videoPreview}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="pointer-events-none mx-auto h-40 w-full object-cover object-top"
-                    />
-                ) : (
-                    <Image
-                        src={image}
-                        alt={title}
-                        width={500}
-                        height={300}
-                        className="h-40 w-full overflow-hidden object-cover object-top"
-                    />
-                )}
-            </Link>
-            <CardHeader className="px-4 py-4">
-                <div className="space-y-1">
-                    <CardTitle className="mt-1 text-base">{title}</CardTitle>
-                    <div className="hidden font-sans text-xs underline print:visible">
-                        {link?.replace("https://", "").replace("www.", "").replace("/", "")}
+            <div className="flex flex-1 flex-col">
+                <div className="mb-3 min-w-0">
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                        {(domains?.length ? domains : technologies.slice(0, 2)).map((item) => (
+                            <span key={item} className="text-xs text-muted-foreground">
+                                {item}
+                            </span>
+                        ))}
                     </div>
-                    <p className="prose max-w-full text-pretty font-mono text-xs text-muted-foreground dark:prose-invert line-clamp-2">
-                        {description}
-                    </p>
+                    <h3 className="flex items-start justify-between gap-4 text-lg font-medium leading-snug tracking-tight text-foreground">
+                        <Link href={`/projects/${slug}`} className="after:absolute after:inset-0">
+                            {title}
+                        </Link>
+                        <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                    </h3>
                 </div>
-            </CardHeader>
-            <CardContent className="mt-auto flex flex-col px-4 pb-4">
-                {technologies && technologies.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                        {technologies.map((tech) => {
-                            const Icon = getTechIcon(tech);
-                            if (!Icon) return null;
-
-                            return (
-                                <TooltipProvider key={tech} delayDuration={0}>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <div className="flex items-center justify-center w-5 h-5 p-0">
-                                                <Icon className="size-full" />
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{tech}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            );
-                        })}
-                    </div>
-                )}
-            </CardContent>
-            <CardFooter className="px-4 pb-4 pt-0 flex flex-col gap-3 items-start">
-                {/* <div
-                    className={cn(
-                        "flex items-center gap-1 rounded-md px-2 py-1 text-[10px] w-full font-mono",
-                        isWorking
-                            ? "border border-green-500/20 bg-green-500/5 text-green-700 dark:text-green-400"
-                            : "border border-red-500/20 bg-red-500/5 text-red-700 dark:text-red-400"
-                    )}
-                >
-                    {isWorking ? (
-                        <>
-                            <div className="size-1.5 rounded-full bg-green-500 animate-pulse" />
-                            All Systems Operational
-                        </>
-                    ) : (
-                        <>
-                            <div className="size-1.5 rounded-full bg-red-500 animate-pulse" />
-                            Building
-                        </>
-                    )}
-                </div> */}
-
-                <div className="flex flex-row flex-wrap items-start gap-2 w-full">
-                    {link && (
-                        <Link href={link} target="_blank">
-                            <Badge className="flex gap-2 px-2 py-1 text-[10px] font-mono">
-                                <Globe className="size-3" />
-                                Website
-                            </Badge>
+                <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {description}
+                </p>
+                <p className="mt-3 line-clamp-1 text-xs text-muted-foreground">
+                    {technologies.slice(0, 4).join(" · ")}
+                </p>
+                <div className="relative z-10 mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    {primaryLink && (
+                        <Link href={primaryLink.href} target="_blank" rel="noopener noreferrer" className="flex min-h-8 items-center gap-1.5 hover:text-foreground">
+                            <ExternalLink className="size-3.5" />
+                            {primaryLink.label}
                         </Link>
                     )}
                     {github && (
-                        <Link href={github} target="_blank">
-                            <Badge className="flex gap-2 px-2 py-1 text-[10px] font-mono" variant="outline">
-                                <Github className="size-3" />
-                                Source
-                            </Badge>
+                        <Link href={github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground">
+                            <Github className="size-3.5" />
+                            Source
                         </Link>
                     )}
                 </div>
-            </CardFooter>
-        </Card>
+            </div>
+        </article>
     );
 }

@@ -49,9 +49,19 @@ const useCollapsible = () => {
 
 function CollapsibleWithContext({
     defaultOpen,
+    openFromHash,
     ...props
-}: React.ComponentProps<typeof Collapsible>) {
+}: React.ComponentProps<typeof Collapsible> & { openFromHash?: string }) {
     const [open, setOpen] = useState(defaultOpen ?? false);
+
+    useEffect(() => {
+        if (!openFromHash || window.location.hash !== `#${openFromHash}`) return;
+        const frame = requestAnimationFrame(() => {
+            setOpen(true);
+            document.getElementById(openFromHash)?.scrollIntoView({ block: "center" });
+        });
+        return () => cancelAnimationFrame(frame);
+    }, [openFromHash]);
 
     return (
         <CollapsibleContext.Provider value={{ open }}>

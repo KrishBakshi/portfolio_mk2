@@ -15,8 +15,9 @@ export function Nav({
 }) {
   return (
     <nav
+      aria-label="Primary navigation"
       data-active-id={activeId}
-      className={cn("flex items-center gap-4", className)}
+      className={cn("flex items-center gap-3", className)}
     >
       {items.map(({ title, href }) => {
         const active =
@@ -43,9 +44,10 @@ export function NavItem({
 }) {
   return (
     <Link
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "font-mono text-sm font-medium text-muted-foreground transition-[color] duration-300",
-        active && "text-foreground"
+        "px-1 py-2 text-sm font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline",
+        active && "text-foreground underline"
       )}
       {...props}
     />

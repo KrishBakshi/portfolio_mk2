@@ -1,23 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
 
 import { Providers } from "@/components/layout/providers";
-import { PageBottomBlur } from "@/components/layout/page-bottom-blur";
 import { ScrollToTopButton } from "@/components/layout/scroll-to-top-button";
 import { SiteHeader } from "@/components/layout/site-header";
+import Footer from "@/components/Footer";
 import { getRootMetadata } from "@/config/metadata";
-import { getSiteUrl, getSiteUrlFromHeaders, META_THEME_COLORS } from "@/config/site";
+import { META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
 
 import { Analytics } from "@vercel/analytics/next"
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const siteUrl = getSiteUrlFromHeaders(headersList) ?? getSiteUrl();
-  return getRootMetadata(siteUrl);
-}
+export const metadata: Metadata = getRootMetadata();
 
 export const viewport: Viewport = {
   themeColor: [
@@ -55,14 +50,16 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <div className="relative mx-auto w-full max-w-[calc(48rem+120px)] overflow-x-clip px-2 min-[765px]:px-4 min-[900px]:px-0">
+          <div className="relative mx-auto w-full max-w-3xl overflow-x-clip px-3 min-[765px]:px-5 min-[900px]:px-0">
             <SiteHeader />
             <div className="mx-auto w-full">
               {children}
               <Analytics />
             </div>
+            <div className="mx-auto w-full max-w-3xl border-t border-border">
+              <Footer />
+            </div>
           </div>
-          <PageBottomBlur />
           <ScrollToTopButton />
         </Providers>
       </body>

@@ -197,8 +197,11 @@ export const Tooltip = ({
 
     useEffect(() => {
         if (isVisible && contentRef.current) {
-            const newPosition = calculatePosition(mouse.x, mouse.y);
-            setPosition(newPosition);
+            const frame = requestAnimationFrame(() => {
+                const newPosition = calculatePosition(mouse.x, mouse.y);
+                setPosition(newPosition);
+            });
+            return () => cancelAnimationFrame(frame);
         }
     }, [isVisible, height, width, mouse.x, mouse.y, calculatePosition]);
 

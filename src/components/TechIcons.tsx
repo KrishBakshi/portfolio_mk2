@@ -60,7 +60,7 @@ import ClaudeCode from './technologies/ClaudeCode';
 import Codex from './technologies/Codex';
 import AgentSkills from './technologies/AgentSkills';
 
-export const TechIcons: Record<string, React.ComponentType<any>> = {
+export const TechIcons: Record<string, React.ComponentType<{ className?: string }>> = {
     'AWS': AWS,
     'Appwrite': Appwrite,
     'Bootstrap': BootStrap,

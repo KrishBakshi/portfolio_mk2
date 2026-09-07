@@ -9,7 +9,7 @@ interface ProjectDomainFiltersProps {
 }
 
 const pillClassName =
-  "rounded-md border px-2.5 py-1 font-mono text-xs transition-colors";
+  "min-h-10 rounded-md border px-3 py-2 font-mono text-xs transition-colors";
 
 export function ProjectDomainFilters({
   domains,
@@ -33,9 +33,8 @@ export function ProjectDomainFilters({
             <button
               type="button"
               aria-pressed={isActive}
-              onClick={() =>
-                onChange(isAll ? null : activeDomain === label ? null : label)
-              }
+              aria-label={isAll ? "Show all projects" : `Filter projects by ${label}`}
+              onClick={() => onChange(isAll ? null : label)}
               className={cn(
                 pillClassName,
                 isActive

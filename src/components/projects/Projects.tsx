@@ -14,17 +14,14 @@ export function Projects({ projects, max, showToggle = true, showAllHref }: Proj
     const visibleProjects = showAllHref && max ? projects.slice(0, max) : projects;
 
     return (
-        <div className="space-y-6 px-4 sm:py-4">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">Projects</h2>
-                <p className="text-muted-foreground font-mono text-sm">
-                    A selection of projects I've worked on.
-                </p>
+        <section className="px-5 sm:px-8">
+            <div className="mb-6">
+                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Projects</h2>
             </div>
 
-            <div className="bg-background">
+            <div>
                 {showAllHref ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
                         {visibleProjects.map((project) => (
                             <ProjectCard key={project.slug} project={project.frontmatter} className="h-full" />
                         ))}
@@ -33,7 +30,7 @@ export function Projects({ projects, max, showToggle = true, showAllHref }: Proj
                     <CollapsibleList
                         items={projects}
                         max={max}
-                        listClassName="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        listClassName="flex flex-col"
                         keyExtractor={(project) => project.slug}
                         renderItem={(project) => (
                             <ProjectCard project={project.frontmatter} className="h-full" />
@@ -44,10 +41,10 @@ export function Projects({ projects, max, showToggle = true, showAllHref }: Proj
             </div>
 
             {showAllHref ? (
-                <div className="flex h-12 items-center justify-center pt-2">
-                    <ShowAllLink href={showAllHref} label="Show All Projects" />
+                <div className="mt-5 flex items-center justify-start">
+                    <ShowAllLink href={showAllHref} label="Explore all projects" />
                 </div>
             ) : null}
-        </div>
+        </section>
     );
 }
