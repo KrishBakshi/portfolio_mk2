@@ -43,6 +43,16 @@ export function getBlogPostBySlug(slug: string): Blog | null {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
         }
 
+        if (!frontmatter.readTime) {
+            const words = content
+                .replace(/```[\s\S]*?```/g, " ")
+                .replace(/[#*_[\]()]/g, " ")
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean).length;
+            frontmatter.readTime = `${Math.max(1, Math.ceil(words / 220))} min read`;
+        }
+
         return {
             slug,
             frontmatter,
@@ -129,4 +139,26 @@ export function getNeighboringPosts(slug: string): { previous: BlogPreview | nul
         previous: previousPost,
         next: nextPost,
     };
+}
+
+export function getRelatedPosts(slug: string, limit = 3): BlogPreview[] {
+    const posts = getPublishedBlogPosts();
+    const current = posts.find((post) => post.slug === slug);
+    if (!current) return [];
+
+    const currentTags = new Set(current.frontmatter.tags.map((tag) => tag.toLowerCase()));
+
+    return posts
+        .filter((post) => post.slug !== slug)
+        .map((post) => ({
+            post,
+            score: post.frontmatter.tags.reduce(
+                (total, tag) => total + (currentTags.has(tag.toLowerCase()) ? 1 : 0),
+                0
+            ),
+        }))
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map(({ post }) => post);
 }

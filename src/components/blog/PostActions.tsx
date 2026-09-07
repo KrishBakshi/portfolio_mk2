@@ -140,7 +140,7 @@ export function ViewOptions({
     }
 
     return _items;
-  }, [markdownUrl, isComponent, fullMarkdownUrl]);
+  }, [isComponent, fullMarkdownUrl]);
 
   return (
     <>
@@ -149,7 +149,7 @@ export function ViewOptions({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 rounded-l-none border-l border-gray-300/50 dark:border-white/10 px-2 text-muted-foreground hover:text-foreground active:scale-95 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="h-10 rounded-l-none border-l border-border px-3 text-muted-foreground hover:text-foreground active:scale-95"
           >
             <span className="sr-only">View options</span>
             <ChevronDown className="h-3 w-3" />
@@ -248,9 +248,9 @@ export function LLMCopyButtonWithViewOptions({
   const fullMarkdownUrl = useAbsoluteUrl(markdownUrl);
 
   return (
-    <div className={cn("flex h-7 items-center rounded-lg border-gray-300/50 dark:border-white/10 bg-secondary text-secondary-foreground shadow-sm")}>
-      <div className="flex h-full items-center px-2 gap-2">
-         <CopyButton text={mdxContent || fullMarkdownUrl} />
+    <div className={cn("flex h-10 items-center rounded-lg border border-border bg-secondary text-secondary-foreground")}>
+      <div className="flex h-full items-center gap-1 px-1.5">
+         <CopyButton text={mdxContent || fullMarkdownUrl} label="Copy MDX" />
          <span className="text-xs font-medium">MDX</span>
       </div>
       <ViewOptions markdownUrl={markdownUrl} mdxContent={mdxContent} isComponent={isComponent} />

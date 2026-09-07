@@ -10,6 +10,9 @@ import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
 import { BlogPlatformToggle } from './BlogPlatformToggle';
 import { NodeGraph } from './NodeGraph';
+import { ImageGallery } from './ImageGallery';
+import { LinkMention, isMentionLink } from './LinkMention';
+import { ImageLightboxProvider, ZoomableImage } from './ImageLightbox';
 import { Code, Heading, Prose } from '@/components/ui/typography';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { splitBlogContentWithDropdowns } from '@/lib/blog-dropdown';
@@ -49,19 +52,24 @@ function parseImageSize(src?: string, title?: string | null) {
     return { src: imageSrc, width };
 }
 
+function omitMarkdownNode<T extends { node?: unknown }>({ node, ...props }: T): Omit<T, "node"> {
+    void node;
+    return props;
+}
+
 const markdownComponents = {
-    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h1" className="text-4xl font-bold" {...props} />,
-    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h2" className="text-3xl font-semibold" {...props} />,
-    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h3" className="text-2xl font-semibold" {...props} />,
-    h4: (props: React.ComponentProps<'h4'>) => <Heading as="h4" className="text-xl font-semibold" {...props} />,
-    h5: (props: React.ComponentProps<'h5'>) => <Heading as="h5" className="text-lg font-semibold" {...props} />,
+    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className="text-2xl font-semibold" {...props} />,
+    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className="text-xl font-semibold" {...props} />,
+    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-lg font-semibold" {...props} />,
+    h4: (props: React.ComponentProps<'h4'>) => <Heading as="h5" className="text-base font-semibold" {...props} />,
+    h5: (props: React.ComponentProps<'h5'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
     h6: (props: React.ComponentProps<'h6'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
-    table: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'table'>) => <Table {...props} />,
-    thead: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'thead'>) => <TableHeader {...props} />,
-    tbody: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'tbody'>) => <TableBody {...props} />,
-    tr: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'tr'>) => <TableRow {...props} />,
-    th: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'th'>) => <TableHead {...props} />,
-    td: ({ node, ...props }: { node?: unknown } & React.ComponentProps<'td'>) => <TableCell {...props} />,
+    table: (props: { node?: unknown } & React.ComponentProps<'table'>) => <Table {...omitMarkdownNode(props)} />,
+    thead: (props: { node?: unknown } & React.ComponentProps<'thead'>) => <TableHeader {...omitMarkdownNode(props)} />,
+    tbody: (props: { node?: unknown } & React.ComponentProps<'tbody'>) => <TableBody {...omitMarkdownNode(props)} />,
+    tr: (props: { node?: unknown } & React.ComponentProps<'tr'>) => <TableRow {...omitMarkdownNode(props)} />,
+    th: (props: { node?: unknown } & React.ComponentProps<'th'>) => <TableHead {...omitMarkdownNode(props)} />,
+    td: (props: { node?: unknown } & React.ComponentProps<'td'>) => <TableCell {...omitMarkdownNode(props)} />,
     code: ({ children, className, ...props }: React.ComponentProps<'code'> & { children?: React.ReactNode }) => {
         const match = /language-(\w+)/.exec(className || '');
         const isInline = !match;
@@ -99,16 +107,26 @@ const markdownComponents = {
             {children}
         </pre>
     ),
-    a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-        <a
-            href={href}
-            target={href?.startsWith('http') ? '_blank' : undefined}
-            rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-        >
-            {children}
-        </a>
-    ),
-    img: ({ src, alt, title, ...props }: React.ComponentProps<'img'>) => {
+    a: ({ children, href }: { children?: React.ReactNode; href?: string }) => {
+        const text = React.Children.toArray(children)
+            .map((child) => (typeof child === "string" ? child : ""))
+            .join("");
+
+        if (href && isMentionLink(href, text)) {
+            return <LinkMention url={href} />;
+        }
+
+        return (
+            <a
+                href={href}
+                target={href?.startsWith('http') ? '_blank' : undefined}
+                rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+                {children}
+            </a>
+        );
+    },
+    img: ({ src, alt, title }: React.ComponentProps<'img'>) => {
         const imageSource = typeof src === "string" ? src : undefined;
         const { src: imageSrc, width } = parseImageSize(imageSource, title);
 
@@ -117,15 +135,7 @@ const markdownComponents = {
                 className={cn("not-prose my-8", width && "mx-auto")}
                 style={width ? { width, maxWidth: "100%" } : undefined}
             >
-                <div className="overflow-hidden rounded-lg">
-                    <img
-                        {...props}
-                        src={imageSrc}
-                        alt={alt || ""}
-                        className="block h-auto w-full max-w-full"
-                        loading="lazy"
-                    />
-                </div>
+                <ZoomableImage src={imageSrc} alt={alt || ""} />
                 {alt && (
                     <figcaption className="mt-2 text-center text-sm text-muted-foreground">
                         {alt}
@@ -154,22 +164,33 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
     const parts = splitBlogContentWithDropdowns(content);
 
     return (
-        <Prose className={cn("max-w-none prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent", className)}>
-            {parts.map((part, index) => {
-                if (part.type === "dropdown") {
-                    return <BlogConfigDropdown key={`dropdown-${index}`} {...part.dropdown} />;
-                }
-                if (part.type === "platform") {
-                    return <BlogPlatformToggle key={`platform-${index}`} {...part.platform} />;
-                }
-                if (part.type === "install") {
-                    return <BlogInstallToggle key={`install-${index}`} {...part.install} />;
-                }
-                if (part.type === "graph") {
-                    return <NodeGraph key={`graph-${index}`} {...part.graph} />;
-                }
-                return <MarkdownChunk key={`markdown-${index}`} content={part.content} />;
-            })}
-        </Prose>
+        <ImageLightboxProvider>
+            <Prose
+                data-article-body
+                className={cn(
+                    "max-w-none prose-base sm:prose-lg prose-p:leading-[1.8] prose-li:leading-relaxed prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent",
+                    className
+                )}
+            >
+                {parts.map((part, index) => {
+                    if (part.type === "dropdown") {
+                        return <BlogConfigDropdown key={`dropdown-${index}`} {...part.dropdown} />;
+                    }
+                    if (part.type === "platform") {
+                        return <BlogPlatformToggle key={`platform-${index}`} {...part.platform} />;
+                    }
+                    if (part.type === "install") {
+                        return <BlogInstallToggle key={`install-${index}`} {...part.install} />;
+                    }
+                    if (part.type === "graph") {
+                        return <NodeGraph key={`graph-${index}`} {...part.graph} />;
+                    }
+                    if (part.type === "gallery") {
+                        return <ImageGallery key={`gallery-${index}`} {...part.gallery} />;
+                    }
+                    return <MarkdownChunk key={`markdown-${index}`} content={part.content} />;
+                })}
+            </Prose>
+        </ImageLightboxProvider>
     );
 }

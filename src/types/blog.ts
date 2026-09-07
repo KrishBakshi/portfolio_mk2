@@ -2,7 +2,7 @@ export interface BlogFrontmatter {
     title: string;
     slug: string;
     description: string;
-    image: string;
+    image?: string;
     tags: string[];
     date: string;
     author?: string;

@@ -12,23 +12,21 @@ interface BlogProps {
 
 export function Blog({ posts, max = 2, showToggle = true, showAllHref }: BlogProps) {
     const visiblePosts = showAllHref ? posts.slice(0, max) : posts;
+    const Heading = showAllHref ? "h2" : "h1";
 
     return (
-        <div className="space-y-6 px-4 sm:py-4">
-            <div className="mb-2 flex flex-col gap-2">
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">Blog</h2>
-                <p className="text-foreground font-mono text-sm">
-                    Thoughts on technology.
-                </p>
+        <section className="px-5 sm:px-8">
+            <div className="mb-6">
+                <Heading className={showAllHref ? "text-2xl font-semibold tracking-tight sm:text-3xl" : "text-3xl font-semibold tracking-tight sm:text-4xl"}>
+                    Writing
+                </Heading>
             </div>
 
-            <div className="bg-background">
+            <div>
                 {showAllHref ? (
-                    <div className="flex flex-col">
-                        {visiblePosts.map((post) => (
-                            <BlogCard key={post.slug} post={post.frontmatter} />
-                        ))}
-                    </div>
+                    visiblePosts.map((post) => (
+                        <BlogCard key={post.slug} post={post.frontmatter} />
+                    ))
                 ) : (
                     <CollapsibleList
                         items={posts}
@@ -43,10 +41,10 @@ export function Blog({ posts, max = 2, showToggle = true, showAllHref }: BlogPro
             </div>
 
             {showAllHref ? (
-                <div className="flex h-12 items-center justify-center pt-2">
-                    <ShowAllLink href={showAllHref} label="Show All Blogs" />
+                <div className="mt-5 flex items-center justify-start">
+                    <ShowAllLink href={showAllHref} label="Browse all writing" />
                 </div>
             ) : null}
-        </div>
+        </section>
     );
 }

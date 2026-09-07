@@ -6,19 +6,23 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ReadingProgress } from "@/components/blog/ReadingProgress";
+import { BlogCard } from "@/components/blog/BlogCard";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  getAllBlogPosts,
+  getPublishedBlogPosts,
   getBlogPostBySlug,
   getNeighboringPosts,
+  getRelatedPosts,
   getRawMdxContent,
 } from "@/lib/blog";
 import { PostShareMenu } from "@/components/blog/PostShareMenu";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
+import { SITE_INFO } from "@/config/site";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -27,7 +31,7 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllBlogPosts();
+  const posts = getPublishedBlogPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -39,9 +43,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
-  if (!post) {
+  if (!post || !post.frontmatter.isPublished) {
     return {
-      title: "Blog Post Not Found",
+      title: "Writing Not Found",
     };
   }
 
@@ -53,6 +57,7 @@ export async function generateMetadata({
     publishedTime: post.frontmatter.date,
     authors: post.frontmatter.author ? [post.frontmatter.author] : undefined,
     tags: post.frontmatter.tags,
+    image: post.frontmatter.image,
   });
 }
 
@@ -60,18 +65,39 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
-  if (!post) {
+  if (!post || !post.frontmatter.isPublished) {
     notFound();
   }
 
   const { frontmatter, content } = post;
   const { previous, next } = getNeighboringPosts(slug);
+  const related = getRelatedPosts(slug);
   const rawMdxContent = getRawMdxContent(slug);
+  const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: frontmatter.title,
+    description: frontmatter.description,
+    datePublished: frontmatter.date,
+    author: { "@type": "Person", name: frontmatter.author ?? "Krish Bakshi" },
+    mainEntityOfPage: `${SITE_INFO.url}/blog/${slug}`,
+    ...(frontmatter.image ? { image: new URL(frontmatter.image, SITE_INFO.url).toString() } : {}),
+  };
 
   return (
     <PageDetailShell>
-      <div className="mt-6 mb-6 flex items-center justify-between">
-        <BackButton href="/blog" label="Back to Blog" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
+      <ReadingProgress />
+      <div className="flex items-center justify-between border-b border-border py-4">
+        <BackButton href="/blog" label="Back to Writing" />
 
         <div className="flex items-center gap-2">
           <LLMCopyButtonWithViewOptions
@@ -84,36 +110,46 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <TableOfContents content={content} title={frontmatter.title} />
 
-      <article className="relative border border-gray-300/50 bg-background p-6 sm:p-8 dark:border-white/10">
-        <div className="space-y-8">
-          <header className="space-y-4">
-            <h1 className="font-sans text-3xl font-bold tracking-tight sm:text-4xl">
+      <article data-reading-scope className="relative py-10 sm:py-14">
+        <div className="mx-auto max-w-[720px] space-y-10">
+          <header>
+            <div className="mb-5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <time dateTime={frontmatter.date}>{formattedDate}</time>
+              <span aria-hidden>/</span>
+              <span>{frontmatter.readTime}</span>
+              {frontmatter.author ? <><span aria-hidden>/</span><span>{frontmatter.author}</span></> : null}
+            </div>
+            <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
               {frontmatter.title}
             </h1>
-
-            <div className="flex flex-wrap gap-2">
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              {frontmatter.description}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
               {frontmatter.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="font-mono">
+                <Badge key={tag} variant="secondary" className="text-xs font-normal text-muted-foreground">
                   {tag}
                 </Badge>
               ))}
             </div>
           </header>
 
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
-            <Image
-              src={frontmatter.image}
-              alt={frontmatter.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          {frontmatter.image && (
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
+              <Image
+                src={frontmatter.image}
+                alt={frontmatter.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
 
           <NotionRenderer content={content} />
 
           {frontmatter.externalUrl && (
-            <div className="border-t pt-4">
+            <div className="border-t border-border pt-4">
               <a
                 href={frontmatter.externalUrl}
                 target="_blank"
@@ -128,11 +164,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </article>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {related.length > 0 ? (
+        <section className="mx-auto w-full max-w-[720px] border-t border-border py-10">
+          <h2 className="mb-5 text-xl font-semibold">Related writing</h2>
+          {related.map((post) => (
+            <BlogCard key={post.slug} post={post.frontmatter} />
+          ))}
+        </section>
+      ) : null}
+
+      <nav aria-label="Article pagination" className="mx-auto grid w-full max-w-[720px] grid-cols-1 border-t border-border sm:grid-cols-2">
         {previous ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-start gap-1 whitespace-normal p-4 mb-4 text-left"
+            className="h-auto flex-col items-start gap-1 whitespace-normal px-0 py-6 text-left sm:pr-6"
             asChild
           >
             <Link href={`/blog/${previous.slug}`}>
@@ -152,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {next ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-end gap-1 whitespace-normal p-4 mb-4 text-right"
+            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-6 text-right sm:border-l sm:border-border sm:pl-6"
             asChild
           >
             <Link href={`/blog/${next.slug}`}>
@@ -168,7 +213,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         ) : (
           <div />
         )}
-      </div>
+      </nav>
     </PageDetailShell>
   );
 }

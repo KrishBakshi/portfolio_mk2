@@ -5,7 +5,7 @@ import { getPublishedBlogPosts } from "@/lib/blog";
 import { getPublishedProjects } from "@/lib/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/work", "/projects", "/blog", "/llms.txt", "/llms-full.txt", "/about.md", "/experience.md", "/projects.md"].map(
+  const staticRoutes = ["", "/work", "/projects", "/blog", "/rss.xml", "/llms.txt", "/llms-full.txt", "/about.md", "/experience.md", "/projects.md"].map(
     (route) => ({
       url: `${SITE_INFO.url}${route}`,
       lastModified: new Date(),

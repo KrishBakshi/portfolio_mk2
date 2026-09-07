@@ -1,22 +1,18 @@
 import { getStaticPageMetadata } from "@/config/metadata";
 import { PageCanvas } from "@/components/PageCanvas";
 import { Blog } from "@/components/blog/Blog";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getPublishedBlogPosts } from "@/lib/blog";
 
 export const metadata = getStaticPageMetadata("/blog");
 
 export default function BlogPage() {
-  const posts = getAllBlogPosts();
+  const posts = getPublishedBlogPosts();
 
   return (
     <PageCanvas>
-      <div className="mx-auto mb-6 w-full max-w-3xl sm:px-0">
-        <div id="js-cover-mark" className="pointer-events-none absolute left-0 top-0 h-32 w-full" />
-
-        <div className="mt-6 border border-gray-300/50 bg-background p-4 dark:border-white/10">
-          <Blog posts={posts} max={5} />
-        </div>
-      </div>
+      <main className="mx-auto w-full bg-background py-10 sm:py-16">
+        <Blog posts={posts} max={posts.length} showToggle={false} />
+      </main>
     </PageCanvas>
   );
 }
