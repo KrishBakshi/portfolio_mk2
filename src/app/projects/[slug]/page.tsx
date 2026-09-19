@@ -18,6 +18,7 @@ import {
   getRawProjectMdxContent,
 } from "@/lib/projects";
 import { PostShareMenu } from "@/components/blog/PostShareMenu";
+import { ViewCount } from "@/components/blog/ViewCount";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
 import { getProjectPrimaryLink } from "@/lib/project-links";
 
@@ -93,6 +94,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   {domain}
                 </Link>
               ))}
+              <ViewCount kind="project" slug={slug} />
             </div>
             <h1 className={pageTitle}>
               {frontmatter.title}

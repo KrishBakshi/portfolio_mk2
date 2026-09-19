@@ -21,6 +21,7 @@ import {
   getRawMdxContent,
 } from "@/lib/blog";
 import { PostShareMenu } from "@/components/blog/PostShareMenu";
+import { ViewCount } from "@/components/blog/ViewCount";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
 import { SITE_INFO } from "@/config/site";
 
@@ -117,6 +118,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <time dateTime={frontmatter.date}>{formattedDate}</time>
               <span aria-hidden>/</span>
               <span>{frontmatter.readTime}</span>
+              <ViewCount kind="blog" slug={slug} />
               {frontmatter.author ? <><span aria-hidden>/</span><span>{frontmatter.author}</span></> : null}
             </div>
             <h1 className={pageTitle}>
