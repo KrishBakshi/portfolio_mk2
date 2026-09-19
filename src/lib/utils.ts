@@ -8,5 +8,5 @@ export const cn = (...inputs: ClassValue[]) => {
 
 
 /** Heading scale: one page title per page, section titles beneath it. */
-export const pageTitle = "text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl";
-export const sectionTitle = "text-lg font-semibold tracking-tight text-foreground";
+export const pageTitle = "text-xl font-medium leading-tight tracking-tight text-foreground sm:text-2xl";
+export const sectionTitle = "text-base font-medium tracking-tight text-foreground";

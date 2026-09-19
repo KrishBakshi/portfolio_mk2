@@ -7,6 +7,7 @@ export default function Footer() {
             <div className="flex items-center gap-4">
                 <Link href="/rss.xml" className="font-mono hover:text-foreground">RSS</Link>
                 <Link href="/llms.txt" className="font-mono hover:text-foreground">llms.txt</Link>
+                <a href="/resume.pdf" className="font-mono hover:text-foreground">Resume</a>
             </div>
         </footer>
     )

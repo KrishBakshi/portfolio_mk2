@@ -122,11 +122,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h1 className={pageTitle}>
               {frontmatter.title}
             </h1>
-            <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
-              {frontmatter.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
           </header>
 
           {frontmatter.image && (
