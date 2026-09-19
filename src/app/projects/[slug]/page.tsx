@@ -128,6 +128,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <video
                 src={frontmatter.videoFull}
                 controls
+                autoPlay
                 muted
                 playsInline
                 aria-label={`${frontmatter.title} project demo`}
