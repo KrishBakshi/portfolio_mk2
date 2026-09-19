@@ -126,13 +126,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {frontmatter.image && (
             <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
-              <Image
-                src={frontmatter.image}
-                alt={frontmatter.title}
-                fill
-                className="object-cover"
-                priority
-              />
+              {frontmatter.image.endsWith(".svg") ? (
+                // SVG line-art cover: invert in dark mode so it stays legible.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={frontmatter.image}
+                  alt=""
+                  className="size-full object-cover dark:invert"
+                />
+              ) : (
+                <Image
+                  src={frontmatter.image}
+                  alt={frontmatter.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              )}
             </div>
           )}
 
