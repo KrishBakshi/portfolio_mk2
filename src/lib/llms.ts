@@ -45,14 +45,10 @@ export const PROFILE = {
     [
       { type: "text", value: "Currently a Data Scientist at " },
       { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
-      { type: "text", value: ", working across " },
       {
-        type: "link",
-        label: "AI agents",
-        href: "/projects?domain=AI%20Agents",
-      },
-      {
-        type: "text", value: ", computer vision, and neural network training on GPU clusters.",
+        type: "text",
+        value:
+          ", working at the intersection of research and production across computer vision, AI agents & automation, and document intelligence.",
       },
     ],
   ] satisfies ProfileBullet[],
