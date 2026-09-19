@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 /** Counts below this stay hidden, so a brand-new page doesn't show "2 views". */
@@ -10,7 +11,7 @@ const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFracti
 const today = () => new Date().toISOString().slice(0, 10);
 
 /**
- * "/ 1.2k views" for the meta line. Makes no request if this browser already
+ * "/ (eye) 1.2k" for the meta line. Makes no request if this browser already
  * counted the page today; otherwise exactly one.
  */
 export function ViewCount({ kind, slug }: { kind: "blog" | "project"; slug: string }) {
@@ -47,7 +48,11 @@ export function ViewCount({ kind, slug }: { kind: "blog" | "project"; slug: stri
   return (
     <>
       <span aria-hidden>/</span>
-      <span>{compact.format(views)} {views === 1 ? "view" : "views"}</span>
+      <span className="inline-flex items-center gap-1" title={`${views} ${views === 1 ? "view" : "views"}`}>
+        <Eye className="size-3.5" aria-hidden />
+        <span aria-hidden>{compact.format(views)}</span>
+        <span className="sr-only">{views} {views === 1 ? "view" : "views"}</span>
+      </span>
     </>
   );
 }
