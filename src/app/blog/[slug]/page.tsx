@@ -114,12 +114,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <article data-reading-scope className="relative py-4 sm:py-6">
         <div className="mx-auto max-w-[720px] space-y-6">
           <header>
-            <div className="mb-5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <time dateTime={frontmatter.date}>{formattedDate}</time>
-              <span aria-hidden>/</span>
-              <span>{frontmatter.readTime}</span>
+            <div className="mb-5 flex items-center justify-between gap-4 text-xs text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-2">
+                <time dateTime={frontmatter.date}>{formattedDate}</time>
+                <span aria-hidden>/</span>
+                <span>{frontmatter.readTime}</span>
+              </div>
               <ViewCount kind="blog" slug={slug} />
-              {frontmatter.author ? <><span aria-hidden>/</span><span>{frontmatter.author}</span></> : null}
             </div>
             <h1 className={pageTitle}>
               {frontmatter.title}
