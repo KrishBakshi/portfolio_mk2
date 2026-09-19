@@ -11,7 +11,7 @@ const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFracti
 const today = () => new Date().toISOString().slice(0, 10);
 
 /**
- * "/ (eye) 1.2k" for the meta line. Makes no request if this browser already
+ * eye icon + "1.2k", right-aligned in the meta row. Makes no request if this browser already
  * counted the page today; otherwise exactly one.
  */
 export function ViewCount({ kind, slug }: { kind: "blog" | "project"; slug: string }) {
@@ -46,13 +46,10 @@ export function ViewCount({ kind, slug }: { kind: "blog" | "project"; slug: stri
   if (views === null || views < MIN_VIEWS_SHOWN) return null;
 
   return (
-    <>
-      <span aria-hidden>/</span>
-      <span className="inline-flex items-center gap-1" title={`${views} ${views === 1 ? "view" : "views"}`}>
-        <Eye className="size-3.5" aria-hidden />
-        <span aria-hidden>{compact.format(views)}</span>
-        <span className="sr-only">{views} {views === 1 ? "view" : "views"}</span>
-      </span>
-    </>
+    <span className="inline-flex shrink-0 items-center gap-1" title={`${views} ${views === 1 ? "view" : "views"}`}>
+      <Eye className="size-3.5" aria-hidden />
+      <span aria-hidden>{compact.format(views)}</span>
+      <span className="sr-only">{views} {views === 1 ? "view" : "views"}</span>
+    </span>
   );
 }
