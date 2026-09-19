@@ -31,9 +31,9 @@ export function Skills() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         aria-label={tech.title}
-                                        className="group grid size-10 place-items-center rounded-md"
+                                        className="grid size-10 place-items-center rounded-md"
                                     >
-                                        <div className="flex size-8 items-center justify-center p-1.5 text-muted-foreground transition-colors group-hover:text-foreground">
+                                        <div className="flex size-8 items-center justify-center p-1.5 text-foreground">
                                             <Icon className="size-full" />
                                         </div>
                                     </Link>
