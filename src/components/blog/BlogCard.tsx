@@ -7,8 +7,8 @@ export function BlogCard({ post }: { post: BlogFrontmatter }) {
             <h3 className="text-[15px] font-medium leading-snug text-foreground group-hover:underline underline-offset-4">
                 {post.title}
             </h3>
-            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                {post.description}
+            <p className="mt-1 truncate text-sm text-muted-foreground">
+                {post.display ?? post.description}
             </p>
         </Link>
     );

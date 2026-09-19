@@ -1,7 +1,9 @@
-import { Blog, BlogFrontmatter, BlogPreview } from '@/types/blog';
+import { Blog, BlogFrontmatter, BlogPreview, BLOG_DISPLAY_MAX_CHARS } from '@/types/blog';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+
+class DisplayTooLongError extends Error {}
 
 const blogDirectory = path.join(process.cwd(), 'public/data/blog');
 
@@ -43,6 +45,12 @@ export function getBlogPostBySlug(slug: string): Blog | null {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
         }
 
+        if (frontmatter.display && frontmatter.display.length > BLOG_DISPLAY_MAX_CHARS) {
+            throw new DisplayTooLongError(
+                `${slug}.mdx: "display" is ${frontmatter.display.length} chars (max ${BLOG_DISPLAY_MAX_CHARS})`
+            );
+        }
+
         if (!frontmatter.readTime) {
             const words = content
                 .replace(/```[\s\S]*?```/g, " ")
@@ -59,6 +67,7 @@ export function getBlogPostBySlug(slug: string): Blog | null {
             content,
         };
     } catch (error) {
+        if (error instanceof DisplayTooLongError) throw error;
         console.error(`Error reading blog post ${slug}:`, error);
         return null;
     }
