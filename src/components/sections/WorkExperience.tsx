@@ -219,7 +219,7 @@ export function ExperiencePositionItem({
                     <div className="flex items-start gap-3">
                         <div
                             className={cn(
-                                "relative z-10 flex size-6 shrink-0 items-center justify-center rounded-lg mt-0.5",
+                                "relative z-10 flex size-6 shrink-0 items-center justify-center rounded-lg mt-1",
                                 "bg-muted text-muted-foreground"
                             )}
                             aria-hidden
@@ -227,9 +227,9 @@ export function ExperiencePositionItem({
                             <ExperienceIcon className="size-4" />
                         </div>
 
-                        <div className="-ml-2 flex min-h-11 flex-1 flex-col justify-center rounded-lg px-3 py-2 hover:bg-muted/60 transition-colors">
+                        <div className="flex flex-1 flex-col justify-center py-1">
                             <div className="mb-1 flex items-center gap-3">
-                                <span className="flex-1 text-base font-medium text-balance text-foreground">
+                                <span className="flex-1 text-[15px] font-medium leading-6 text-balance text-foreground">
                                     {position.title}
                                 </span>
 
