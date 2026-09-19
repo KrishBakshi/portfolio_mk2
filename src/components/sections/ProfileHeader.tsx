@@ -6,7 +6,6 @@ import type { ProfileBullet } from "@/lib/llms";
 
 interface ProfileHeaderProps {
   name?: string;
-  title?: string;
   profileImage?: string;
   bullets?: ProfileBullet[];
   socialLinks?: {
@@ -75,7 +74,6 @@ function ProfileBulletContent({ parts }: { parts: ProfileBullet }) {
 
 export default function ProfileHeader({
   name = "",
-  title = "",
   profileImage = "",
   bullets = [],
   socialLinks = {
@@ -88,24 +86,20 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   return (
     <header className="px-5 sm:px-8">
-      <div className="grid grid-cols-[minmax(0,1fr)_4.5rem] items-start gap-6 sm:grid-cols-[minmax(0,1fr)_5.5rem]">
-        <div className="min-w-0">
-          <p className="mb-2 text-sm text-muted-foreground">{title}</p>
-          <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-            {name}
-          </h1>
-        </div>
-
-        <div className="relative aspect-square overflow-hidden rounded-xl">
+      <div className="flex items-center gap-4">
+        <div className="relative size-14 shrink-0 overflow-hidden rounded-xl sm:size-16">
           <Image
             src={profileImage}
             alt={`${name} profile photo`}
             fill
             priority
-            sizes="88px"
+            sizes="64px"
             className="object-cover"
           />
         </div>
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+          {name}
+        </h1>
       </div>
 
       {bullets.length > 0 && (
@@ -159,17 +153,6 @@ export default function ProfileHeader({
               aria-label="Email"
             >
               <span>Email</span>
-            </a>
-          )}
-          {socialLinks.resume && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Resume"
-            >
-              <span>Resume</span>
             </a>
           )}
       </nav>

@@ -21,7 +21,6 @@ export default function Home() {
       <main className="mx-auto w-full space-y-12 bg-background py-10 sm:py-16">
         <ProfileHeader
           name={PROFILE.name}
-          title={PROFILE.title}
           profileImage={PROFILE.profileImage}
           bullets={[...PROFILE.bullets]}
           socialLinks={PROFILE.socialLinks}
@@ -30,6 +29,7 @@ export default function Home() {
           {WORK_EXPERIENCE_DATA.map((e) => (
             <EntryRow
               key={e.id}
+              logo={e.companyLogo}
               title={`${e.companyName} — ${e.positions[0].title}`}
               meta={e.positions[0].employmentPeriod}
             />

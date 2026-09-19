@@ -51,4 +51,8 @@ export const MAIN_NAV: NavItem[] = [
     title: "Writing",
     href: "/blog",
   },
+  {
+    title: "Resume",
+    href: "/resume.pdf",
+  },
 ];

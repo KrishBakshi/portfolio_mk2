@@ -16,7 +16,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between gap-2 px-5 sm:gap-4 sm:px-8">
+      <div className="mx-auto flex h-14 max-w-2xl items-center justify-between gap-2 px-5 sm:gap-4 sm:px-8">
         <SiteHeaderMark />
 
         <div className="flex-1" />

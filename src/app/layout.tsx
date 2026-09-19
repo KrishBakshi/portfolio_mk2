@@ -49,13 +49,13 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <div className="relative mx-auto w-full max-w-3xl overflow-x-clip px-3 min-[765px]:px-5 min-[900px]:px-0">
+          <div className="relative mx-auto w-full max-w-2xl overflow-x-clip px-3 min-[765px]:px-5 min-[900px]:px-0">
             <SiteHeader />
             <div className="mx-auto w-full">
               {children}
               <Analytics />
             </div>
-            <div className="mx-auto w-full max-w-3xl border-t border-border">
+            <div className="mx-auto w-full max-w-2xl border-t border-border">
               <Footer />
             </div>
           </div>
