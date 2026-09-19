@@ -25,18 +25,17 @@ export default function Home() {
           bullets={[...PROFILE.bullets]}
           socialLinks={PROFILE.socialLinks}
         />
+        <Projects projects={projects} max={5} showAllHref="/projects" />
+        {posts.length > 0 && <Blog posts={posts} max={3} showAllHref="/blog" />}
         <Section title="Experience" href="/work">
           {WORK_EXPERIENCE_DATA.map((e) => (
             <EntryRow
               key={e.id}
-              logo={e.companyLogo}
               title={`${e.companyName} — ${e.positions[0].title}`}
               meta={e.positions[0].employmentPeriod}
             />
           ))}
         </Section>
-        <Projects projects={projects} max={5} showAllHref="/projects" />
-        {posts.length > 0 && <Blog posts={posts} max={3} showAllHref="/blog" />}
       </main>
     </PageCanvas>
   );

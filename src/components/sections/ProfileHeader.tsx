@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
     twitter?: string;
     resume?: string;
     github?: string;
+    huggingface?: string;
     linkedin?: string;
     mail?: string;
   };
@@ -122,6 +123,17 @@ export default function ProfileHeader({
               aria-label="GitHub"
             >
               <span>GitHub</span>
+            </a>
+          )}
+          {socialLinks.huggingface && (
+            <a
+              className={socialLinkClassName}
+              href={socialLinks.huggingface}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Hugging Face"
+            >
+              <span>Hugging Face</span>
             </a>
           )}
           {socialLinks.twitter && (

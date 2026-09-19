@@ -66,6 +66,7 @@ export const PROFILE = {
   socialLinks: {
     twitter: "https://x.com/KrishBakshi_",
     github: "https://github.com/KrishBakshi",
+    huggingface: "https://huggingface.co/KrishBakshi",
     linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
     resume: "/resume.pdf",
     mail: "mailto:work.krishb@gmail.com",
@@ -75,6 +76,7 @@ export const PROFILE = {
 const PROFILE_SOCIAL_LINKS = [
   { title: "X", href: PROFILE.socialLinks.twitter },
   { title: "GitHub", href: PROFILE.socialLinks.github },
+  { title: "Hugging Face", href: PROFILE.socialLinks.huggingface },
   { title: "LinkedIn", href: PROFILE.socialLinks.linkedin },
   { title: "Resume", href: `${SITE_INFO.url}${PROFILE.socialLinks.resume}` },
   { title: "Email", href: PROFILE.socialLinks.mail },
