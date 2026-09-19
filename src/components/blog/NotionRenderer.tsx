@@ -4,7 +4,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
-import { cn } from '@/lib/utils';
+import { cn, sectionTitle } from '@/lib/utils';
 import { CopyButton } from './CopyButton';
 import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
@@ -58,12 +58,12 @@ function omitMarkdownNode<T extends { node?: unknown }>({ node, ...props }: T): 
 }
 
 const markdownComponents = {
-    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className="text-lg font-medium" {...props} />,
-    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className="text-base font-medium" {...props} />,
-    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-base font-medium" {...props} />,
-    h4: (props: React.ComponentProps<'h4'>) => <Heading as="h5" className="text-base font-semibold" {...props} />,
-    h5: (props: React.ComponentProps<'h5'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
-    h6: (props: React.ComponentProps<'h6'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
+    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className={sectionTitle} {...props} />,
+    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className={sectionTitle} {...props} />,
+    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-[15px] font-medium text-foreground" {...props} />,
+    h4: (props: React.ComponentProps<'h4'>) => <Heading as="h5" className="text-[15px] font-medium text-muted-foreground" {...props} />,
+    h5: (props: React.ComponentProps<'h5'>) => <Heading as="h6" className="text-[15px] font-medium text-muted-foreground" {...props} />,
+    h6: (props: React.ComponentProps<'h6'>) => <Heading as="h6" className="text-[15px] font-medium text-muted-foreground" {...props} />,
     table: (props: { node?: unknown } & React.ComponentProps<'table'>) => <Table {...omitMarkdownNode(props)} />,
     thead: (props: { node?: unknown } & React.ComponentProps<'thead'>) => <TableHeader {...omitMarkdownNode(props)} />,
     tbody: (props: { node?: unknown } & React.ComponentProps<'tbody'>) => <TableBody {...omitMarkdownNode(props)} />,
@@ -90,7 +90,7 @@ const markdownComponents = {
                 <pre>
                     <Code
                         className={cn(
-                            "hljs block font-mono text-sm bg-transparent border-0 p-0",
+                            "hljs block font-mono text-[13px] bg-transparent border-0 p-0",
                             className
                         )}
                         data-language={match ? match[1] : "text"}
@@ -137,7 +137,7 @@ const markdownComponents = {
             >
                 <ZoomableImage src={imageSrc} alt={alt || ""} />
                 {alt && (
-                    <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+                    <figcaption className="mt-2 text-center text-xs text-muted-foreground">
                         {alt}
                     </figcaption>
                 )}
@@ -168,7 +168,7 @@ export function NotionRenderer({ content, className }: NotionRendererProps) {
             <Prose
                 data-article-body
                 className={cn(
-                    "max-w-none prose-base sm:prose-lg prose-p:leading-[1.8] prose-li:leading-relaxed prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent",
+                    "max-w-none text-[15px]! leading-7 prose-p:my-4 prose-p:leading-7 prose-li:my-1 prose-li:leading-7 prose-headings:mt-8 prose-headings:mb-3 prose-pre:my-0 prose-pre:p-0 prose-pre:bg-transparent",
                     className
                 )}
             >
