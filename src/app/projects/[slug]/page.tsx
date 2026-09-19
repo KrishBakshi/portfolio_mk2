@@ -91,26 +91,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h1 className={pageTitle}>
               {frontmatter.title}
             </h1>
-            <div className="mt-3 flex items-center justify-between gap-4 text-xs text-muted-foreground">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                {(frontmatter.domains ?? []).map((domain) => (
-                  <Link key={domain} href={`/projects?domain=${encodeURIComponent(domain)}`} className="hover:text-foreground">
-                    {domain}
-                  </Link>
+            <div className="mt-3 flex items-start justify-between gap-4 text-xs text-muted-foreground">
+              <ul aria-label="Technologies" className="flex min-w-0 flex-wrap gap-y-1 font-mono">
+                {frontmatter.technologies.map((tech) => (
+                  <li key={tech} className="after:mx-2 after:content-['·'] last:after:content-none">
+                    {tech}
+                  </li>
                 ))}
-              </div>
+              </ul>
               <ViewCount kind="project" slug={slug} />
             </div>
-            <ul
-              aria-label="Technologies"
-              className="mt-5 flex flex-wrap gap-y-1 font-mono text-xs text-muted-foreground"
-            >
-              {frontmatter.technologies.map((tech) => (
-                <li key={tech} className="after:mx-2 after:content-['·'] last:after:content-none">
-                  {tech}
-                </li>
-              ))}
-            </ul>
             <div className="mt-6 flex flex-wrap gap-2">
               {primaryLink ? (
                 <Button asChild variant="outline" className="min-h-10">
