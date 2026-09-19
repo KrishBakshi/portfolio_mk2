@@ -1,15 +1,11 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { META_THEME_COLORS } from "@/config/site";
 import { useMetaColor } from "@/hooks/use-meta-color";
-// Note: Uncomment when you add the audio file at /public/audio/ui-sounds/click.wav
-// import { useSound } from "@/hooks/use-sound";
-
-import { MoonIcon } from "@/components/animated-icons/moon";
-import { SunMediumIcon } from "@/components/animated-icons/sun-medium";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
@@ -23,22 +19,15 @@ export function ThemeToggle() {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // Note: Uncomment when you add the audio file
-  // const playClick = useSound("/audio/ui-sounds/click.wav");
-  const playClick = useCallback(() => {
-    // Sound will be enabled when audio file is added
-  }, []);
-
   const switchTheme = useCallback(() => {
     if (!mounted) return;
-    playClick();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
     setMetaColor(
       resolvedTheme === "dark"
         ? META_THEME_COLORS.light
         : META_THEME_COLORS.dark
     );
-  }, [mounted, resolvedTheme, setTheme, setMetaColor, playClick]);
+  }, [mounted, resolvedTheme, setTheme, setMetaColor]);
 
   const isDark = mounted && resolvedTheme === "dark";
 
@@ -49,7 +38,7 @@ export function ThemeToggle() {
       onClick={switchTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {isDark ? <SunMediumIcon size={16} className="h-4 w-4" /> : <MoonIcon size={16} className="h-4 w-4" />}
+      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
     </Button>
   );
 }
