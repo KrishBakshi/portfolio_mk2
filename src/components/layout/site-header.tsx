@@ -29,7 +29,6 @@ export function SiteHeader() {
           <MobileNav className="min-[765px]:hidden" items={MAIN_NAV} />
         </div>
       </div>
-      <div aria-hidden="true" className="absolute right-5 bottom-0 left-5 h-px bg-border sm:right-8 sm:left-8" />
     </header>
   );
 }
