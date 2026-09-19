@@ -11,7 +11,6 @@ import { BlogCard } from "@/components/blog/BlogCard";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   getPublishedBlogPosts,
@@ -122,14 +121,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
               {frontmatter.title}
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              {frontmatter.description}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
               {frontmatter.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs font-normal text-muted-foreground">
-                  {tag}
-                </Badge>
+                <span key={tag}>{tag}</span>
               ))}
             </div>
           </header>

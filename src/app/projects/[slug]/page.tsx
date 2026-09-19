@@ -10,7 +10,6 @@ import { ReadingProgress } from "@/components/blog/ReadingProgress";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   getPublishedProjects,
@@ -97,14 +96,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
               {frontmatter.title}
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              {frontmatter.description}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
               {frontmatter.technologies.map((tech) => (
-                <Badge key={tech} variant="secondary" className="text-xs font-normal text-muted-foreground">
-                  {tech}
-                </Badge>
+                <span key={tech}>{tech}</span>
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-2">

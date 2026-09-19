@@ -11,7 +11,7 @@ export default function BlogPage() {
   return (
     <PageCanvas>
       <main className="mx-auto w-full bg-background py-10 sm:py-16">
-        <Blog posts={posts} max={posts.length} showToggle={false} />
+        <Blog posts={posts} />
       </main>
     </PageCanvas>
   );
