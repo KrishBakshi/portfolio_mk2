@@ -46,13 +46,13 @@ export const PROFILE = {
       {
         type: "text",
         value:
-          "I work at the intersection of research and production, currently a Data Scientist at ",
+          "Currently a Data Scientist at ",
       },
       { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
       {
         type: "text",
         value:
-          ", working across computer vision, AI agents & automation, and document intelligence.",
+          ", working across computer vision, document intelligence, AI agents & Automation.",
       },
     ],
   ] satisfies ProfileBullet[],
