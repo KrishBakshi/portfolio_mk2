@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <PageDetailShell>
       <ReadingProgress />
-      <div className="flex items-center justify-between border-b border-border py-4">
+      <div className="flex items-center justify-between py-4">
         <BackButton href="/projects" label="Back to Projects" />
 
         <div className="flex items-center gap-2">

@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <ReadingProgress />
-      <div className="flex items-center justify-between border-b border-border py-4">
+      <div className="flex items-center justify-between py-4">
         <BackButton href="/blog" label="Back to Writing" />
 
         <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <NotionRenderer content={content} />
 
           {frontmatter.externalUrl && (
-            <div className="border-t border-border pt-4">
+            <div>
               <a
                 href={frontmatter.externalUrl}
                 target="_blank"
@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </article>
 
       {related.length > 0 ? (
-        <section className="mx-auto w-full max-w-[720px] border-t border-border py-10">
+        <section className="mx-auto w-full max-w-[720px] py-10">
           <h2 className={`${sectionTitle} mb-5`}>Related writing</h2>
           {related.map((post) => (
             <BlogCard key={post.slug} post={post.frontmatter} />
@@ -163,7 +163,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </section>
       ) : null}
 
-      <nav aria-label="Article pagination" className="mx-auto grid w-full max-w-[720px] grid-cols-1 border-t border-border sm:grid-cols-2">
+      <nav aria-label="Article pagination" className="mx-auto grid w-full max-w-[720px] grid-cols-1 sm:grid-cols-2">
         {previous ? (
           <Button
             variant="link"
@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {next ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-6 text-right sm:border-l sm:border-border sm:pl-6"
+            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-6 text-right sm:pl-6"
             asChild
           >
             <Link href={`/blog/${next.slug}`}>
