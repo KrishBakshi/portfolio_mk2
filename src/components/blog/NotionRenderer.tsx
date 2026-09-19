@@ -58,9 +58,9 @@ function omitMarkdownNode<T extends { node?: unknown }>({ node, ...props }: T): 
 }
 
 const markdownComponents = {
-    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className="text-2xl font-semibold" {...props} />,
-    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className="text-xl font-semibold" {...props} />,
-    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-lg font-semibold" {...props} />,
+    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className="text-xl font-semibold" {...props} />,
+    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className="text-lg font-semibold" {...props} />,
+    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-base font-semibold" {...props} />,
     h4: (props: React.ComponentProps<'h4'>) => <Heading as="h5" className="text-base font-semibold" {...props} />,
     h5: (props: React.ComponentProps<'h5'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
     h6: (props: React.ComponentProps<'h6'>) => <Heading as="h6" className="text-base font-semibold" {...props} />,
