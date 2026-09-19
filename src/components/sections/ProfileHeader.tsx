@@ -168,6 +168,17 @@ export default function ProfileHeader({
               <span>Email</span>
             </a>
           )}
+          {socialLinks.resume && (
+            <a
+              className={socialLinkClassName}
+              href={socialLinks.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Resume"
+            >
+              <span>Resume</span>
+            </a>
+          )}
       </nav>
     </header>
   );
