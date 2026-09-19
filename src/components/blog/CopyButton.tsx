@@ -8,9 +8,10 @@ interface CopyButtonProps {
     text: string;
     className?: string;
     label?: string;
+    children?: React.ReactNode;
 }
 
-export function CopyButton({ text, className, label = "Copy code" }: CopyButtonProps) {
+export function CopyButton({ text, className, label = "Copy code", children }: CopyButtonProps) {
     const [isCopied, setIsCopied] = React.useState(false);
 
     const copy = async () => {
@@ -26,6 +27,7 @@ export function CopyButton({ text, className, label = "Copy code" }: CopyButtonP
             aria-label={label}
         >
             {isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {children}
         </button>
     );
 }
