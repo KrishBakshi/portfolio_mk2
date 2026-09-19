@@ -1,5 +1,6 @@
 "use client";
 
+import { pageTitle } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
@@ -98,7 +99,7 @@ export default function ProfileHeader({
             className="object-cover"
           />
         </div>
-        <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+        <h1 className={pageTitle}>
           {name}
         </h1>
       </div>

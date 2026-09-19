@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/utils";
 
 import { PageCanvas } from "@/components/PageCanvas";
 import { ShowAllLink } from "@/components/ui/show-all-link";
@@ -29,7 +30,7 @@ export default function NotFound() {
               <p className="font-mono text-xs text-muted-foreground">
                 Error 404
               </p>
-              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+              <h1 className={`${pageTitle} mt-3`}>
                 Page not found
               </h1>
               <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-relaxed text-foreground/80 sm:text-base">

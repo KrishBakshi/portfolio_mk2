@@ -1,5 +1,6 @@
 "use client";
 
+import { pageTitle } from "@/lib/utils";
 import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -46,7 +47,7 @@ export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
   return (
     <div>
       <div className="mb-8 space-y-6">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className={pageTitle}>
           Projects
         </h1>
 

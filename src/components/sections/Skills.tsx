@@ -1,5 +1,6 @@
 "use client";
 
+import { sectionTitle } from "@/lib/utils";
 import React from "react";
 import { TECH_STACK } from "@/lib/static-data";
 import { getTechIcon } from "@/components/TechIcons";
@@ -10,7 +11,7 @@ export function Skills({ max = 18 }: { max?: number }) {
     return (
         <section className="px-5 sm:px-8">
             <header className="mb-6">
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Stack</h2>
+                <h2 className={sectionTitle}>Stack</h2>
             </header>
 
             <div>

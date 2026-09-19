@@ -8,6 +8,7 @@ import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { pageTitle, sectionTitle } from "@/lib/utils";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
@@ -118,7 +119,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <span>{frontmatter.readTime}</span>
               {frontmatter.author ? <><span aria-hidden>/</span><span>{frontmatter.author}</span></> : null}
             </div>
-            <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+            <h1 className={pageTitle}>
               {frontmatter.title}
             </h1>
             <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
@@ -160,7 +161,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {related.length > 0 ? (
         <section className="mx-auto w-full max-w-[720px] border-t border-border py-10">
-          <h2 className="mb-5 text-xl font-semibold">Related writing</h2>
+          <h2 className={`${sectionTitle} mb-5`}>Related writing</h2>
           {related.map((post) => (
             <BlogCard key={post.slug} post={post.frontmatter} />
           ))}

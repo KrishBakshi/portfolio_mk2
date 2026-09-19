@@ -18,7 +18,7 @@ import {
     CollapsibleTrigger,
     CollapsibleChevronsIcon,
 } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { cn, pageTitle, sectionTitle } from "@/lib/utils";
 
 const iconMap = {
     code: CodeXmlIcon,
@@ -98,7 +98,7 @@ export function WorkExperience({
     return (
         <section className={cn("px-5 sm:px-8", className)}>
             <header className="mb-6">
-                <Heading className={showAllHref ? "text-2xl font-semibold tracking-tight sm:text-3xl" : "text-3xl font-semibold tracking-tight sm:text-4xl"}>{title}</Heading>
+                <Heading className={showAllHref ? sectionTitle : pageTitle}>{title}</Heading>
             </header>
             <div>
                 {showAllHref ? (

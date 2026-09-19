@@ -7,6 +7,7 @@ import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
+import { pageTitle } from "@/lib/utils";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
@@ -93,7 +94,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </Link>
               ))}
             </div>
-            <h1 className="text-4xl font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+            <h1 className={pageTitle}>
               {frontmatter.title}
             </h1>
             <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">

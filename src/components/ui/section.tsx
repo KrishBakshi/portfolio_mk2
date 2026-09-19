@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { pageTitle, sectionTitle } from "@/lib/utils";
 
 interface SectionProps {
   title: string;
@@ -9,11 +10,11 @@ interface SectionProps {
 export function Section({ title, href, children }: SectionProps) {
   return (
     <section className="px-5 sm:px-8">
-      <div className="mb-2 flex items-baseline justify-between">
+      <div className="mb-3 flex items-baseline justify-between">
         {href ? (
-          <h2 className="text-sm font-medium text-muted-foreground">{title}</h2>
+          <h2 className={sectionTitle}>{title}</h2>
         ) : (
-          <h1 className="mb-4 text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+          <h1 className={`${pageTitle} mb-4`}>{title}</h1>
         )}
         {href ? (
           <Link href={href} className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
