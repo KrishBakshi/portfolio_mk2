@@ -43,12 +43,16 @@ export const PROFILE = {
   highlights: ["Vision", "AI agents", "Fine-tuning", "RL"],
   bullets: [
     [
-      { type: "text", value: "Currently a Data Scientist at " },
+      {
+        type: "text",
+        value:
+          "I work at the intersection of research and production, currently a Data Scientist at ",
+      },
       { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
       {
         type: "text",
         value:
-          ", working at the intersection of research and production across computer vision, AI agents & automation, and document intelligence.",
+          ", working across computer vision, AI agents & automation, and document intelligence.",
       },
     ],
   ] satisfies ProfileBullet[],
