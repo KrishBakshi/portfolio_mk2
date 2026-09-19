@@ -13,7 +13,7 @@ Next.js 16 App Router portfolio for **Krish Bakshi** (Data Scientist). Content i
 | Profile header & bullets | `src/lib/llms.ts` → `PROFILE` | Tagline, highlights, social links, banner paths |
 | Work experience | `public/data/work-experience.json` | Roles, descriptions (markdown), skills |
 | Projects | `public/data/projects/*.mdx` | Frontmatter: `title`, `slug`, `description`, `domains`, `technologies`, `isWorking` |
-| Blog posts | `public/data/blog/{slug}/{slug}.mdx` | Set `isPublished: true`; `display` = one-line question for list cards (max 80 chars, build fails if longer) |
+| Blog posts | `public/data/blog/{slug}/{slug}.mdx` | Set `isPublished: true`; `display` = one-line hook for list cards (no question mark) (max 80 chars, build fails if longer) |
 | Tech stack | `public/data/skills.json` | Rendered on home page Stack section |
 | Project domain filters | `src/config/project-domains.ts` | Vision, AI Agents, LLM, RAG, Gen AI, RL |
 
