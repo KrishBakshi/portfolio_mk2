@@ -5,6 +5,10 @@ import { getProjectBySlug } from "@/lib/projects";
 
 const BOT_PATTERN = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse/i;
 
+// Local dev and Vercel previews share the same Redis instance as production,
+// so they count into a separate namespace and never touch the live numbers.
+const KEY_PREFIX = process.env.VERCEL_ENV === "production" ? "views" : "views-test";
+
 function exists(kind: string, slug: string) {
   if (kind === "blog") return getBlogPostBySlug(slug)?.frontmatter.isPublished === true;
   if (kind === "project") return getProjectBySlug(slug) !== null;
@@ -29,7 +33,7 @@ export async function POST(
   }
 
   try {
-    const res = await fetch(`${url}/incr/${encodeURIComponent(`views:${kind}:${slug}`)}`, {
+    const res = await fetch(`${url}/incr/${encodeURIComponent(`${KEY_PREFIX}:${kind}:${slug}`)}`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
