@@ -88,7 +88,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <article data-reading-scope className="relative py-4 sm:py-6">
         <div className="mx-auto max-w-[720px] space-y-6">
           <header>
-            <div className="mb-5 flex items-center justify-between gap-4 text-xs text-muted-foreground">
+            <h1 className={pageTitle}>
+              {frontmatter.title}
+            </h1>
+            <div className="mt-3 flex items-center justify-between gap-4 text-xs text-muted-foreground">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 {(frontmatter.domains ?? []).map((domain) => (
                   <Link key={domain} href={`/projects?domain=${encodeURIComponent(domain)}`} className="hover:text-foreground">
@@ -98,9 +101,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </div>
               <ViewCount kind="project" slug={slug} />
             </div>
-            <h1 className={pageTitle}>
-              {frontmatter.title}
-            </h1>
             <ul
               aria-label="Technologies"
               className="mt-5 flex flex-wrap gap-y-1 font-mono text-xs text-muted-foreground"
