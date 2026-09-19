@@ -12,7 +12,7 @@ export default function ProjectsPage() {
 
   return (
     <PageCanvas>
-      <main className="mx-auto w-full bg-background px-5 py-10 sm:px-8 sm:py-16">
+      <main className="mx-auto w-full bg-background px-5 py-6 sm:px-8 sm:py-10">
         <Suspense
           fallback={
             <div role="status" className="space-y-4" aria-label="Loading projects">

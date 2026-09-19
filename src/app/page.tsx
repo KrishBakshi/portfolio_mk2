@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <PageCanvas>
-      <main className="mx-auto w-full space-y-12 bg-background py-10 sm:py-16">
+      <main className="mx-auto w-full space-y-8 bg-background py-6 sm:py-10">
         <ProfileHeader
           name={PROFILE.name}
           profileImage={PROFILE.profileImage}

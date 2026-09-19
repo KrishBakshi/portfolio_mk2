@@ -46,7 +46,7 @@ export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
 
   return (
     <div>
-      <div className="mb-8 space-y-6">
+      <div className="mb-5 space-y-4">
         <h1 className={pageTitle}>
           Projects
         </h1>

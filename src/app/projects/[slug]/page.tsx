@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <PageDetailShell>
       <ReadingProgress />
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between py-3">
         <BackButton href="/projects" label="Back to Projects" />
 
         <div className="flex items-center gap-2">
@@ -84,8 +84,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <TableOfContents content={content} title={frontmatter.title} />
 
-      <article data-reading-scope className="relative py-10 sm:py-14">
-        <div className="mx-auto max-w-[720px] space-y-10">
+      <article data-reading-scope className="relative py-4 sm:py-6">
+        <div className="mx-auto max-w-[720px] space-y-6">
           <header>
             <div className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
               {(frontmatter.domains ?? []).map((domain) => (

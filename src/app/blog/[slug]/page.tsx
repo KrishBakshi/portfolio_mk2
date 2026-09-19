@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <ReadingProgress />
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between py-3">
         <BackButton href="/blog" label="Back to Writing" />
 
         <div className="flex items-center gap-2">
@@ -110,8 +110,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <TableOfContents content={content} title={frontmatter.title} />
 
-      <article data-reading-scope className="relative py-10 sm:py-14">
-        <div className="mx-auto max-w-[720px] space-y-10">
+      <article data-reading-scope className="relative py-4 sm:py-6">
+        <div className="mx-auto max-w-[720px] space-y-6">
           <header>
             <div className="mb-5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <time dateTime={frontmatter.date}>{formattedDate}</time>
@@ -154,8 +154,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </article>
 
+      <div className="mx-auto w-full max-w-[720px] border-t border-border">
       {related.length > 0 ? (
-        <section className="mx-auto w-full max-w-[720px] py-10">
+        <section className="py-5">
           <h2 className={`${sectionTitle} mb-5`}>Related writing</h2>
           {related.map((post) => (
             <BlogCard key={post.slug} post={post.frontmatter} />
@@ -163,11 +164,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </section>
       ) : null}
 
-      <nav aria-label="Article pagination" className="mx-auto grid w-full max-w-[720px] grid-cols-1 sm:grid-cols-2">
+      <nav aria-label="Article pagination" className="grid grid-cols-1 sm:grid-cols-2">
         {previous ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-start gap-1 whitespace-normal px-0 py-6 text-left sm:pr-6"
+            className="h-auto flex-col items-start gap-1 whitespace-normal px-0 py-4 text-left sm:pr-6"
             asChild
           >
             <Link href={`/blog/${previous.slug}`}>
@@ -187,7 +188,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {next ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-6 text-right sm:pl-6"
+            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-4 text-right sm:pl-6"
             asChild
           >
             <Link href={`/blog/${next.slug}`}>
@@ -204,6 +205,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div />
         )}
       </nav>
+      </div>
     </PageDetailShell>
   );
 }

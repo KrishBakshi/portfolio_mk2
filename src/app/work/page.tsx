@@ -9,7 +9,7 @@ export const metadata = getStaticPageMetadata("/work");
 export default function WorkPage() {
   return (
     <PageCanvas>
-      <main className="mx-auto w-full bg-background py-10 sm:py-16">
+      <main className="mx-auto w-full bg-background py-6 sm:py-10">
         <WorkExperience
           experiences={WORK_EXPERIENCE_DATA}
           title="Experience"

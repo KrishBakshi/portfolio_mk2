@@ -10,7 +10,7 @@ export default function BlogPage() {
 
   return (
     <PageCanvas>
-      <main className="mx-auto w-full bg-background py-10 sm:py-16">
+      <main className="mx-auto w-full bg-background py-6 sm:py-10">
         <Blog posts={posts} />
       </main>
     </PageCanvas>
