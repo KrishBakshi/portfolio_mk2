@@ -4,10 +4,10 @@ export function SiteHeaderMark() {
   return (
     <Link
       href="/"
-      aria-label="Krish Bakshi, home"
-      className="text-sm font-semibold tracking-tight text-foreground"
+      aria-label="Home"
+      className="text-sm font-medium text-foreground"
     >
-      Krish Bakshi
+      Home
     </Link>
   );
 }

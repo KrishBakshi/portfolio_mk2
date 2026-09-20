@@ -88,7 +88,10 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   return (
     <header className="px-5 sm:px-8">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className={pageTitle}>
+          {name}
+        </h1>
         <div className="relative size-14 shrink-0 overflow-hidden rounded-xl sm:size-16">
           <Image
             src={profileImage}
@@ -99,9 +102,6 @@ export default function ProfileHeader({
             className="object-cover"
           />
         </div>
-        <h1 className={pageTitle}>
-          {name}
-        </h1>
       </div>
 
       {bullets.length > 0 && (
