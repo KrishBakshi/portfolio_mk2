@@ -23,7 +23,7 @@ export function SiteHeader() {
 
         <DesktopNav items={MAIN_NAV} />
 
-        <div className="flex items-center gap-1">
+        <div className="-mr-[9px] flex items-center gap-1">
           <CommandMenu searchItems={searchItems} />
           <ThemeToggle />
           <MobileNav className="min-[765px]:hidden" items={MAIN_NAV} />
