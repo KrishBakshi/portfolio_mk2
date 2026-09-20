@@ -1,6 +1,5 @@
 "use client";
 
-import { pageTitle } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
@@ -89,16 +88,17 @@ export default function ProfileHeader({
   return (
     <header className="px-5 sm:px-8">
       <div className="flex items-center justify-between gap-4">
-        <h1 className={pageTitle}>
+        <h1 className="text-3xl font-normal tracking-[-0.025em] text-foreground sm:text-4xl">
+          <span className="mb-1 block text-lg text-muted-foreground sm:text-xl">Hi, I&apos;m</span>
           {name}
         </h1>
-        <div className="relative size-14 shrink-0 overflow-hidden rounded-xl sm:size-16">
+        <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl sm:size-20">
           <Image
             src={profileImage}
             alt={`${name} profile photo`}
             fill
             priority
-            sizes="64px"
+            sizes="80px"
             className="object-cover"
           />
         </div>
