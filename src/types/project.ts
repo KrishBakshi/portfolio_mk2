@@ -8,7 +8,6 @@ export interface ProjectFrontmatter {
     display?: string;
     image?: string;
     videoPreview?: string;
-    videoFull?: string;
     link: string;
     github?: string;
     technologies: string[];

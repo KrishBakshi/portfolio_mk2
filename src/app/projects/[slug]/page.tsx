@@ -65,8 +65,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const { frontmatter, content } = project;
-  // Trial: play the short preview clip instead of the full demo.
-  const previewSrc = frontmatter.videoPreview ?? frontmatter.videoFull;
+  const previewSrc = frontmatter.videoPreview;
   const rawMdxContent = getRawProjectMdxContent(slug);
   const primaryLink = getProjectPrimaryLink(frontmatter.link, frontmatter.github);
 

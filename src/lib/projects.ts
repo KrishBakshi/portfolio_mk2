@@ -50,7 +50,6 @@ export function getProjectBySlug(slug: string): Project | null {
             ...parsedFrontmatter,
             image: existingAsset(parsedFrontmatter.image),
             videoPreview: existingAsset(parsedFrontmatter.videoPreview),
-            videoFull: existingAsset(parsedFrontmatter.videoFull),
         };
         if (!frontmatter.title || !frontmatter.description) {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
