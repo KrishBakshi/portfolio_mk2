@@ -6,7 +6,7 @@ export function SiteHeaderMark() {
     <Link
       href="/"
       aria-label="Home"
-      className="-ml-[9px] grid size-9 place-items-center rounded-md text-foreground transition-colors hover:text-muted-foreground"
+      className="-ml-[9px] grid size-9 place-items-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
     >
       <HomeIcon className="size-[18px]" />
     </Link>
