@@ -1,7 +1,9 @@
-import { Project, ProjectFrontmatter, ProjectPreview } from '@/types/project';
+import { Project, ProjectFrontmatter, ProjectPreview, PROJECT_DISPLAY_MAX_CHARS } from '@/types/project';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+
+class DisplayTooLongError extends Error {}
 
 const projectsDirectory = path.join(process.cwd(), 'public/data/projects');
 const publicDirectory = path.join(process.cwd(), 'public');
@@ -54,12 +56,19 @@ export function getProjectBySlug(slug: string): Project | null {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
         }
 
+        if (frontmatter.display && frontmatter.display.length > PROJECT_DISPLAY_MAX_CHARS) {
+            throw new DisplayTooLongError(
+                `${slug}.mdx: "display" is ${frontmatter.display.length} chars (max ${PROJECT_DISPLAY_MAX_CHARS})`
+            );
+        }
+
         return {
             slug,
             frontmatter,
             content,
         };
     } catch (error) {
+        if (error instanceof DisplayTooLongError) throw error;
         console.error(`Error reading project ${slug}:`, error);
         return null;
     }
