@@ -5,7 +5,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
 import { cn, sectionTitle } from '@/lib/utils';
-import { CopyButton } from './CopyButton';
+import { CodeHeader } from './CodeHeader';
 import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
 import { BlogPlatformToggle } from './BlogPlatformToggle';
@@ -84,9 +84,7 @@ const markdownComponents = {
 
         return (
             <div className="not-prose blog-code-block my-4">
-                <div className="absolute top-2 right-2 z-10">
-                    <CopyButton text={String(children).replace(/\n$/, '')} />
-                </div>
+                <CodeHeader lang={match[1]} code={String(children).replace(/\n$/, '')} />
                 <pre>
                     <Code
                         className={cn(

@@ -6,6 +6,7 @@ import bash from "highlight.js/lib/languages/bash";
 import ini from "highlight.js/lib/languages/ini";
 import json from "highlight.js/lib/languages/json";
 
+import { CodeHeader } from "@/components/blog/CodeHeader";
 import { CopyButton } from "@/components/blog/CopyButton";
 import { cn } from "@/lib/utils";
 
@@ -60,7 +61,7 @@ export function BlogCodeBlock({
         ) : null}
         <pre>
           <code
-            className={cn("hljs block font-mono text-sm", `language-${lang}`)}
+            className={cn("hljs block font-mono", `language-${lang}`)}
             dangerouslySetInnerHTML={{ __html: highlighted }}
           />
         </pre>
@@ -70,12 +71,10 @@ export function BlogCodeBlock({
 
   return (
     <div className={cn("not-prose blog-code-block relative my-4", className)}>
-      <div className="absolute top-2 right-2 z-10">
-        <CopyButton text={code} />
-      </div>
+      <CodeHeader lang={lang} code={code} />
       <pre>
         <code
-          className={cn("hljs block font-mono text-sm", `language-${lang}`)}
+          className={cn("hljs block font-mono", `language-${lang}`)}
           dangerouslySetInnerHTML={{ __html: highlighted }}
         />
       </pre>
