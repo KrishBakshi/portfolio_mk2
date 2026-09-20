@@ -1,11 +1,8 @@
 import { getStaticPageMetadata } from "@/config/metadata";
 import ProfileHeader from "@/components/sections/ProfileHeader";
 import { PageCanvas } from "@/components/PageCanvas";
-import { EntryRow } from "@/components/ui/entry-row";
-import { Section } from "@/components/ui/section";
 import { Projects } from "@/components/projects/Projects";
 import { Blog } from "@/components/blog/Blog";
-import { WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 import { getPublishedProjects } from "@/lib/projects";
 import { getPublishedBlogPosts } from "@/lib/blog";
 import { PROFILE } from "@/lib/llms";
@@ -27,15 +24,6 @@ export default function Home() {
         />
         <Projects projects={projects} max={5} showAllHref="/projects" />
         {posts.length > 0 && <Blog posts={posts} max={3} showAllHref="/blog" />}
-        <Section title="Experience" href="/work">
-          {WORK_EXPERIENCE_DATA.map((e) => (
-            <EntryRow
-              key={e.id}
-              title={`${e.companyName} — ${e.positions[0].title}`}
-              meta={e.positions[0].employmentPeriod}
-            />
-          ))}
-        </Section>
       </main>
     </PageCanvas>
   );
