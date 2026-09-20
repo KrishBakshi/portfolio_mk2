@@ -42,7 +42,7 @@ export function BlogCodeTabs({
   if (!active) return null;
 
   return (
-    <div className="not-prose relative my-4 overflow-hidden border border-border bg-code">
+    <div className="not-prose relative my-4 overflow-hidden rounded-lg border border-border bg-code">
       <div className="px-4 shadow-[inset_0_-1px_0_0] shadow-border">
         <div
           role="tablist"

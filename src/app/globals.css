@@ -28,10 +28,10 @@
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --info: #3b82f6;
-  --code: #11151d;
-  --code-foreground: #e8edf5;
-  --code-number: #687386;
-  --code-highlight: #202735;
+  --code: #fafafa;
+  --code-foreground: #24292e;
+  --code-number: #a3a3a3;
+  --code-highlight: #f0f0f0;
   --selection: #171717;
   --selection-foreground: #ffffff;
 }
@@ -223,11 +223,16 @@ html.light {
   }
 
   .blog-code-block {
-    @apply relative overflow-hidden border border-border bg-code text-code-foreground;
+    @apply relative overflow-hidden rounded-lg border border-border bg-code text-code-foreground;
   }
 
   .blog-code-block pre {
-    @apply m-0 overflow-x-auto bg-transparent p-3;
+    @apply m-0 overflow-x-auto bg-transparent px-4 py-3;
+  }
+
+  .blog-code-block code {
+    font-size: 13px;
+    line-height: 1.5rem;
   }
 
   .blog-code-block .hljs {
