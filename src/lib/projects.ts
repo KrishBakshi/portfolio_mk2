@@ -49,6 +49,7 @@ export function getProjectBySlug(slug: string): Project | null {
         const frontmatter: ProjectFrontmatter = {
             ...parsedFrontmatter,
             image: existingAsset(parsedFrontmatter.image),
+            videoPreview: existingAsset(parsedFrontmatter.videoPreview),
             videoFull: existingAsset(parsedFrontmatter.videoFull),
         };
         if (!frontmatter.title || !frontmatter.description) {

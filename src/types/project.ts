@@ -7,6 +7,7 @@ export interface ProjectFrontmatter {
     /** One-line overview for list rows (max PROJECT_DISPLAY_MAX_CHARS). Falls back to description. */
     display?: string;
     image?: string;
+    videoPreview?: string;
     videoFull?: string;
     link: string;
     github?: string;
