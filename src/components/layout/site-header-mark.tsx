@@ -1,3 +1,4 @@
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
 export function SiteHeaderMark() {
@@ -5,10 +6,9 @@ export function SiteHeaderMark() {
     <Link
       href="/"
       aria-label="Home"
-      className="text-sm font-medium text-foreground"
+      className="-ml-[9px] grid size-9 place-items-center rounded-md text-foreground transition-colors hover:text-muted-foreground"
     >
-      Home
+      <HomeIcon className="size-[18px]" />
     </Link>
   );
 }
-
