@@ -65,6 +65,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const { frontmatter, content } = project;
+  // Trial: play the short preview clip instead of the full demo.
+  const previewSrc = frontmatter.videoPreview ?? frontmatter.videoFull;
   const rawMdxContent = getRawProjectMdxContent(slug);
   const primaryLink = getProjectPrimaryLink(frontmatter.link, frontmatter.github);
 
@@ -121,11 +123,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
           </header>
 
-          {frontmatter.videoFull || frontmatter.image ? (
+          {previewSrc || frontmatter.image ? (
           <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
-            {frontmatter.videoFull ? (
+            {previewSrc ? (
               <video
-                src={frontmatter.videoFull}
+                src={previewSrc}
+                loop
                 controls
                 autoPlay
                 muted
