@@ -18,16 +18,13 @@ function existingAsset(asset?: string): string | undefined {
 }
 
 /**
- * Demo videos live in the object-storage bucket when ASSETS_BASE_URL is set,
- * under the demo-preview/ folder (/assets/demo/preview/x.mp4 becomes
- * <base>/demo-preview/x.mp4). Without it, fall back to the local file in public/.
+ * Demo videos live in the R2 bucket under demo-preview/
+ * (/assets/demo/preview/x.mp4 becomes <base>/demo-preview/x.mp4).
  */
 function resolveVideo(asset?: string): string | undefined {
     if (!asset) return undefined;
-    if (ASSETS_BASE_URL && !/^https?:\/\//.test(asset)) {
-        return `${ASSETS_BASE_URL}${asset.replace(/^\/assets\/demo\/preview\//, "/demo-preview/")}`;
-    }
-    return existingAsset(asset);
+    if (/^https?:\/\//.test(asset)) return asset;
+    return `${ASSETS_BASE_URL}${asset.replace(/^\/assets\/demo\/preview\//, "/demo-preview/")}`;
 }
 
 /**
