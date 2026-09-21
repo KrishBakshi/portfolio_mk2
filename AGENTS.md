@@ -63,6 +63,8 @@ Large assets live in one public Supabase bucket with three folders: `blogs`, `de
 
 - `ASSETS_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos are loaded from.
 - Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
+- Blog images: MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. Upload with `scripts/assets.sh copy public/data/blog assets:<bucket>/blogs --exclude "*.mdx"`. The `.mdx` files stay in the repo.
+- Resume: `/resume.pdf` stays the public link and redirects to `<base>/documents/resume.pdf`.
 - Unset = local files from `public/`.
 - Manage files with `scripts/assets.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). A local pre-commit hook blocks commits containing the bucket address or keys.
 
