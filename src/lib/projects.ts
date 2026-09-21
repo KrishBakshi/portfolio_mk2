@@ -2,6 +2,7 @@ import { Project, ProjectFrontmatter, ProjectPreview, PROJECT_DISPLAY_MAX_CHARS 
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+import { ASSETS_BASE_URL } from '@/lib/assets';
 
 class DisplayTooLongError extends Error {}
 
@@ -15,8 +16,6 @@ function existingAsset(asset?: string): string | undefined {
     const relativePath = asset.split(/[?#]/)[0].replace(/^\/+/, "");
     return fs.existsSync(path.join(publicDirectory, relativePath)) ? asset : undefined;
 }
-
-const ASSETS_BASE_URL = process.env.ASSETS_BASE_URL?.replace(/\/+$/, "");
 
 /**
  * Demo videos live in the object-storage bucket when ASSETS_BASE_URL is set,
