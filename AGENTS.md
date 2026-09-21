@@ -57,14 +57,14 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 - **Do not add** tech stack items to search.
 - Groups: Navigation, Projects, Blog, Experience, Contact & Links, Theme.
 
-## Media (object storage)
+## Assets (object storage)
 
-Large media lives in one public Supabase bucket with three folders: `blogs`, `demo-preview` and `documents`. It is served through our own domain (`https://assets.krishbakshi.com`, a Cloudflare Worker in front of the bucket), so the provider address never appears in page HTML or client JS. The bucket address is only a Worker setting and a server-only env var; never commit it.
+Large assets live in one public Supabase bucket with three folders: `blogs`, `demo-preview` and `documents`. It is served through our own domain (`https://assets.krishbakshi.com`, a Cloudflare Worker in front of the bucket), so the provider address never appears in page HTML or client JS. The bucket address is only a Worker setting and a server-only env var; never commit it.
 
-- `MEDIA_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos are loaded from.
+- `ASSETS_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos are loaded from.
 - Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
 - Unset = local files from `public/`.
-- Manage files with `scripts/media.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). A local pre-commit hook blocks commits containing the bucket address or keys.
+- Manage files with `scripts/assets.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). A local pre-commit hook blocks commits containing the bucket address or keys.
 
 ## Conventions
 
