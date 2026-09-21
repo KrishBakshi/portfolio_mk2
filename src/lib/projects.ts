@@ -16,6 +16,21 @@ function existingAsset(asset?: string): string | undefined {
     return fs.existsSync(path.join(publicDirectory, relativePath)) ? asset : undefined;
 }
 
+const MEDIA_BASE_URL = process.env.MEDIA_BASE_URL?.replace(/\/+$/, "");
+
+/**
+ * Demo videos live in the object-storage bucket when MEDIA_BASE_URL is set
+ * (bucket keys drop the /assets/demo prefix, e.g. preview/wingmate.mp4).
+ * Without it, fall back to the local file in public/.
+ */
+function resolveVideo(asset?: string): string | undefined {
+    if (!asset) return undefined;
+    if (MEDIA_BASE_URL && !/^https?:\/\//.test(asset)) {
+        return `${MEDIA_BASE_URL}${asset.replace(/^\/assets\/demo/, "")}`;
+    }
+    return existingAsset(asset);
+}
+
 /**
  * Get all project files from the projects directory
  */
@@ -49,7 +64,7 @@ export function getProjectBySlug(slug: string): Project | null {
         const frontmatter: ProjectFrontmatter = {
             ...parsedFrontmatter,
             image: existingAsset(parsedFrontmatter.image),
-            videoPreview: existingAsset(parsedFrontmatter.videoPreview),
+            videoPreview: resolveVideo(parsedFrontmatter.videoPreview),
         };
         if (!frontmatter.title || !frontmatter.description) {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
