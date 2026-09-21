@@ -59,7 +59,12 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 
 ## Demo videos (object storage)
 
-Project preview clips can be served from the Supabase bucket `demo-videos` (public). Set `MEDIA_BASE_URL=https://<ref>.supabase.co/storage/v1/object/public/demo-videos` in the deploy environment. Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; the bucket key drops `/assets/demo`, so upload as `preview/<name>.mp4`. Unset = local files from `public/`.
+Project preview clips are served from the Supabase bucket `demo-videos` (public) through our own domain, so the provider address never appears in page HTML or client JS. Two deploy env vars (both server-only, never `NEXT_PUBLIC_`):
+
+- `MEDIA_BASE_URL=/media`: the path videos are referenced by.
+- `MEDIA_ORIGIN=https://<ref>.supabase.co/storage/v1/object/public/demo-videos`: where `next.config.ts` forwards `/media/*`.
+
+Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; the bucket key drops `/assets/demo`, so upload as `preview/<name>.mp4`. Unset = local files from `public/`.
 
 ## Conventions
 
