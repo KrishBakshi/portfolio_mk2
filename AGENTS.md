@@ -59,13 +59,15 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 
 ## Assets (object storage)
 
-Large assets live in a Cloudflare R2 bucket with three folders: `blogs`, `demo-preview` and `documents`. The bucket is public through the custom domain `https://assets.krishbakshi.com` (an R2 custom domain, no proxy or Worker). Object keys match the URL path, e.g. `demo-preview/wingmate.mp4`.
+Videos, blog images and the resume live in a Cloudflare R2 bucket (`assets`) with three folders: `blogs`, `demo-preview` and `documents`. It is public through the R2 custom domain `https://assets.krishbakshi.com`. Object keys match the URL path, e.g. `demo-preview/wingmate.mp4`. These files are NOT in git.
 
-- `ASSETS_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos, blog images and the resume are loaded from. Unset = local files from `public/`.
-- Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
-- Blog images: MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. The `.mdx` files stay in the repo.
-- Resume: `/resume.pdf` stays the public link. `next.config.ts` rewrites it (no redirect, the address bar never changes) to `<base>/documents/resume.pdf`.
-- Manage files with `scripts/assets.sh` (rclone wrapper, needs `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` in `.env`, see the script header). Never commit account IDs or keys; a local pre-commit hook blocks them.
+- **Local copy:** `assets-source/` (git-ignored) mirrors the bucket layout: `demo-preview/`, `blogs/<slug>/`, `documents/`. Add or rename files there, then sync with `scripts/assets.sh copy assets-source assets:assets`.
+- **Base URL:** `src/lib/assets.ts` defaults to `https://assets.krishbakshi.com`; set `ASSETS_BASE_URL` (in `.env` / Vercel) only to point somewhere else.
+- **Videos:** frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
+- **Blog images:** MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. The `.mdx` files stay in the repo.
+- **Resume:** `/resume.pdf` stays the public link; `next.config.ts` rewrites it (no redirect) to `<base>/documents/resume.pdf`.
+- **Credentials:** `scripts/assets.sh` (rclone wrapper) needs `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` in `.env`. Never commit them; a local pre-commit hook blocks account endpoints and keys.
+- **Naming:** give files descriptive names (no "Screenshot ..." or "image 3"), named after the project or what the image shows.
 
 ## Conventions
 

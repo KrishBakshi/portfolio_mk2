@@ -3,7 +3,7 @@
 #
 #   scripts/assets.sh lsd assets:                                  list buckets
 #   scripts/assets.sh lsf assets:<bucket> --dirs-only              list folders
-#   scripts/assets.sh copy public/assets/demo/preview assets:<bucket>/demo-preview
+#   scripts/assets.sh copy assets-source assets:<bucket>          upload everything (mirrors the bucket layout)
 #
 # .env needs: R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
 ENV_FILE="$(dirname "$0")/../.env"
