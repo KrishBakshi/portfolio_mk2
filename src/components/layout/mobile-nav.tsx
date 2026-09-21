@@ -23,7 +23,7 @@ export function MobileNav({
   const pathname = usePathname();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
