@@ -2,25 +2,34 @@
 # rclone against the media bucket, using S3 credentials from .env (never printed).
 #
 #   scripts/media.sh lsd media:                                   list buckets
-#   scripts/media.sh ls media:demo-videos                         list files
-#   scripts/media.sh copy public/assets/demo/preview media:demo-videos/preview
+#   scripts/media.sh lsf media:<bucket> --dirs-only               list folders
+#   scripts/media.sh copy public/assets/demo/preview media:<bucket>/demo-preview
 #
-# .env needs: SUPABASE_S3_ENDPOINT, SUPABASE_S3_REGION,
-#             SUPABASE_S3_ACCESS_KEY_ID, SUPABASE_S3_SECRET_ACCESS_KEY
+# .env needs: SUPABASE_S3_ACCESS_KEY_ID, SUPABASE_S3_SECRET_ACCESS_KEY
+# Optional:   SUPABASE_S3_ENDPOINT (default: derived from NEXT_PUBLIC_SUPABASE_URL)
+#             SUPABASE_S3_REGION   (default: us-east-1; set it if requests are rejected)
 ENV_FILE="$(dirname "$0")/../.env"
 
 get() { grep -E "^$1=" "$ENV_FILE" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; }
 
-for v in SUPABASE_S3_ENDPOINT SUPABASE_S3_REGION SUPABASE_S3_ACCESS_KEY_ID SUPABASE_S3_SECRET_ACCESS_KEY; do
+for v in SUPABASE_S3_ACCESS_KEY_ID SUPABASE_S3_SECRET_ACCESS_KEY; do
   if [ -z "$(get $v)" ]; then echo "media.sh: $v is missing in .env" >&2; exit 1; fi
 done
+
+ENDPOINT="$(get SUPABASE_S3_ENDPOINT)"
+if [ -z "$ENDPOINT" ]; then
+  PROJECT_URL="$(get NEXT_PUBLIC_SUPABASE_URL)"
+  [ -n "$PROJECT_URL" ] || { echo "media.sh: set SUPABASE_S3_ENDPOINT or NEXT_PUBLIC_SUPABASE_URL in .env" >&2; exit 1; }
+  ENDPOINT="$(echo "$PROJECT_URL" | sed -e 's#\.supabase\.co.*#.storage.supabase.co/storage/v1/s3#')"
+fi
+REGION="$(get SUPABASE_S3_REGION)"; REGION="${REGION:-us-east-1}"
 
 export RCLONE_CONFIG_MEDIA_TYPE=s3
 export RCLONE_CONFIG_MEDIA_PROVIDER=Other
 export RCLONE_CONFIG_MEDIA_FORCE_PATH_STYLE=true
 export RCLONE_CONFIG_MEDIA_NO_CHECK_BUCKET=true
-export RCLONE_CONFIG_MEDIA_ENDPOINT="$(get SUPABASE_S3_ENDPOINT)"
-export RCLONE_CONFIG_MEDIA_REGION="$(get SUPABASE_S3_REGION)"
+export RCLONE_CONFIG_MEDIA_ENDPOINT="$ENDPOINT"
+export RCLONE_CONFIG_MEDIA_REGION="$REGION"
 export RCLONE_CONFIG_MEDIA_ACCESS_KEY_ID="$(get SUPABASE_S3_ACCESS_KEY_ID)"
 export RCLONE_CONFIG_MEDIA_SECRET_ACCESS_KEY="$(get SUPABASE_S3_SECRET_ACCESS_KEY)"
 
