@@ -59,14 +59,13 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 
 ## Assets (object storage)
 
-Large assets live in one public Supabase bucket with three folders: `blogs`, `demo-preview` and `documents`. It is served through our own domain (`https://assets.krishbakshi.com`, a Cloudflare Worker in front of the bucket), so the provider address never appears in page HTML or client JS. The bucket address is only a Worker setting and a server-only env var; never commit it.
+Large assets live in a Cloudflare R2 bucket with three folders: `blogs`, `demo-preview` and `documents`. The bucket is public through the custom domain `https://assets.krishbakshi.com` (an R2 custom domain, no proxy or Worker). Object keys match the URL path, e.g. `demo-preview/wingmate.mp4`.
 
-- `ASSETS_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos are loaded from.
+- `ASSETS_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos, blog images and the resume are loaded from. Unset = local files from `public/`.
 - Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
-- Blog images: MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. Upload with `scripts/assets.sh copy public/data/blog assets:<bucket>/blogs --exclude "*.mdx"`. The `.mdx` files stay in the repo.
+- Blog images: MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. The `.mdx` files stay in the repo.
 - Resume: `/resume.pdf` stays the public link. `next.config.ts` rewrites it (no redirect, the address bar never changes) to `<base>/documents/resume.pdf`.
-- Unset = local files from `public/`.
-- Manage files with `scripts/assets.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). A local pre-commit hook blocks commits containing the bucket address or keys.
+- Manage files with `scripts/assets.sh` (rclone wrapper, needs `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` in `.env`, see the script header). Never commit account IDs or keys; a local pre-commit hook blocks them.
 
 ## Conventions
 
