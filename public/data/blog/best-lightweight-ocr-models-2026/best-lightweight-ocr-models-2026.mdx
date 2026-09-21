@@ -102,19 +102,19 @@ For more complex layouts and variable inputs, benchmark the models below against
 
 Falcon OCR is a 300M parameter vision-language model built by TII (the Falcon team) specifically for document OCR, released under Apache 2.0.
 
-![Falcon Perception and Falcon-OCR project banner](/data/blog/best-lightweight-ocr-models-2026/Built-in_Retina_Display_(Area)_2026-09-02_0111_PM.jpg)
+![Falcon Perception and Falcon-OCR project banner](/data/blog/best-lightweight-ocr-models-2026/falcon-ocr-banner.jpg)
 
 What makes it different is the architecture choice. Most OCR VLM systems are built as a pipeline: a vision encoder produces embeddings, hands them to a separate text decoder, plus additional task-specific glue holding the two together. Falcon OCR skips that entirely.
 
 It's a single, early-fusion, dense autoregressive Transformer. Image patches and text tokens are processed in the same shared parameter space from the very first layer, using a hybrid attention mask: image tokens attend bidirectionally (so the model can look at the whole page at once), while text tokens decode causally, conditioned on the image. One backbone, one decoding path; task switching happens through prompts rather than swapping out modules.
 
-![Falcon Perception architecture diagram: a single early-fusion autoregressive Transformer for OCR and perception](/data/blog/best-lightweight-ocr-models-2026/Built-in_Retina_Display_(Area)_2026-09-02_0138_PM.jpg)
+![Falcon Perception architecture diagram: a single early-fusion autoregressive Transformer for OCR and perception](/data/blog/best-lightweight-ocr-models-2026/falcon-perception-architecture.jpg)
 
 Given an image, it produces plain text, LaTeX for formulas, or HTML for tables, depending on the output format you request. It runs in two modes: plain OCR for simple documents, photos, slides, and receipts; and a layout-aware mode that first detects regions on the page (via PP-DocLayoutV3) and then runs OCR per region, meant for complex multi-column or dense pages like academic papers and newspapers.
 
 Falcon-OCR is actually part of a broader family called Falcon Perception. The same early-fusion, natively multimodal architecture also powers a separate Falcon-Perception model that does object detection and instance segmentation from natural language queries 
 
-![Falcon Perception demo: object detection and instance segmentation from a natural language query](/data/blog/best-lightweight-ocr-models-2026/Falcon_Perception_(Window)_2026-09-02_0108_PM.jpg)
+![Falcon Perception demo: object detection and instance segmentation from a natural language query](/data/blog/best-lightweight-ocr-models-2026/falcon-perception-demo.jpg)
 
 (e.g. "segment the cat on the left" gives you bounding boxes plus pixel masks). 
 
@@ -130,17 +130,17 @@ For a 0.3B model, Falcon OCR punches well above its weight, especially on tables
 
 GLM-OCR is a 1B parameter multimodal OCR model from [Z.ai](http://z.ai/) (the GLM team), released under MIT, built for complex document understanding.
 
-![GLM-OCR model card banner (Z.ai)](/data/blog/best-lightweight-ocr-models-2026/image%203.jpg)
+![GLM-OCR model card banner (Z.ai)](/data/blog/best-lightweight-ocr-models-2026/glm-ocr-model-card.jpg)
 
 What makes it different is the training recipe layered on top of a fairly standard encoder-decoder setup. It introduces Multi-Token Prediction (MTP) loss and stable full-task reinforcement learning to push training efficiency, recognition accuracy, and generalization further than a typical next-token setup would.
 
-![GLM-OCR example: complex nested table recognition](/data/blog/best-lightweight-ocr-models-2026/image%204.jpg)
+![GLM-OCR example: complex nested table recognition](/data/blog/best-lightweight-ocr-models-2026/glm-ocr-nested-table-example.jpg)
 
 [GLM-OCR complex chart recognition guide](https://docs.z.ai/guides/vlm/glm-ocr#complex-chart-content-recognition)
 
 Architecturally, it's built on the GLM-V encoder-decoder design: a CogViT visual encoder pretrained on large-scale image-text data, a lightweight cross-modal connector with token downsampling to keep things efficient, and a GLM-0.5B language decoder. It runs a two-stage pipeline of layout analysis (using PP-DocLayout-V3, the same detector Falcon OCR uses) followed by parallel recognition across detected regions.
 
-![GLM-OCR architecture diagram: document parsing and key-info extraction pipeline (Figure 2)](/data/blog/best-lightweight-ocr-models-2026/image%205.jpg)
+![GLM-OCR architecture diagram: document parsing and key-info extraction pipeline (Figure 2)](/data/blog/best-lightweight-ocr-models-2026/glm-ocr-architecture.jpg)
 
 [GLM-OCR paper](https://arxiv.org/pdf/2603.10910)
 
@@ -148,7 +148,7 @@ It's optimized for real-world business documents, complex tables, code-heavy pag
 
 On OmniDocBench v1.5 it scores 94.62, ranking #1 overall at the time of release, ahead of much larger general-purpose VLMs on formula recognition, table recognition, and information extraction specifically.
 
-![GLM-OCR benchmark results on OmniDocBench v1.5 (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/image%206.jpg)
+![GLM-OCR benchmark results on OmniDocBench v1.5 (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/glm-ocr-omnidocbench-results.jpg)
 
 GLM-OCR is a good pick when you want a single model that's fast enough for production and still tops the accuracy charts, especially for messy real-world business documents rather than clean academic ones.
 
@@ -160,7 +160,7 @@ MinerU2.5-Pro is a 1.2B parameter PDF-to-Markdown document parsing model from Op
 
 What makes it different is philosophy, not architecture. The team deliberately kept the 1.2B parameter architecture unchanged from the base version and pushed performance entirely through data engineering: cleaner layout-detection training data, and a much larger, more targeted dataset for image analysis (charts, flowcharts, seals). 
 
-![MinerU2.5-Pro data engine: sampling, annotation, and hard-case refinement pipeline](/data/blog/best-lightweight-ocr-models-2026/image%207.jpg)
+![MinerU2.5-Pro data engine: sampling, annotation, and hard-case refinement pipeline](/data/blog/best-lightweight-ocr-models-2026/mineru-2-5-pro-data-engine.jpg)
 
 It's a case study in how far a fixed-size model can go on training-data quality alone.
 
@@ -170,7 +170,7 @@ It has reduced category misclassification during layout detection (particularly 
 
 On OmniDocBench v1.6 (full) it scores 95.72 overall, which it claims as SOTA, beating both specialized OCR models like GLM-OCR and PaddleOCR-VL-1.5, and much larger frontier VLMs like Gemini 3 Pro and Qwen3-VL-235B.
 
-![MinerU2.5-Pro benchmark comparison on OmniDocBench v1.6 (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/image%2011.jpg)
+![MinerU2.5-Pro benchmark comparison on OmniDocBench v1.6 (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/mineru-2-5-pro-omnidocbench-benchmark.jpg)
 
 It's a strong reminder that architecture isn't the only lever. If you're stuck at a parameter budget, MinerU2.5-Pro shows how much headroom good data alone can unlock.
 
@@ -180,19 +180,19 @@ It's a strong reminder that architecture isn't the only lever. If you're stuck a
 
 Surya is a 650M parameter OCR model from Datalab, released under OpenRAIL, positioned as a lightweight, fast, general-purpose document OCR tool rather than a research-frontier model.
 
-![Datalab Surya-OCR-2 model card banner](/data/blog/best-lightweight-ocr-models-2026/image%2012.jpg)
+![Datalab Surya-OCR-2 model card banner](/data/blog/best-lightweight-ocr-models-2026/surya-ocr-2-model-card.jpg)
 
 What makes it different is the tradeoff it's tuned for: it isn't chasing the top accuracy score at any cost, it's built to be the best option in the sub-1B, high-throughput bracket while still handling layout and multilingual text properly.
 
 It handles detection and recognition together, does layout analysis (tables, images, headers) with correct reading order, and does table recognition down to rows and columns, all in one lightweight package.
 
-![Surya-OCR-2 example: detection and recognition on a two-column academic paper](/data/blog/best-lightweight-ocr-models-2026/image%2013.jpg)
+![Surya-OCR-2 example: detection and recognition on a two-column academic paper](/data/blog/best-lightweight-ocr-models-2026/surya-ocr-2-two-column-example.jpg)
 
 [Surya source repository](https://github.com/datalab-to/surya)
 
 On olmOCR-bench it scores 83.3%, the top score under 3B parameters, while running at 5 pages/second on a single RTX 5090. It also scores 87.2% on an internal 91-language multilingual benchmark, which makes it one of the stronger choices here if your documents aren't all in English. Datalab also runs a hosted, higher-accuracy sibling model called Chandra on their managed platform, for when you need more than Surya gives you locally.
 
-![olmOCR-bench performance vs. parameter count — Surya-OCR-2 leads the sub-1B bracket](/data/blog/best-lightweight-ocr-models-2026/image%2014.jpg)
+![olmOCR-bench performance vs. parameter count — Surya-OCR-2 leads the sub-1B bracket](/data/blog/best-lightweight-ocr-models-2026/surya-ocr-2-olmocr-bench-vs-size.jpg)
 
 [Surya OCR 2 release notes](https://www.datalab.to/blog/surya-2)
 
@@ -206,19 +206,19 @@ PaddleOCR-VL-1.6 is a compact document parsing model from Baidu's PaddlePaddle t
 
 What makes it different is a two-part upgrade recipe on top of an already-strong base: a region-aware data optimization framework that specifically finds the weak regions the previous model struggled with and applies targeted enhancement there, plus a progressive post-training stage using curated data selection and reinforcement learning to push accuracy up in stages rather than in one pass.
 
-![PaddleOCR-VL-1.6 architecture: under-optimized region mining and progressive post-training (Figure 2)](/data/blog/best-lightweight-ocr-models-2026/image%2015.jpg)
+![PaddleOCR-VL-1.6 architecture: under-optimized region mining and progressive post-training (Figure 2)](/data/blog/best-lightweight-ocr-models-2026/paddleocr-vl-1-6-architecture.jpg)
 
 [PaddleOCR-VL-1.6 paper](https://arxiv.org/pdf/2606.03264)
 
 The architecture itself is fully compatible with PaddleOCR-VL-1.5, so it's a drop-in, zero-cost migration for anyone already running the previous version.
 
-![PaddleOCR-VL-1.6 before/after on a degraded 1988 academic paper scan](/data/blog/best-lightweight-ocr-models-2026/image%2016.jpg)
+![PaddleOCR-VL-1.6 before/after on a degraded 1988 academic paper scan](/data/blog/best-lightweight-ocr-models-2026/paddleocr-vl-1-6-degraded-scan-before-after.jpg)
 
 [PaddleOCR AI Studio](https://aistudio.baidu.com/paddleocr)
 
 It currently claims the top spot on OmniDocBench v1.6 at 96.33%, and also sets new records on OmniDocBench v1.5 and Real5-OmniDocBench, outscoring Gemini 3 Pro, MinerU2.5-Pro, GLM-OCR, Qwen3-VL-235B, dots.ocr, DeepSeek-OCR2, MonkeyOCR-pro-3B, GPT-5.2, and Dolphin-1.5 in their own published comparison.
 
-![PaddleOCR-VL-1.6 benchmark results on OmniDocBench v1.6 and Real5-OmniDocBench (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/image%2017.jpg)
+![PaddleOCR-VL-1.6 benchmark results on OmniDocBench v1.6 and Real5-OmniDocBench (Figure 1)](/data/blog/best-lightweight-ocr-models-2026/paddleocr-vl-1-6-benchmark-results.jpg)
 
 Right now this is the highest-scoring compact model on this list, so if raw accuracy is your priority and you're already in the Paddle ecosystem, it's the one to benchmark first.
 
