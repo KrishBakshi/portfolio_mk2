@@ -19,14 +19,14 @@ function existingAsset(asset?: string): string | undefined {
 const MEDIA_BASE_URL = process.env.MEDIA_BASE_URL?.replace(/\/+$/, "");
 
 /**
- * Demo videos live in the object-storage bucket when MEDIA_BASE_URL is set
- * (bucket keys drop the /assets/demo prefix, e.g. preview/wingmate.mp4).
- * Without it, fall back to the local file in public/.
+ * Demo videos live in the object-storage bucket when MEDIA_BASE_URL is set,
+ * under the demo-preview/ folder (/assets/demo/preview/x.mp4 becomes
+ * <base>/demo-preview/x.mp4). Without it, fall back to the local file in public/.
  */
 function resolveVideo(asset?: string): string | undefined {
     if (!asset) return undefined;
     if (MEDIA_BASE_URL && !/^https?:\/\//.test(asset)) {
-        return `${MEDIA_BASE_URL}${asset.replace(/^\/assets\/demo/, "")}`;
+        return `${MEDIA_BASE_URL}${asset.replace(/^\/assets\/demo\/preview\//, "/demo-preview/")}`;
     }
     return existingAsset(asset);
 }
