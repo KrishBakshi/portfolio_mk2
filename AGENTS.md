@@ -57,6 +57,10 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 - **Do not add** tech stack items to search.
 - Groups: Navigation, Projects, Blog, Experience, Contact & Links, Theme.
 
+## Demo videos (object storage)
+
+Project preview clips can be served from the Supabase bucket `demo-videos` (public). Set `MEDIA_BASE_URL=https://<ref>.supabase.co/storage/v1/object/public/demo-videos` in the deploy environment. Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; the bucket key drops `/assets/demo`, so upload as `preview/<name>.mp4`. Unset = local files from `public/`.
+
 ## Conventions
 
 - Match existing component patterns; keep diffs focused.
