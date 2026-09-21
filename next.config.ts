@@ -5,11 +5,17 @@ import type { NextConfig } from "next";
 const assetsBase = process.env.ASSETS_BASE_URL?.replace(/\/+$/, "");
 
 const nextConfig: NextConfig = {
-  // Keep /resume.pdf as the stable link; it forwards to the copy in the bucket.
-  async redirects() {
-    return assetsBase
-      ? [{ source: "/resume.pdf", destination: `${assetsBase}/documents/resume.pdf`, permanent: false }]
-      : [];
+  // /resume.pdf stays on our own domain: the file is fetched from the bucket
+  // behind the scenes, so the assets domain never shows in the address bar.
+  // beforeFiles so it wins over the local copy in public/.
+  async rewrites() {
+    return {
+      beforeFiles: assetsBase
+        ? [{ source: "/resume.pdf", destination: `${assetsBase}/documents/resume.pdf` }]
+        : [],
+      afterFiles: [],
+      fallback: [],
+    };
   },
   images: {
     remotePatterns: [
