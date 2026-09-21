@@ -2,6 +2,7 @@ import { Blog, BlogFrontmatter, BlogPreview, BLOG_DISPLAY_MAX_CHARS } from '@/ty
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+import { withBlogAssets } from '@/lib/assets';
 
 class DisplayTooLongError extends Error {}
 
@@ -61,10 +62,14 @@ export function getBlogPostBySlug(slug: string): Blog | null {
             frontmatter.readTime = `${Math.max(1, Math.ceil(words / 220))} min read`;
         }
 
+        if (frontmatter.image) {
+            frontmatter.image = withBlogAssets(frontmatter.image);
+        }
+
         return {
             slug,
             frontmatter,
-            content,
+            content: withBlogAssets(content),
         };
     } catch (error) {
         if (error instanceof DisplayTooLongError) throw error;
@@ -120,7 +125,7 @@ export function getRawMdxContent(slug: string): string | null {
             return null;
         }
 
-        return fs.readFileSync(fullPath, 'utf8');
+        return withBlogAssets(fs.readFileSync(fullPath, 'utf8'));
     } catch (error) {
         console.error(`Error reading raw MDX content for ${slug}:`, error);
         return null;
