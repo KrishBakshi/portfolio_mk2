@@ -1,6 +1,10 @@
 "use client";
 
+import { ChevronUp, Ellipsis } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
 
@@ -73,6 +77,21 @@ function ProfileBulletContent({ parts }: { parts: ProfileBullet }) {
   );
 }
 
+type SocialLinkItem = { label: string; href: string; external?: boolean };
+
+function SocialLink({ label, href, external = true, className }: SocialLinkItem & { className?: string }) {
+  return (
+    <a
+      className={cn(socialLinkClassName, "whitespace-nowrap max-sm:text-[13px]", className)}
+      href={href}
+      aria-label={label}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      <span>{label}</span>
+    </a>
+  );
+}
+
 export default function ProfileHeader({
   name = "",
   profileImage = "",
@@ -85,6 +104,20 @@ export default function ProfileHeader({
     mail: "",
   },
 }: ProfileHeaderProps) {
+  const [showMore, setShowMore] = useState(false);
+
+  // One line on phones: the last link waits behind the "…" button.
+  const primaryLinks: SocialLinkItem[] = [
+    socialLinks.github && { label: "GitHub", href: socialLinks.github },
+    socialLinks.huggingface && { label: "Hugging Face", href: socialLinks.huggingface },
+    socialLinks.twitter && { label: "X", href: socialLinks.twitter },
+    socialLinks.linkedin && { label: "LinkedIn", href: socialLinks.linkedin },
+    socialLinks.mail && { label: "Email", href: socialLinks.mail, external: false },
+  ].filter((link): link is SocialLinkItem => Boolean(link));
+  const extraLinks: SocialLinkItem[] = [
+    socialLinks.resume && { label: "Resume", href: socialLinks.resume },
+  ].filter((link): link is SocialLinkItem => Boolean(link));
+
   return (
     <header className="px-5 sm:px-8">
       <div className="flex items-center justify-between gap-4">
@@ -114,71 +147,34 @@ export default function ProfileHeader({
         </div>
       )}
 
-      <nav aria-label="Profile links" className="mt-7 flex flex-wrap gap-x-5 gap-y-1">
-          {socialLinks.github && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <span>GitHub</span>
-            </a>
-          )}
-          {socialLinks.huggingface && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.huggingface}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Hugging Face"
-            >
-              <span>Hugging Face</span>
-            </a>
-          )}
-          {socialLinks.twitter && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X"
-            >
-              <span>X</span>
-            </a>
-          )}
-          {socialLinks.linkedin && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <span>LinkedIn</span>
-            </a>
-          )}
-          {socialLinks.mail && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.mail}
-              aria-label="Email"
-            >
-              <span>Email</span>
-            </a>
-          )}
-          {socialLinks.resume && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Resume"
-            >
-              <span>Resume</span>
-            </a>
-          )}
+      <nav
+        id="profile-links"
+        aria-label="Profile links"
+        className={cn(
+          "mt-7 flex items-center gap-y-1 sm:flex-wrap sm:justify-start sm:gap-x-5",
+          showMore ? "flex-wrap gap-x-4" : "flex-nowrap justify-between gap-x-2"
+        )}
+      >
+        {primaryLinks.map((link) => (
+          <SocialLink key={link.label} {...link} />
+        ))}
+
+        {extraLinks.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowMore((open) => !open)}
+            aria-expanded={showMore}
+            aria-controls="profile-links"
+            aria-label={showMore ? "Show fewer links" : "Show more links"}
+            className="inline-flex min-h-10 items-center text-muted-foreground transition-colors hover:text-foreground sm:hidden"
+          >
+            {showMore ? <ChevronUp className="size-4" /> : <Ellipsis className="size-4" />}
+          </button>
+        )}
+
+        {extraLinks.map((link) => (
+          <SocialLink key={link.label} {...link} className={cn(!showMore && "max-sm:hidden")} />
+        ))}
       </nav>
     </header>
   );
