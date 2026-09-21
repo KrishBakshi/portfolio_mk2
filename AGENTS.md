@@ -57,16 +57,14 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 - **Do not add** tech stack items to search.
 - Groups: Navigation, Projects, Blog, Experience, Contact & Links, Theme.
 
-## Demo videos (object storage)
+## Media (object storage)
 
-Project preview clips are served from the Supabase bucket `demo-videos` (public) through our own domain, so the provider address never appears in page HTML or client JS. Two deploy env vars (both server-only, never `NEXT_PUBLIC_`):
+Large media lives in one public Supabase bucket with three folders: `blogs`, `demo-preview` and `documents`. It is served through our own domain (`https://assets.krishbakshi.com`, a Cloudflare Worker in front of the bucket), so the provider address never appears in page HTML or client JS. The bucket address is only a Worker setting and a server-only env var; never commit it.
 
-- `MEDIA_BASE_URL=/media`: the path videos are referenced by.
-- `MEDIA_ORIGIN=https://<ref>.supabase.co/storage/v1/object/public/demo-videos`: where `next.config.ts` forwards `/media/*`.
-
-Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; the bucket key drops `/assets/demo`, so upload as `preview/<name>.mp4`. Unset = local files from `public/`.
-
-Manage bucket files with `scripts/media.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). Never commit the bucket address or keys; a local pre-commit hook blocks them.
+- `MEDIA_BASE_URL=https://assets.krishbakshi.com` (deploy env): where videos are loaded from.
+- Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
+- Unset = local files from `public/`.
+- Manage files with `scripts/media.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). A local pre-commit hook blocks commits containing the bucket address or keys.
 
 ## Conventions
 
