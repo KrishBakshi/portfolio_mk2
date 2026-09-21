@@ -66,6 +66,8 @@ Project preview clips are served from the Supabase bucket `demo-videos` (public)
 
 Frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; the bucket key drops `/assets/demo`, so upload as `preview/<name>.mp4`. Unset = local files from `public/`.
 
+Manage bucket files with `scripts/media.sh` (rclone wrapper, needs `SUPABASE_S3_*` in `.env`, see the script header). Never commit the bucket address or keys; a local pre-commit hook blocks them.
+
 ## Conventions
 
 - Match existing component patterns; keep diffs focused.
