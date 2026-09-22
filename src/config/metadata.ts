@@ -22,7 +22,7 @@ export const PAGE_META: Record<string, { title: string; description: string }> =
     description: PROFILE.about,
   },
   "/work": {
-    title: "Work Experience",
+    title: "Experience",
     description:
       "Professional experience building and deploying data science and AI systems, from computer vision pipelines to production LLM applications.",
   },
@@ -32,9 +32,9 @@ export const PAGE_META: Record<string, { title: string; description: string }> =
       "Portfolio projects across Vision, AI Agents, LLM, RAG, Gen AI, and RL, from research prototypes to production systems.",
   },
   "/blog": {
-    title: "Blog",
+    title: "Writing",
     description:
-      "Technical writing on ML engineering, experiment tracking, GPU workflows, and developer tooling.",
+      "Research notes on document AI, computer vision, ML engineering, GPU workflows, and production systems.",
   },
 };
 
@@ -46,6 +46,7 @@ export function buildPageMetadata({
   publishedTime,
   authors,
   tags,
+  image,
 }: {
   title: string;
   description: string;
@@ -54,10 +55,12 @@ export function buildPageMetadata({
   publishedTime?: string;
   authors?: string[];
   tags?: string[];
+  image?: string;
 }): Metadata {
   const canonicalPath = path.startsWith("/") ? path : `/${path}`;
   const displayTitle =
     title === DEFAULT_TITLE ? DEFAULT_TITLE : `${title}${TITLE_SEP}${PROFILE.name}`;
+  const images = image ? [{ url: image, alt: title }] : DEFAULT_OG_IMAGES;
 
   return {
     title,
@@ -73,7 +76,7 @@ export function buildPageMetadata({
       ...(publishedTime ? { publishedTime } : {}),
       ...(authors ? { authors } : {}),
       ...(tags ? { tags } : {}),
-      images: DEFAULT_OG_IMAGES,
+      images,
     },
     twitter: {
       card: "summary_large_image",
@@ -81,7 +84,7 @@ export function buildPageMetadata({
       description,
       creator: TWITTER_HANDLE,
       site: TWITTER_HANDLE,
-      images: DEFAULT_OG_IMAGES,
+      images,
     },
     alternates: {
       canonical: canonicalPath,
@@ -120,7 +123,12 @@ export function getRootMetadata(siteUrl?: string): Metadata {
     creator: base.creator,
     openGraph: base.openGraph,
     twitter: base.twitter,
-    alternates: base.alternates,
+    alternates: {
+      ...base.alternates,
+      types: {
+        "application/rss+xml": "/rss.xml",
+      },
+    },
     robots: base.robots,
   };
 }

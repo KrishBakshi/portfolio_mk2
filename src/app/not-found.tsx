@@ -1,31 +1,36 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { pageTitle } from "@/lib/utils";
 
 import { PageCanvas } from "@/components/PageCanvas";
-import Footer from "@/components/Footer";
 import { ShowAllLink } from "@/components/ui/show-all-link";
 import { MAIN_NAV } from "@/config/site";
 
-const sectionClassName =
-  "border border-gray-300/50 bg-background dark:border-white/10";
+const sectionClassName = "border-t border-border";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (
     <PageCanvas>
-      <div className="mx-auto w-full max-w-3xl sm:px-0">
-        <div className={`mb-6 mt-6 ${sectionClassName}`}>
+      <main className="mx-auto w-full bg-background">
+        <div>
           <div className="relative flex flex-col items-center overflow-hidden px-6 py-16 text-center sm:py-20">
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none font-sans text-[7rem] font-semibold leading-none tracking-tighter text-foreground/[0.05] sm:text-[9rem]"
+              className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-[8rem] font-semibold leading-none tracking-tighter text-foreground/[0.05] sm:text-[11rem]"
             >
               404
             </span>
 
             <div className="relative z-10">
-              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              <p className="font-mono text-xs text-muted-foreground">
                 Error 404
               </p>
-              <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              <h1 className={`${pageTitle} mt-3`}>
                 Page not found
               </h1>
               <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-relaxed text-foreground/80 sm:text-base">
@@ -39,8 +44,8 @@ export default function NotFound() {
           </div>
         </div>
 
-        <div className={`mb-6 px-6 py-5 ${sectionClassName}`}>
-          <p className="mb-3 font-mono text-xs uppercase tracking-wide text-muted-foreground">
+        <div className={`px-6 py-6 ${sectionClassName}`}>
+          <p className="mb-3 font-mono text-xs text-muted-foreground">
             Or try one of these
           </p>
           <nav className="flex flex-wrap gap-2" aria-label="Site sections">
@@ -48,7 +53,7 @@ export default function NotFound() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 {item.title}
               </Link>
@@ -56,10 +61,7 @@ export default function NotFound() {
           </nav>
         </div>
 
-        <div className={sectionClassName}>
-          <Footer />
-        </div>
-      </div>
+      </main>
     </PageCanvas>
   );
 }

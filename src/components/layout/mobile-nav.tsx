@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +20,10 @@ export function MobileNav({
   items: NavItem[];
   className?: string;
 }) {
+  const pathname = usePathname();
+
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -36,7 +39,13 @@ export function MobileNav({
       <DropdownMenuContent className="w-64" align="end" sideOffset={8}>
         {items.map((link) => (
           <DropdownMenuItem key={link.href} asChild>
-            <Link href={link.href}>{link.title}</Link>
+            <Link
+              href={link.href}
+              aria-current={pathname.startsWith(link.href) ? "page" : undefined}
+              className={cn(pathname.startsWith(link.href) && "bg-accent font-medium text-foreground")}
+            >
+              {link.title}
+            </Link>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

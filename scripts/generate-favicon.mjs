@@ -11,13 +11,13 @@ const output = join(root, "src/app/favicon.ico");
 const sizes = [16, 32, 48];
 
 async function createRounded(size) {
-  const circle = Buffer.from(
-    `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}"/></svg>`
+  const mask = Buffer.from(
+    `<svg width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${Math.round(size * 0.22)}"/></svg>`
   );
 
   return sharp(input)
     .resize(size, size, { fit: "cover", position: "center" })
-    .composite([{ input: circle, blend: "dest-in" }])
+    .composite([{ input: mask, blend: "dest-in" }])
     .png()
     .toBuffer();
 }

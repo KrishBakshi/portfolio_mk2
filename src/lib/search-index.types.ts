@@ -18,7 +18,7 @@ export type CommandSearchItem = {
 const GROUP_LABELS: Record<CommandSearchGroup, string> = {
   navigation: "Navigation",
   projects: "Projects",
-  blog: "Blog",
+  blog: "Writing",
   experience: "Experience",
   social: "Contact & Links",
 };

@@ -1,36 +1,29 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { FaLinkedin, FaXTwitter, FaGithub, FaPaperclip, FaEnvelope } from "react-icons/fa6";
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
 
 interface ProfileHeaderProps {
   name?: string;
-  age?: string;
-  title?: string;
   profileImage?: string;
-  tagline?: ProfileBullet;
   bullets?: ProfileBullet[];
-  highlights?: string[];
-  socialLabel?: string;
   socialLinks?: {
     twitter?: string;
     resume?: string;
     github?: string;
+    huggingface?: string;
     linkedin?: string;
     mail?: string;
   };
 }
 
-const tapStyle = {
-  WebkitTapHighlightColor: "transparent",
-  WebkitTouchCallout: "none",
-  WebkitUserSelect: "none",
-  userSelect: "none",
-} as const;
-
 const socialLinkClassName =
-  "text-foreground hover:opacity-80 active:opacity-75 touch-manipulation transition-opacity duration-200";
+  "inline-flex min-h-10 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline active:opacity-75 touch-manipulation transition-colors";
 
 const inlineLinkClassName =
   "font-semibold text-inherit no-underline transition-colors hover:text-foreground hover:underline hover:decoration-foreground hover:underline-offset-2";
@@ -84,15 +77,25 @@ function ProfileBulletContent({ parts }: { parts: ProfileBullet }) {
   );
 }
 
+type SocialLinkItem = { label: string; href: string; external?: boolean };
+
+function SocialLink({ label, href, external = true, className }: SocialLinkItem & { className?: string }) {
+  return (
+    <a
+      className={cn(socialLinkClassName, "whitespace-nowrap max-sm:text-[13px]", className)}
+      href={href}
+      aria-label={label}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      <span>{label}</span>
+    </a>
+  );
+}
+
 export default function ProfileHeader({
   name = "",
-  age = "",
-  title = "",
   profileImage = "",
-  tagline,
   bullets = [],
-  highlights = [],
-  socialLabel = "Here are my socials",
   socialLinks = {
     twitter: "",
     github: "",
@@ -101,134 +104,80 @@ export default function ProfileHeader({
     mail: "",
   },
 }: ProfileHeaderProps) {
+  const [showMore, setShowMore] = useState(false);
+
+  // One line on phones: the last link waits behind the "…" button.
+  const primaryLinks: SocialLinkItem[] = [
+    socialLinks.github && { label: "GitHub", href: socialLinks.github },
+    socialLinks.huggingface && { label: "Hugging Face", href: socialLinks.huggingface },
+    socialLinks.twitter && { label: "X", href: socialLinks.twitter },
+    socialLinks.linkedin && { label: "LinkedIn", href: socialLinks.linkedin },
+    socialLinks.mail && { label: "Email", href: socialLinks.mail, external: false },
+  ].filter((link): link is SocialLinkItem => Boolean(link));
+  const extraLinks: SocialLinkItem[] = [
+    socialLinks.resume && { label: "Resume", href: socialLinks.resume },
+  ].filter((link): link is SocialLinkItem => Boolean(link));
+
   return (
-    <div className="flex flex-col px-4 pb-6 pt-4 sm:px-6 sm:pt-5">
-      <div className="mb-6 flex items-end gap-2">
-        <div
-          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-300 bg-cover bg-center shadow-sm dark:border-gray-600"
-          role="img"
-          aria-label={name}
-          style={{ backgroundImage: `url("${profileImage}")` }}
-        />
-        <div className="min-w-0">
-          <h1 className="mb-1 font-sans text-2xl font-semibold tracking-tight sm:text-3xl">
-            {name}
-          </h1>
-          <p className="font-mono text-xs text-muted-foreground sm:text-sm">
-            {age && `${age} • `}
-            {title}
-          </p>
+    <header className="px-5 sm:px-8">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-3xl font-normal tracking-[-0.025em] text-foreground sm:text-4xl">
+          <span className="mb-1 block text-lg text-muted-foreground sm:text-xl">Hi, I&apos;m</span>
+          {name}
+        </h1>
+        <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl sm:size-20">
+          <Image
+            src={profileImage}
+            alt={`${name} profile photo`}
+            fill
+            priority
+            sizes="80px"
+            className="object-cover"
+          />
         </div>
       </div>
 
-      {(tagline?.length || bullets.length > 0 || highlights.length > 0) && (
-        <div className="mb-6 space-y-3">
-          {tagline && tagline.length > 0 && (
-            <p className="max-w-prose font-sans text-[15px] leading-relaxed text-foreground/90 sm:text-base">
-              <ProfileBulletContent parts={tagline} />
+      {bullets.length > 0 && (
+        <div className="mt-7 max-w-[64ch] space-y-2 text-[15px] leading-relaxed text-muted-foreground">
+          {bullets.map((parts, index) => (
+            <p key={index}>
+              <ProfileBulletContent parts={parts} />
             </p>
-          )}
-
-          {bullets.length > 0 && (
-            <ul className="space-y-2">
-              {bullets.map((parts, index) => (
-                <li
-                  key={index}
-                  className="flex gap-2.5 font-mono text-xs leading-relaxed text-foreground/90 sm:text-sm"
-                >
-                  <span aria-hidden className="shrink-0 text-muted-foreground">
-                    •
-                  </span>
-                  <span>
-                    <ProfileBulletContent parts={parts} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {highlights.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {highlights.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-md border border-border/60 bg-muted/30 px-2.5 py-1 font-mono text-xs text-foreground/85"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
+          ))}
         </div>
       )}
 
-      <div className="space-y-3 border-t border-border/50 pt-5">
-        <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
-          {socialLabel}
-        </p>
-        <div className="flex flex-wrap gap-4">
-          {socialLinks.github && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              style={tapStyle}
-            >
-              <FaGithub size={18} />
-            </a>
-          )}
-          {socialLinks.twitter && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X"
-              style={tapStyle}
-            >
-              <FaXTwitter size={18} />
-            </a>
-          )}
-          {socialLinks.linkedin && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              style={tapStyle}
-            >
-              <FaLinkedin size={18} />
-            </a>
-          )}
-          {socialLinks.mail && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.mail}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Email"
-              style={tapStyle}
-            >
-              <FaEnvelope size={18} />
-            </a>
-          )}
-          {socialLinks.resume && (
-            <a
-              className={socialLinkClassName}
-              href={socialLinks.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Resume"
-              style={tapStyle}
-            >
-              <FaPaperclip size={18} />
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
+      <nav
+        id="profile-links"
+        aria-label="Profile links"
+        className={cn(
+          "mt-7 flex items-center gap-y-1 sm:flex-wrap sm:justify-start sm:gap-x-5",
+          showMore ? "flex-wrap gap-x-4" : "flex-nowrap justify-between gap-x-2"
+        )}
+      >
+        {primaryLinks.map((link) => (
+          <SocialLink key={link.label} {...link} />
+        ))}
+
+        {extraLinks.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowMore((open) => !open)}
+            aria-expanded={showMore}
+            aria-controls="profile-links"
+            aria-label={showMore ? "Show fewer links" : "Show more links"}
+            className="inline-flex min-h-10 items-center text-muted-foreground transition-colors hover:text-foreground sm:hidden"
+          >
+            <ChevronDown
+              className={cn("size-4 transition-transform duration-300 ease-out", showMore && "rotate-180")}
+            />
+          </button>
+        )}
+
+        {extraLinks.map((link) => (
+          <SocialLink key={link.label} {...link} className={cn(!showMore && "max-sm:hidden")} />
+        ))}
+      </nav>
+    </header>
   );
 }

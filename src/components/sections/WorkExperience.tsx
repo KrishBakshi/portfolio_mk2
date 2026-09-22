@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import {
     CollapsibleWithContext,
@@ -17,8 +18,7 @@ import {
     CollapsibleTrigger,
     CollapsibleChevronsIcon,
 } from "@/components/ui/collapsible";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn, pageTitle, sectionTitle } from "@/lib/utils";
 
 const iconMap = {
     code: CodeXmlIcon,
@@ -78,7 +78,8 @@ export function WorkExperience({
     showToggle = true,
     showAllHref,
     expandLatestPositions = false,
-    title = "Work Experience",
+    expandCurrentPosition = false,
+    title = "Experience",
 }: {
     className?: string;
     experiences: ExperienceItemType[];
@@ -87,16 +88,19 @@ export function WorkExperience({
     showAllHref?: string;
     /** When true, opens only the first (most recent) role per company. */
     expandLatestPositions?: boolean;
+    /** When true, opens the current employer's latest role. */
+    expandCurrentPosition?: boolean;
     title?: string;
 }) {
     const visibleExperiences = showAllHref ? experiences.slice(0, max) : experiences;
+    const Heading = showAllHref ? "h2" : "h1";
 
     return (
-        <section className={cn("bg-background px-4 sm:py-4", className)}>
-            <header className="mb-4">
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans">{title}</h2>
+        <section className={cn("px-5 sm:px-8", className)}>
+            <header className="mb-6">
+                <Heading className={showAllHref ? sectionTitle : pageTitle}>{title}</Heading>
             </header>
-            <div className="bg-background">
+            <div>
                 {showAllHref ? (
                     <div className="flex flex-col">
                         {visibleExperiences.map((experience) => (
@@ -104,6 +108,7 @@ export function WorkExperience({
                                 key={experience.id}
                                 experience={experience}
                                 expandLatestPositions={expandLatestPositions}
+                                expandCurrentPosition={expandCurrentPosition}
                             />
                         ))}
                     </div>
@@ -116,6 +121,7 @@ export function WorkExperience({
                             <ExperienceItem
                                 experience={experience}
                                 expandLatestPositions={expandLatestPositions}
+                                expandCurrentPosition={expandCurrentPosition}
                             />
                         )}
                         showToggle={showToggle}
@@ -124,8 +130,8 @@ export function WorkExperience({
             </div>
 
             {showAllHref ? (
-                <div className="flex h-12 items-center justify-center pt-4">
-                    <ShowAllLink href={showAllHref} label="Show All Experiences" />
+                <div className="mt-5 flex items-center justify-start">
+                    <ShowAllLink href={showAllHref} label="View full experience" />
                 </div>
             ) : null}
         </section>
@@ -137,23 +143,24 @@ const COMPANY_LOGO_SIZE = 24;
 export function ExperienceItem({
     experience,
     expandLatestPositions = false,
+    expandCurrentPosition = false,
 }: {
     experience: ExperienceItemType;
     expandLatestPositions?: boolean;
+    expandCurrentPosition?: boolean;
 }) {
     const logoScale = experience.companyLogoScale ?? 1;
 
     return (
-        <div className="space-y-4 py-4 rounded-lg">
+        <div className="space-y-4 border-b border-border py-5 last:border-b-0">
             <div className="not-prose flex items-center gap-3">
                 <div
                     className="flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background"
-                    aria-hidden
                 >
                     {experience.companyLogo ? (
                         <Image
                             src={experience.companyLogo}
-                            alt={experience.companyName}
+                            alt=""
                             width={COMPANY_LOGO_SIZE}
                             height={COMPANY_LOGO_SIZE}
                             quality={100}
@@ -166,25 +173,27 @@ export function ExperienceItem({
                     )}
                 </div>
 
-                <h3 className="text-lg leading-snug font-medium text-foreground">
+                <h3 className="text-lg font-medium leading-snug tracking-tight text-foreground">
                     {experience.companyName}
                 </h3>
 
                 {experience.isCurrentEmployer && (
-                    <span className="relative flex items-center justify-center">
-                        <span className="absolute inline-flex size-3 animate-ping rounded-full bg-info opacity-50" />
-                        <span className="relative inline-flex size-2 rounded-full bg-info" />
-                        <span className="sr-only">Current Employer</span>
+                    <span className="rounded-md border border-border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+                        Current
                     </span>
                 )}
             </div>
 
-            <div className="relative space-y-4 before:absolute before:left-3 before:h-full before:w-px before:bg-border">
+            <div className="space-y-4">
                 {experience.positions.map((position, index) => (
                     <ExperiencePositionItem
                         key={position.id}
                         position={position}
-                        defaultOpen={expandLatestPositions && index === 0}
+                        defaultOpen={
+                            index === 0 &&
+                            (expandLatestPositions ||
+                                (expandCurrentPosition && experience.isCurrentEmployer))
+                        }
                     />
                 ))}
             </div>
@@ -202,28 +211,27 @@ export function ExperiencePositionItem({
     const ExperienceIcon = iconMap[position.icon || "business"];
 
     return (
-        <CollapsibleWithContext defaultOpen={defaultOpen} asChild>
-            <div className="relative last:before:absolute last:before:h-full last:before:w-4 last:before:bg-background">
+        <CollapsibleWithContext defaultOpen={defaultOpen} openFromHash={position.id} asChild>
+            <div id={position.id} className="relative scroll-m-24">
                 <CollapsibleTrigger
                     className="group/experience not-prose block w-full text-left select-none"
                 >
                     <div className="flex items-start gap-3">
                         <div
                             className={cn(
-                                "relative z-10 flex size-6 shrink-0 items-center justify-center rounded-lg mt-0.5",
-                                "bg-muted text-muted-foreground",
-                                "border border-muted-foreground/15 ring-1 ring-border ring-offset-1 ring-offset-background"
+                                "relative z-10 flex size-6 shrink-0 items-center justify-center rounded-lg mt-1",
+                                "bg-muted text-muted-foreground"
                             )}
                             aria-hidden
                         >
                             <ExperienceIcon className="size-4" />
                         </div>
 
-                        <div className="flex-1 -ml-2 pl-3 pr-1 hover:bg-accent transition-colors">
+                        <div className="flex flex-1 flex-col justify-center py-1">
                             <div className="mb-1 flex items-center gap-3">
-                                <h4 className="flex-1 text-base font-medium text-balance text-foreground">
+                                <span className="flex-1 text-[15px] font-medium leading-6 text-balance text-foreground">
                                     {position.title}
-                                </h4>
+                                </span>
 
                                 <div
                                     className="shrink-0 text-muted-foreground [&_svg]:size-4"
@@ -233,18 +241,14 @@ export function ExperiencePositionItem({
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground font-mono">
+                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                 {position.employmentType && (
                                     <>
                                         <dl>
                                             <dt className="sr-only">Employment Type</dt>
                                             <dd>{position.employmentType}</dd>
                                         </dl>
-
-                                        <Separator
-                                            className="data-[orientation=vertical]:h-4"
-                                            orientation="vertical"
-                                        />
+                                        <span aria-hidden>/</span>
                                     </>
                                 )}
 
@@ -261,10 +265,11 @@ export function ExperiencePositionItem({
                     {position.description && (
                         <Prose className="pt-2 pl-9">
                             <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
                                 components={{
                                     a: ({ children, href }) => {
                                         const isExternal =
-                                            href?.startsWith("https://");
+                                            href?.startsWith("https://") || href?.startsWith("http://");
 
                                         return (
                                         <a
@@ -289,8 +294,8 @@ export function ExperiencePositionItem({
 
                     {Array.isArray(position.skills) && position.skills.length > 0 && (
                         <ul className="not-prose flex flex-wrap gap-1.5 pt-2 pl-9">
-                            {position.skills.map((skill, index) => (
-                                <li key={index} className="flex">
+                            {position.skills.map((skill) => (
+                                <li key={skill} className="flex">
                                     <Skill>{skill}</Skill>
                                 </li>
                             ))}
@@ -306,7 +311,7 @@ function Prose({ className, ...props }: React.ComponentProps<"div">) {
     return (
         <div
             className={cn(
-                "prose prose-sm max-w-none font-mono text-foreground prose-neutral dark:prose-invert",
+                "prose prose-sm max-w-none text-foreground prose-neutral dark:prose-invert",
                 "prose-a:font-medium prose-a:wrap-break-word prose-a:text-foreground prose-a:underline prose-a:underline-offset-4",
                 "prose-code:rounded-md prose-code:border prose-code:bg-muted/50 prose-code:px-[0.3rem] prose-code:py-[0.2rem] prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none",
                 className
@@ -320,7 +325,7 @@ function Skill({ className, ...props }: React.ComponentProps<"span">) {
     return (
         <span
             className={cn(
-                "inline-flex items-center rounded-lg border border-gray-300/50 dark:border-white/10 bg-muted/50 px-1.5 py-0.5 font-mono text-xs text-muted-foreground",
+                "inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground",
                 className
             )}
             {...props}

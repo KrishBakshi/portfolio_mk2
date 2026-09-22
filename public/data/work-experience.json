@@ -10,7 +10,7 @@
         "employmentPeriod": "July 2025 - Present",
         "employmentType": "Full-time",
         "icon": "code",
-        "description": "- Shipped an end-to-end AI system to detect anomalies on floor plans, cutting manual effort **up to 80%** and processing **10×** more orders per month.\n- Built [**Nasiwak Studio**](https://nasiwakservices.com/portfolio/nasiwak-studio?lang=ja), an end-to-end vision AI system to detect **85+** small electrical symbols on blueprints, automating manual invoice generation up to **100%**.\n- Created an AI karaoke pipeline (yt-dlp, UVR, Whisper, FFmpeg) that renders videos in **<5s**; engineered a C++ autotune backend with **±1ms** latency and **80%** noise reduction for live audio.",
+        "description": "- Shipped an end-to-end AI system to detect anomalies on floor plans, cutting manual effort **up to 80%** and processing **10×** more orders per month.\n- Built [**Nasiwak Studio**](https://nasiwakservices.com/portfolio/nasiwak-studio), an end-to-end vision AI system to detect **85+** small electrical symbols on blueprints, automating manual invoice generation up to **100%**.\n- Created an AI karaoke pipeline (yt-dlp, UVR, Whisper, FFmpeg) that renders videos in **<5s**; engineered a C++ autotune backend with **±1ms** latency and **80%** noise reduction for live audio.",
         "skills": [
           "Object detection",
           "Vision AI",
@@ -53,7 +53,7 @@
         "employmentPeriod": "July 2024 - January 2025",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Incubated at **Harvard Innovation Labs**, mentored by ex-IIT and ex-Harvard founders on production-grade ML delivery.\n- Engineered scalable time-series forecasting pipelines on **Azure Databricks** (PySpark, ETL) to ingest and model sales data in cloud data lakes.\n- Built an **XGBoost** model achieving **92.81%** accuracy on regular sales and **86.79%** on promotional sales, using features from inventory, logistics, historical sales, and regional weather.\n- Benchmarked **ARIMA** and **SARIMA** auto-regression baselines to strengthen forecast confidence for planning teams.\n- Wrote **BigQuery** analytics to surface trends from large datasets; contributed to time-series, computer vision, and LLM application prototypes.",
+        "description": "- Worked at Metafied, a startup incubated at **Harvard Innovation Labs**, with mentorship from ex-IIT and ex-Harvard founders on production ML delivery.\n- Engineered scalable time-series forecasting pipelines on **Azure Databricks** (PySpark, ETL) to ingest and model sales data in cloud data lakes.\n- Built an **XGBoost** model achieving **92.81%** accuracy on regular sales and **86.79%** on promotional sales, using features from inventory, logistics, historical sales, and regional weather.\n- Benchmarked **ARIMA** and **SARIMA** auto-regression baselines to strengthen forecast confidence for planning teams.\n- Wrote **BigQuery** analytics to surface trends from large datasets; contributed to time-series, computer vision, and LLM application prototypes.",
         "skills": [
           "Azure Databricks",
           "PySpark",
@@ -77,7 +77,7 @@
         "employmentPeriod": "December 2023 - January 2024",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Led a team to design and deploy **RPA** solutions that replaced repetitive manual workflows across the business.\n- Automated web scraping, online data collection, and Excel reporting, improving task efficiency **30%**.\n- Reduced operational drag by turning fragile, hand-run processes into reliable, repeatable automations.",
+        "description": "- Worked with a team to design and deploy **RPA** solutions that replaced repetitive manual workflows across the business.\n- Automated web scraping, online data collection, and Excel reporting, improving task efficiency **30%**.\n- Reduced operational drag by turning fragile, hand-run processes into reliable, repeatable automations.",
         "skills": [
           "RPA",
           "Web Scraping",
@@ -98,7 +98,7 @@
         "employmentPeriod": "July 2020 - September 2020",
         "employmentType": "Internship",
         "icon": "code",
-        "description": "- Led a developer team to deliver a dynamic full-stack website, owning frontend, backend, and release coordination.\n- Designed the database schema and real-time client-server connectivity with **phpMyAdmin** and **Wamp Server**.\n- Shipped a production-ready site that gave the business a stable digital presence instead of static brochure pages.",
+        "description": "- Contributed across frontend, backend, and release coordination to deliver a dynamic full-stack website with a small developer team.\n- Designed the database schema and real-time client-server connectivity with **phpMyAdmin** and **Wamp Server**.\n- Shipped a deployed site that gave the business a stable digital presence instead of static brochure pages.",
         "skills": [
           "Full-stack Development",
           "PHP",

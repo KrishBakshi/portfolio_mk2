@@ -30,17 +30,17 @@ export const SITE_INFO = {
   get url() {
     return getSiteUrl();
   },
-  description: "I build cool stuff using Data and AI.",
+  description: "Data scientist and AI engineer turning applied research into reliable systems.",
 };
 
 export const META_THEME_COLORS = {
   light: "#ffffff",
-  dark: "#09090b",
+  dark: "#0a0a0a",
 };
 
 export const MAIN_NAV: NavItem[] = [
   {
-    title: "Work",
+    title: "Experience",
     href: "/work",
   },
   {
@@ -48,7 +48,7 @@ export const MAIN_NAV: NavItem[] = [
     href: "/projects",
   },
   {
-    title: "Blog",
+    title: "Writing",
     href: "/blog",
   },
 ];

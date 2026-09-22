@@ -34,7 +34,8 @@ export function PostShareMenu({ url }: { url: string }) {
         <Button
           variant="secondary"
           size="icon"
-          className="h-7 w-7 rounded-lg active:scale-95 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="size-10 rounded-lg active:scale-95"
+          aria-label="Share this page"
         >
           <Share className="h-3.5 w-3.5" />
         </Button>

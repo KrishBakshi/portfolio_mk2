@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/preserve-manual-memoization */
 
 import React from "react";
 import { Minus, Plus, RotateCcw } from "lucide-react";
@@ -250,15 +251,17 @@ export function NodeGraph({
         setCamera(next);
     }, []);
 
-    const resetView = React.useCallback(() => {
+    const resetView = () => {
+        const viewport = viewportRef.current;
+        if (!viewport) return;
+        commitCamera(fitCamera(viewport.clientWidth, viewport.clientHeight, width, height));
+    };
+
+    React.useEffect(() => {
         const viewport = viewportRef.current;
         if (!viewport) return;
         commitCamera(fitCamera(viewport.clientWidth, viewport.clientHeight, width, height));
     }, [commitCamera, height, width]);
-
-    React.useEffect(() => {
-        resetView();
-    }, [resetView]);
 
     /** Zoom toward a point inside the viewport, Maps-style. */
     const zoomAt = React.useCallback(

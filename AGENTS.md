@@ -12,8 +12,8 @@ Next.js 16 App Router portfolio for **Krish Bakshi** (Data Scientist). Content i
 |---------|----------|--------|
 | Profile header & bullets | `src/lib/llms.ts` → `PROFILE` | Tagline, highlights, social links, banner paths |
 | Work experience | `public/data/work-experience.json` | Roles, descriptions (markdown), skills |
-| Projects | `public/data/projects/*.mdx` | Frontmatter: `title`, `slug`, `description`, `domains`, `technologies`, `isWorking` |
-| Blog posts | `public/data/blog/{slug}/{slug}.mdx` | Set `isPublished: true` in frontmatter |
+| Projects | `public/data/projects/*.mdx` | Frontmatter: `title`, `slug`, `description`, `display` (one-line list overview, max 80 chars, build fails if longer), `domains`, `technologies`, `isWorking` |
+| Blog posts | `public/data/blog/{slug}/{slug}.mdx` | Set `isPublished: true`; `display` = one-line hook for list cards (no question mark) (max 80 chars, build fails if longer) |
 | Tech stack | `public/data/skills.json` | Rendered on home page Stack section |
 | Project domain filters | `src/config/project-domains.ts` | Vision, AI Agents, LLM, RAG, Gen AI, RL |
 
@@ -56,6 +56,18 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 - **Projects**: domain subcategories only (e.g. "AI Agents projects"), not individual project rows. Keywords include project titles/tech within each domain for lookup.
 - **Do not add** tech stack items to search.
 - Groups: Navigation, Projects, Blog, Experience, Contact & Links, Theme.
+
+## Assets (object storage)
+
+Videos, blog images and the resume live in a Cloudflare R2 bucket (`assets`) with three folders: `blogs`, `demo-preview` and `documents`. It is public through the R2 custom domain `https://assets.krishbakshi.com`. Object keys match the URL path, e.g. `demo-preview/wingmate.mp4`. These files are NOT in git.
+
+- **Local copy:** `assets-source/` (git-ignored) mirrors the bucket layout: `demo-preview/`, `blogs/<slug>/`, `documents/`. Add or rename files there, then sync with `scripts/assets.sh copy assets-source assets:assets`.
+- **Base URL:** `src/lib/assets.ts` defaults to `https://assets.krishbakshi.com`; set `ASSETS_BASE_URL` (in `.env` / Vercel) only to point somewhere else.
+- **Videos:** frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
+- **Blog images:** MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. The `.mdx` files stay in the repo.
+- **Resume:** `/resume.pdf` stays the public link; `next.config.ts` rewrites it (no redirect) to `<base>/documents/resume.pdf`.
+- **Credentials:** `scripts/assets.sh` (rclone wrapper) needs `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` in `.env`. Never commit them; a local pre-commit hook blocks account endpoints and keys.
+- **Naming:** give files descriptive names (no "Screenshot ..." or "image 3"), named after the project or what the image shows.
 
 ## Conventions
 

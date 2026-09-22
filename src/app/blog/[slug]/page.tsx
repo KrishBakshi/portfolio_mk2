@@ -1,23 +1,29 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ReadingProgress } from "@/components/blog/ReadingProgress";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { pageTitle, sectionTitle } from "@/lib/utils";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  getAllBlogPosts,
+  getPublishedBlogPosts,
   getBlogPostBySlug,
   getNeighboringPosts,
+  getRelatedPosts,
   getRawMdxContent,
 } from "@/lib/blog";
 import { PostShareMenu } from "@/components/blog/PostShareMenu";
+import { ViewCount } from "@/components/blog/ViewCount";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
+import { SITE_INFO } from "@/config/site";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -26,7 +32,7 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllBlogPosts();
+  const posts = getPublishedBlogPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -38,9 +44,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
-  if (!post) {
+  if (!post || !post.frontmatter.isPublished) {
     return {
-      title: "Blog Post Not Found",
+      title: "Writing Not Found",
     };
   }
 
@@ -52,6 +58,7 @@ export async function generateMetadata({
     publishedTime: post.frontmatter.date,
     authors: post.frontmatter.author ? [post.frontmatter.author] : undefined,
     tags: post.frontmatter.tags,
+    image: post.frontmatter.image,
   });
 }
 
@@ -59,18 +66,39 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
-  if (!post) {
+  if (!post || !post.frontmatter.isPublished) {
     notFound();
   }
 
   const { frontmatter, content } = post;
   const { previous, next } = getNeighboringPosts(slug);
+  const related = getRelatedPosts(slug);
   const rawMdxContent = getRawMdxContent(slug);
+  const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: frontmatter.title,
+    description: frontmatter.description,
+    datePublished: frontmatter.date,
+    author: { "@type": "Person", name: frontmatter.author ?? "Krish Bakshi" },
+    mainEntityOfPage: `${SITE_INFO.url}/blog/${slug}`,
+    ...(frontmatter.image ? { image: new URL(frontmatter.image, SITE_INFO.url).toString() } : {}),
+  };
 
   return (
     <PageDetailShell>
-      <div className="mt-6 mb-6 flex items-center justify-between">
-        <BackButton href="/blog" label="Back to Blog" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
+      <ReadingProgress />
+      <div className="flex items-center justify-between py-3">
+        <BackButton href="/blog" label="Back to Writing" />
 
         <div className="flex items-center gap-2">
           <LLMCopyButtonWithViewOptions
@@ -83,36 +111,48 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <TableOfContents content={content} title={frontmatter.title} />
 
-      <article className="relative border border-gray-300/50 bg-background p-6 sm:p-8 dark:border-white/10">
-        <div className="space-y-8">
-          <header className="space-y-4">
-            <h1 className="font-sans text-3xl font-bold tracking-tight sm:text-4xl">
+      <article data-reading-scope className="relative py-4 sm:py-6">
+        <div className="mx-auto max-w-[720px] space-y-6">
+          <header>
+            <h1 className={pageTitle}>
               {frontmatter.title}
             </h1>
-
-            <div className="flex flex-wrap gap-2">
-              {frontmatter.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="font-mono">
-                  {tag}
-                </Badge>
-              ))}
+            <div className="mt-3 flex items-center justify-between gap-4 text-xs text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-2">
+                <time dateTime={frontmatter.date}>{formattedDate}</time>
+                <span aria-hidden>/</span>
+                <span>{frontmatter.readTime}</span>
+              </div>
+              <ViewCount kind="blog" slug={slug} />
             </div>
           </header>
 
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
-            {/* SVG cover; invert in dark mode so the line-art stays legible. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={frontmatter.image}
-              alt=""
-              className="size-full object-cover dark:invert"
-            />
-          </div>
+          {frontmatter.image && (
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
+              {frontmatter.image.endsWith(".svg") ? (
+                // SVG line-art cover: invert in dark mode so it stays legible.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={frontmatter.image}
+                  alt=""
+                  className="size-full object-cover dark:invert"
+                />
+              ) : (
+                <Image
+                  src={frontmatter.image}
+                  alt={frontmatter.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              )}
+            </div>
+          )}
 
           <NotionRenderer content={content} />
 
           {frontmatter.externalUrl && (
-            <div className="border-t pt-4">
+            <div>
               <a
                 href={frontmatter.externalUrl}
                 target="_blank"
@@ -127,11 +167,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </article>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mx-auto w-full max-w-[720px] border-t border-border">
+      {related.length > 0 ? (
+        <section className="py-5">
+          <h2 className={`${sectionTitle} mb-5`}>Related writing</h2>
+          {related.map((post) => (
+            <BlogCard key={post.slug} post={post.frontmatter} />
+          ))}
+        </section>
+      ) : null}
+
+      <nav aria-label="Article pagination" className="grid grid-cols-1 sm:grid-cols-2">
         {previous ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-start gap-1 whitespace-normal p-4 mb-4 text-left"
+            className="h-auto flex-col items-start gap-1 whitespace-normal px-0 py-4 text-left sm:pr-6"
             asChild
           >
             <Link href={`/blog/${previous.slug}`}>
@@ -151,7 +201,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {next ? (
           <Button
             variant="link"
-            className="h-auto flex-col items-end gap-1 whitespace-normal p-4 mb-4 text-right"
+            className="h-auto flex-col items-end gap-1 whitespace-normal px-0 py-4 text-right sm:pl-6"
             asChild
           >
             <Link href={`/blog/${next.slug}`}>
@@ -167,6 +217,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         ) : (
           <div />
         )}
+      </nav>
       </div>
     </PageDetailShell>
   );

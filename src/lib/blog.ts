@@ -1,7 +1,10 @@
-import { Blog, BlogFrontmatter, BlogPreview } from '@/types/blog';
+import { Blog, BlogFrontmatter, BlogPreview, BLOG_DISPLAY_MAX_CHARS } from '@/types/blog';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+import { withBlogAssets } from '@/lib/assets';
+
+class DisplayTooLongError extends Error {}
 
 const blogDirectory = path.join(process.cwd(), 'public/data/blog');
 
@@ -43,12 +46,33 @@ export function getBlogPostBySlug(slug: string): Blog | null {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
         }
 
+        if (frontmatter.display && frontmatter.display.length > BLOG_DISPLAY_MAX_CHARS) {
+            throw new DisplayTooLongError(
+                `${slug}.mdx: "display" is ${frontmatter.display.length} chars (max ${BLOG_DISPLAY_MAX_CHARS})`
+            );
+        }
+
+        if (!frontmatter.readTime) {
+            const words = content
+                .replace(/```[\s\S]*?```/g, " ")
+                .replace(/[#*_[\]()]/g, " ")
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean).length;
+            frontmatter.readTime = `${Math.max(1, Math.ceil(words / 220))} min read`;
+        }
+
+        if (frontmatter.image) {
+            frontmatter.image = withBlogAssets(frontmatter.image);
+        }
+
         return {
             slug,
             frontmatter,
-            content,
+            content: withBlogAssets(content),
         };
     } catch (error) {
+        if (error instanceof DisplayTooLongError) throw error;
         console.error(`Error reading blog post ${slug}:`, error);
         return null;
     }
@@ -101,7 +125,7 @@ export function getRawMdxContent(slug: string): string | null {
             return null;
         }
 
-        return fs.readFileSync(fullPath, 'utf8');
+        return withBlogAssets(fs.readFileSync(fullPath, 'utf8'));
     } catch (error) {
         console.error(`Error reading raw MDX content for ${slug}:`, error);
         return null;
@@ -129,4 +153,26 @@ export function getNeighboringPosts(slug: string): { previous: BlogPreview | nul
         previous: previousPost,
         next: nextPost,
     };
+}
+
+export function getRelatedPosts(slug: string, limit = 3): BlogPreview[] {
+    const posts = getPublishedBlogPosts();
+    const current = posts.find((post) => post.slug === slug);
+    if (!current) return [];
+
+    const currentTags = new Set(current.frontmatter.tags.map((tag) => tag.toLowerCase()));
+
+    return posts
+        .filter((post) => post.slug !== slug)
+        .map((post) => ({
+            post,
+            score: post.frontmatter.tags.reduce(
+                (total, tag) => total + (currentTags.has(tag.toLowerCase()) ? 1 : 0),
+                0
+            ),
+        }))
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map(({ post }) => post);
 }

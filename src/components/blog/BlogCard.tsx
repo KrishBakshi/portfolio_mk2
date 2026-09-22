@@ -1,30 +1,15 @@
-"use client";
-
 import Link from "next/link";
 import type { BlogFrontmatter } from "@/types/blog";
 
-interface BlogCardProps {
-    post: BlogFrontmatter;
-}
-
-export function BlogCard({ post }: BlogCardProps) {
-    const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-
+export function BlogCard({ post }: { post: BlogFrontmatter }) {
     return (
-        <Link
-            href={`/blog/${post.slug}`}
-            className="flex flex-col justify-between p-4 transition-colors hover:bg-accent sm:flex-row sm:items-center group"
-        >
-            <h3 className="text-base font-medium group-hover:text-primary transition-colors font-sans">
+        <Link href={`/blog/${post.slug}`} className="group block py-3">
+            <h3 className="text-[15px] font-medium leading-snug text-foreground group-hover:underline underline-offset-4">
                 {post.title}
             </h3>
-            <time className="text-xs text-muted-foreground shrink-0 sm:ml-4 font-mono">
-                {formattedDate}
-            </time>
+            <p className="mt-1 truncate text-sm text-muted-foreground">
+                {post.display ?? post.description}
+            </p>
         </Link>
     );
 }

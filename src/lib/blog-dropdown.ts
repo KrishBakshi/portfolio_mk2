@@ -28,8 +28,7 @@ export const GRAPH_REGEX = /\[\[graph\]\]\n([\s\S]*?)\n\[\[\/graph\]\]/g;
 
 export const GALLERY_REGEX = /\[\[gallery\]\]\n([\s\S]*?)\n\[\[\/gallery\]\]/g;
 
-const GALLERY_IMAGE_REGEX =
-  /!\[([^\]]*)\]\(((?:[^()\s]|\([^()]*\))+)(?:\s+"[^"]*")?\)/g;
+const GALLERY_IMAGE_REGEX = /!\[([^\]]*)\]\(((?:[^()\s]|\([^()]*\))+)(?:\s+"[^"]*")?\)/g;
 
 const FENCED_CODE_REGEX = /```[\s\S]*?```/g;
 
@@ -133,12 +132,10 @@ function findSpecialMatches(content: string): SpecialMatch[] {
   for (const match of content.matchAll(new RegExp(GALLERY_REGEX.source, "g"))) {
     if (match.index === undefined) continue;
 
-    const images = Array.from(match[1].matchAll(GALLERY_IMAGE_REGEX)).map(
-      (image) => ({
-        alt: image[1],
-        src: image[2],
-      })
-    );
+    const images = Array.from(match[1].matchAll(GALLERY_IMAGE_REGEX)).map((img) => ({
+      alt: img[1],
+      src: img[2],
+    }));
 
     if (images.length === 0) continue;
 

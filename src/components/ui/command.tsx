@@ -48,7 +48,6 @@ const CommandDialog = ({
 
             <DialogContent
                 className="overflow-hidden bg-popover p-0 max-sm:top-16 max-sm:translate-y-0"
-                overlay={false}
             >
                 <Command className="[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]]:px-1 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-10 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5 [&_[cmdk-item]]:px-3 [&_[cmdk-item]]:py-2">
                     {children}

@@ -1,9 +1,31 @@
-import { Project, ProjectFrontmatter, ProjectPreview } from '@/types/project';
+import { Project, ProjectFrontmatter, ProjectPreview, PROJECT_DISPLAY_MAX_CHARS } from '@/types/project';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+import { ASSETS_BASE_URL } from '@/lib/assets';
+
+class DisplayTooLongError extends Error {}
 
 const projectsDirectory = path.join(process.cwd(), 'public/data/projects');
+const publicDirectory = path.join(process.cwd(), 'public');
+
+function existingAsset(asset?: string): string | undefined {
+    if (!asset) return undefined;
+    if (/^https?:\/\//.test(asset)) return asset;
+
+    const relativePath = asset.split(/[?#]/)[0].replace(/^\/+/, "");
+    return fs.existsSync(path.join(publicDirectory, relativePath)) ? asset : undefined;
+}
+
+/**
+ * Demo videos live in the R2 bucket under demo-preview/
+ * (/assets/demo/preview/x.mp4 becomes <base>/demo-preview/x.mp4).
+ */
+function resolveVideo(asset?: string): string | undefined {
+    if (!asset) return undefined;
+    if (/^https?:\/\//.test(asset)) return asset;
+    return `${ASSETS_BASE_URL}${asset.replace(/^\/assets\/demo\/preview\//, "/demo-preview/")}`;
+}
 
 /**
  * Get all project files from the projects directory
@@ -34,9 +56,20 @@ export function getProjectBySlug(slug: string): Project | null {
         const { data, content } = matter(fileContents);
 
         // Validate frontmatter
-        const frontmatter = data as ProjectFrontmatter;
+        const parsedFrontmatter = data as ProjectFrontmatter;
+        const frontmatter: ProjectFrontmatter = {
+            ...parsedFrontmatter,
+            image: existingAsset(parsedFrontmatter.image),
+            videoPreview: resolveVideo(parsedFrontmatter.videoPreview),
+        };
         if (!frontmatter.title || !frontmatter.description) {
             throw new Error(`Invalid frontmatter in ${slug}.mdx`);
+        }
+
+        if (frontmatter.display && frontmatter.display.length > PROJECT_DISPLAY_MAX_CHARS) {
+            throw new DisplayTooLongError(
+                `${slug}.mdx: "display" is ${frontmatter.display.length} chars (max ${PROJECT_DISPLAY_MAX_CHARS})`
+            );
         }
 
         return {
@@ -45,6 +78,7 @@ export function getProjectBySlug(slug: string): Project | null {
             content,
         };
     } catch (error) {
+        if (error instanceof DisplayTooLongError) throw error;
         console.error(`Error reading project ${slug}:`, error);
         return null;
     }

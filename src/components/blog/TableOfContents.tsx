@@ -1,63 +1,70 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { cn } from "@/lib/utils";
-import { getTocMarkdownContent } from "@/lib/blog-dropdown";
 
 interface TableOfContentsProps {
   content: string;
   title: string;
 }
 
-interface Heading {
+interface HeadingItem {
   id: string;
   text: string;
   level: number;
 }
 
-function isSectionHeading(heading: Heading) {
-  return heading.level <= 2;
-}
-
-function getRailBarClassName(heading: Heading, activeId: string) {
-  const isSection = isSectionHeading(heading);
-  const isActive = activeId === heading.id;
-
-  return cn(
-    "ml-auto block h-[2px] shrink-0 rounded-full transition-all duration-300",
-    isSection
-      ? isActive
-        ? "w-7 bg-primary"
-        : "w-5 bg-muted-foreground/30 hover:w-6 hover:bg-foreground"
-      : isActive
-        ? "w-6 bg-primary"
-        : "w-4 bg-muted-foreground/30 hover:w-5 hover:bg-foreground"
+function TocLinks({
+  headings,
+  activeId,
+  onSelect,
+}: {
+  headings: HeadingItem[];
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <ul className="border-l border-border">
+      {headings.map((heading) => (
+        <li key={heading.id}>
+          <button
+            type="button"
+            onClick={() => onSelect(heading.id)}
+            aria-current={activeId === heading.id ? "location" : undefined}
+            className={cn(
+              "-ml-px block w-full border-l px-4 py-1.5 text-left text-sm leading-snug transition-colors",
+              heading.level >= 3 && "pl-7 text-xs",
+              activeId === heading.id
+                ? "border-foreground font-medium text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {heading.text}
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 
 export function TableOfContents({ content, title }: TableOfContentsProps) {
-  const [headings, setHeadings] = useState<Heading[]>([]);
+  const [headings, setHeadings] = useState<HeadingItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    const proseContent = getTocMarkdownContent(content);
-    const headingRegex = /^(#{1,3})\s+(.+)$/gm;
-    const extractedHeadings: Heading[] = [];
-    let match;
-
-    while ((match = headingRegex.exec(proseContent)) !== null) {
-      const level = match[1].length;
-      const text = match[2].trim();
-      const id = text
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w\-]+/g, "");
-
-      extractedHeadings.push({ id, text, level });
-    }
-
-    setHeadings(extractedHeadings);
+    const frame = requestAnimationFrame(() => {
+      const elements = document.querySelectorAll<HTMLElement>(
+        "[data-article-body] h2[id], [data-article-body] h3[id], [data-article-body] h4[id]"
+      );
+      setHeadings(
+        Array.from(elements).map((element) => ({
+          id: element.id,
+          text: element.textContent?.trim() ?? element.id,
+          level: Number(element.tagName.slice(1)),
+        }))
+      );
+    });
+    return () => cancelAnimationFrame(frame);
   }, [content]);
 
   useEffect(() => {
@@ -69,7 +76,7 @@ export function TableOfContents({ content, title }: TableOfContentsProps) {
           }
         });
       },
-      { rootMargin: "-100px 0px -66% 0px" }
+      { rootMargin: "-96px 0px -70% 0px" }
     );
 
     headings.forEach((heading) => {
@@ -92,7 +99,9 @@ export function TableOfContents({ content, title }: TableOfContentsProps) {
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      element.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+      window.history.replaceState(null, "", `#${id}`);
       setActiveId(id);
     }
   };
@@ -100,62 +109,21 @@ export function TableOfContents({ content, title }: TableOfContentsProps) {
   if (headings.length === 0) return null;
 
   return (
-    <nav
-      aria-label="Table of contents"
-      className="group fixed top-1/2 right-8 z-50 hidden -translate-y-1/2 xl:block"
-    >
-      <div
-        className={cn(
-          "pointer-events-none absolute top-1/2 right-0 z-50 flex w-56 -translate-y-1/2 translate-x-4 flex-col gap-1.5 border border-gray-300/50 bg-card p-3.5 opacity-0 shadow-xl transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100 dark:border-white/10",
-        )}
+    <>
+      <details className="mb-6 rounded-xl border border-border bg-card p-4 min-[1280px]:hidden">
+        <summary className="cursor-pointer text-sm font-medium">On this page</summary>
+        <nav aria-label="Table of contents" className="mt-4">
+          <TocLinks headings={headings} activeId={activeId} onSelect={scrollToHeading} />
+        </nav>
+      </details>
+
+      <nav
+        aria-label={`On this page: ${title}`}
+        className="fixed top-28 left-[calc(50%+26rem)] hidden w-48 min-[1280px]:block"
       >
-        <h4 className="mb-1.5 line-clamp-2 px-1.5 font-mono text-[13px] leading-snug font-semibold text-muted-foreground">
-          {title}
-        </h4>
-        <ul className="flex flex-col gap-0.5">
-          {headings.map((heading) => {
-            const isSection = isSectionHeading(heading);
-
-            return (
-              <li
-                key={heading.id}
-                className={cn(!isSection && "pl-2.5")}
-              >
-                <button
-                  type="button"
-                  onClick={() => scrollToHeading(heading.id)}
-                  className={cn(
-                    "w-full rounded-md px-1.5 text-left font-mono transition-colors hover:bg-muted",
-                    isSection
-                      ? "py-1 text-[13px] leading-snug font-semibold"
-                      : "py-0.5 text-xs leading-snug",
-                    activeId === heading.id
-                      ? "bg-muted/50 font-medium text-foreground"
-                      : isSection
-                        ? "text-foreground/85"
-                        : "text-muted-foreground"
-                  )}
-                >
-                  {heading.text}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      <ul className="flex w-full flex-col gap-3 py-4 opacity-100 transition-opacity duration-300 group-hover:opacity-0">
-        {headings.map((heading) => (
-          <li key={heading.id} className="flex w-full justify-end">
-            <button
-              type="button"
-              onClick={() => scrollToHeading(heading.id)}
-              className={getRailBarClassName(heading, activeId)}
-              aria-label={`Scroll to ${heading.text}`}
-            />
-          </li>
-        ))}
-      </ul>
-    </nav>
+        <p className="mb-3 text-xs font-medium text-muted-foreground">On this page</p>
+        <TocLinks headings={headings} activeId={activeId} onSelect={scrollToHeading} />
+      </nav>
+    </>
   );
 }

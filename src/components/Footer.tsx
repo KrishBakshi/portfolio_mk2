@@ -1,17 +1,14 @@
-'use client'
+import Link from "next/link";
 
 export default function Footer() {
     return (
-        <div className="sm:px-8 px-4 py-4">
-            <div className="text-left w-full">
-                {/* <div className="mt-6 sm:mt-8 pt-4 sm:pt-6"> */}
-                    <div className="flex justify-center items-center text-center">
-                        <div className="text-sm dark:text-white/40 text-black/40 font-[family-name:var(--font-instrument-serif)]">
-                            © {new Date().getFullYear()} Krish Bakshi. All rights reserved.
-                        </div>
-                    </div>
-                {/* </div> */}
+        <footer className="flex flex-col gap-4 px-5 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <p>© {new Date().getFullYear()} Krish Bakshi</p>
+            <div className="flex items-center gap-4">
+                <Link href="/rss.xml" className="font-mono hover:text-foreground">RSS</Link>
+                <Link href="/llms.txt" className="font-mono hover:text-foreground">llms.txt</Link>
+                <a href="/resume.pdf" className="font-mono hover:text-foreground">Resume</a>
             </div>
-        </div>
+        </footer>
     )
 }

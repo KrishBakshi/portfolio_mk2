@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -13,11 +14,12 @@ export function ShowAllLink({ href, label, className }: ShowAllLinkProps) {
     <Link
       href={href}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-mono tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+        "group inline-flex min-h-10 shrink-0 items-center gap-2 text-sm font-medium text-foreground underline-offset-4 hover:underline",
         className
       )}
     >
       {label}
+      <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
     </Link>
   );
 }

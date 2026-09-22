@@ -1,8 +1,9 @@
 ---
 title: "How I Use Weights & Biases to Track My Experiments"
 slug: "wandb-experiment-tracking-deep-learning"
+display: "How do I track deep learning experiments with Weights & Biases"
 description: "How I use Weights & Biases to log and monitor deep learning training runs — wired up in a PPO LunarLander-v3 experiment with stable-baselines3."
-image: "/data/blog/wandb-experiment-tracking-deep-learning/shot_wandb_header.png"
+image: "/data/blog/wandb-experiment-tracking-deep-learning/wandb-cover.png"
 tags: ["Weights & Biases", "Deep Learning", "Reinforcement Learning", "MLOps", "PPO"]
 date: "2026-06-07"
 author: "Krish Bakshi"
@@ -39,7 +40,7 @@ That said, TensorBoard isn't bad. For a single experiment with a clean hypothesi
 
 Before the training code runs, you need a W&B account, an API key, and a project to log into. This takes about five minutes.
 
-![My W&B Dashboard](/data/blog/wandb-experiment-tracking-deep-learning/shot_wandb_dashboard.png "width:80%")
+![My W&B Dashboard](/data/blog/wandb-experiment-tracking-deep-learning/wandb-dashboard.png "width:80%")
 
 ### 1. Create an account
 
@@ -102,7 +103,7 @@ Once this is in place, `wandb.init()` in the training script will create (or att
 
 Here's a concrete example. I'm training a PPO agent on `LunarLander-v3` using `stable-baselines3`. Even for something this focused, there's a fair amount to track: mean reward across episodes, episode length, gradient behaviour, the best checkpoint, and final test performance after training. The full code is on [GitHub](https://github.com/KrishBakshi/rl-exp/tree/master/ppo/lunar_lander_v3).
 
-![lunar_lander_v3](/data/blog/wandb-experiment-tracking-deep-learning/inference-episode-0.gif "width:70%")
+![lunar_lander_v3](/data/blog/wandb-experiment-tracking-deep-learning/lunarlander-inference-episode.gif "width:70%")
 
 Here's how the WandB integration is wired in.
 

@@ -101,24 +101,14 @@ export function CommandMenu({ searchItems }: CommandMenuProps) {
     return (
         <>
             <Button
-                variant="secondary"
-                className="h-8 gap-1.5 rounded-full border border-input bg-white px-2.5 text-muted-foreground shadow-sm select-none hover:bg-white dark:bg-input/30 dark:hover:bg-input/30"
+                variant="ghost"
+                size="icon"
+                aria-label="Search portfolio"
+                className="gap-1.5 text-muted-foreground hover:text-foreground min-[900px]:w-auto min-[900px]:px-2.5"
                 onClick={() => setOpen(true)}
             >
                 <SearchIcon className="h-4 w-4" aria-hidden />
-
-                <span className="font-sans text-sm/4 font-medium sm:hidden">
-                    Search
-                </span>
-
-                <div className="hidden gap-1 sm:flex">
-                    <kbd className="pointer-events-none flex h-5 min-w-5 items-center justify-center rounded-sm bg-black/5 px-1 font-sans text-[11px] font-medium text-muted-foreground shadow-[inset_0_-1px_1px] shadow-black/10 select-none dark:bg-white/10 dark:shadow-white/10">
-                        ⌘
-                    </kbd>
-                    <kbd className="pointer-events-none flex h-5 min-w-5 items-center justify-center rounded-sm bg-black/5 px-1 font-sans text-[11px] font-medium text-muted-foreground shadow-[inset_0_-1px_1px] shadow-black/10 select-none dark:bg-white/10 dark:shadow-white/10">
-                        K
-                    </kbd>
-                </div>
+                <span className="hidden font-mono text-[11px] min-[900px]:inline">⌘K</span>
             </Button>
 
             <CommandDialog

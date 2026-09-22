@@ -38,42 +38,26 @@ function formatProfileBullet(parts: ProfileBullet): string {
 
 export const PROFILE = {
   name: "Krish Bakshi",
-  title: "Data Scientist",
+  title: "Data Scientist · AI Engineer",
   email: "work.krishb@gmail.com",
-  tagline: [
-    {
-      type: "text",
-      value: "Engineer who ships impactful AI systems, end-to-end at ",
-    },
-    { type: "text", value: "Speed!", italic: true },
-  ] satisfies ProfileBullet,
   highlights: ["Vision", "AI agents", "Fine-tuning", "RL"],
   bullets: [
     [
-      { type: "text", value: "Data Scientist @" },
-      { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
-    ],
-    [
-      { type: "text", value: "Taking novel research: " },
-      { type: "text", value: "paper → production", semibold: true },
-      { type: "text", value: ", with quantified impact." },
-    ],
-    [
-      { type: "text", value: "I enjoy working with " },
-      {
-        type: "link",
-        label: "agents",
-        href: "/projects?domain=AI%20Agents",
-      },
       {
         type: "text",
-        value: " and training neural networks on GPU clusters.",
+        value:
+          "Currently a Data Scientist at ",
+      },
+      { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
+      {
+        type: "text",
+        value:
+          ", working across computer vision, document intelligence, AI agents & Automation.",
       },
     ],
   ] satisfies ProfileBullet[],
-  socialLabel: "Here are my socials",
   about:
-    "Building and deploying ML across computer vision, AI, automation, and agentic workflows.",
+    "Data scientist and AI engineer turning applied research into reliable systems across computer vision, agents, and model training.",
   profileImage: "/header/pfp.jpeg",
   bannerImages: {
     light: "/header/light_2.png",
@@ -82,6 +66,7 @@ export const PROFILE = {
   socialLinks: {
     twitter: "https://x.com/KrishBakshi_",
     github: "https://github.com/KrishBakshi",
+    huggingface: "https://huggingface.co/KrishBakshi",
     linkedin: "https://linkedin.com/in/krish-bakshi-8b85b6314/",
     resume: "/resume.pdf",
     mail: "mailto:work.krishb@gmail.com",
@@ -91,6 +76,7 @@ export const PROFILE = {
 const PROFILE_SOCIAL_LINKS = [
   { title: "X", href: PROFILE.socialLinks.twitter },
   { title: "GitHub", href: PROFILE.socialLinks.github },
+  { title: "Hugging Face", href: PROFILE.socialLinks.huggingface },
   { title: "LinkedIn", href: PROFILE.socialLinks.linkedin },
   { title: "Resume", href: `${SITE_INFO.url}${PROFILE.socialLinks.resume}` },
   { title: "Email", href: PROFILE.socialLinks.mail },
@@ -99,7 +85,7 @@ const PROFILE_SOCIAL_LINKS = [
 export function getAboutMarkdown() {
   return `# About
 
-${formatProfileBullet(PROFILE.tagline)}
+${PROFILE.about}
 
 ${PROFILE.bullets.length > 0 ? `${PROFILE.bullets.map((item) => `- ${formatProfileBullet(item)}`).join("\n")}\n` : ""}${PROFILE.highlights.map((item) => `- ${item}`).join("\n")}
 
@@ -177,7 +163,7 @@ ${content.trim()}`;
 export function getBlogMarkdown() {
   const posts = getPublishedBlogPosts();
 
-  return `# Blog
+  return `# Writing
 
 ${posts
   .map((post) => {
@@ -243,7 +229,7 @@ ${PROFILE.name} is a ${PROFILE.title} who builds and ships AI systems across com
 
 ${getProjectsIndexMarkdown()}
 
-## Blog
+## Writing
 
 ${posts
   .map(

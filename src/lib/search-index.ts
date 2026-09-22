@@ -25,7 +25,7 @@ export function getCommandSearchItems(): CommandSearchItem[] {
     },
     {
       id: "nav-work",
-      title: "Work",
+      title: "Experience",
       subtitle: "Experience and roles",
       href: "/work",
       group: "navigation",
@@ -41,8 +41,8 @@ export function getCommandSearchItems(): CommandSearchItem[] {
     },
     {
       id: "nav-blog",
-      title: "Blog",
-      subtitle: "Posts and notes",
+      title: "Writing",
+      subtitle: "Research notes and articles",
       href: "/blog",
       group: "navigation",
       keywords: ["writing", "articles", "posts"],
@@ -102,7 +102,7 @@ export function getCommandSearchItems(): CommandSearchItem[] {
         id: `experience-${position.id}`,
         title: `${position.title} @ ${company.companyName}`,
         subtitle: position.employmentPeriod,
-        href: "/work",
+        href: `/work#${position.id}`,
         group: "experience",
         keywords: [
           company.companyName,

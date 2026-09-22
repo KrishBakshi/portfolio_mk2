@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { pageTitle } from "@/lib/utils";
+import { useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectDomainFilters } from "@/components/projects/ProjectDomainFilters";
@@ -17,6 +18,8 @@ interface ProjectsPageContentProps {
 
 export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const domainParam = searchParams.get("domain");
 
   const availableDomains = useMemo(
@@ -24,37 +27,39 @@ export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
     [projects]
   );
 
-  const initialDomain =
+  const activeDomain =
     domainParam && availableDomains.includes(domainParam) ? domainParam : null;
-
-  const [activeDomain, setActiveDomain] = useState<string | null>(initialDomain);
 
   const filteredProjects = useMemo(
     () => filterProjectsByDomain(projects, activeDomain),
     [projects, activeDomain]
   );
 
+  const handleDomainChange = (domain: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (domain) params.set("domain", domain);
+    else params.delete("domain");
+    router.replace(`${pathname}${params.size ? `?${params.toString()}` : ""}`, {
+      scroll: false,
+    });
+  };
+
   return (
-    <div className="space-y-6 px-4 sm:py-4">
-      <div className="space-y-3">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-sans text-2xl font-semibold tracking-tight sm:text-3xl">
-            Projects
-          </h2>
-          <p className="font-mono text-sm text-muted-foreground">
-            A selection of projects I&apos;ve worked on.
-          </p>
-        </div>
+    <div>
+      <div className="mb-5 space-y-4">
+        <h1 className={pageTitle}>
+          Projects
+        </h1>
 
         <ProjectDomainFilters
           domains={availableDomains}
           activeDomain={activeDomain}
-          onChange={setActiveDomain}
+          onChange={handleDomainChange}
         />
       </div>
 
       {filteredProjects.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div aria-live="polite">
           {filteredProjects.map((project) => (
             <ProjectCard
               key={project.slug}
@@ -64,7 +69,7 @@ export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
           ))}
         </div>
       ) : (
-        <p className="font-mono text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           No projects match this filter yet.
         </p>
       )}

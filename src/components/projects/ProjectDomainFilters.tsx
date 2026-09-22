@@ -9,7 +9,7 @@ interface ProjectDomainFiltersProps {
 }
 
 const pillClassName =
-  "rounded-md border px-2.5 py-1 font-mono text-xs transition-colors";
+  "font-mono text-xs underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
 export function ProjectDomainFilters({
   domains,
@@ -23,7 +23,7 @@ export function ProjectDomainFilters({
   const pills = ["All", ...domains];
 
   return (
-    <ul className="flex flex-wrap items-center gap-2" role="list">
+    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1" role="list">
       {pills.map((label) => {
         const isAll = label === "All";
         const isActive = isAll ? activeDomain === null : activeDomain === label;
@@ -33,14 +33,11 @@ export function ProjectDomainFilters({
             <button
               type="button"
               aria-pressed={isActive}
-              onClick={() =>
-                onChange(isAll ? null : activeDomain === label ? null : label)
-              }
+              aria-label={isAll ? "Show all projects" : `Filter projects by ${label}`}
+              onClick={() => onChange(isAll ? null : label)}
               className={cn(
                 pillClassName,
-                isActive
-                  ? "border-foreground/45 bg-muted/50 font-semibold text-foreground"
-                  : "border-border/60 bg-muted/30 text-foreground/85 hover:border-foreground/30 hover:bg-muted/40"
+                isActive ? "text-foreground underline" : "text-muted-foreground"
               )}
             >
               {label}

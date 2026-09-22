@@ -6,3 +6,7 @@ export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
 
+
+/** Heading scale: one page title per page, section titles beneath it. */
+export const pageTitle = "text-xl font-medium leading-tight tracking-tight text-foreground sm:text-2xl";
+export const sectionTitle = "text-base font-medium tracking-tight text-foreground";
