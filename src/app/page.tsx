@@ -22,7 +22,7 @@ export default function Home() {
           bullets={[...PROFILE.bullets]}
           socialLinks={PROFILE.socialLinks}
         />
-        <Projects projects={projects} max={5} showAllHref="/projects" />
+        <Projects projects={projects} max={4} showAllHref="/projects" />
         {posts.length > 0 && <Blog posts={posts} max={3} showAllHref="/blog" />}
       </main>
     </PageCanvas>
