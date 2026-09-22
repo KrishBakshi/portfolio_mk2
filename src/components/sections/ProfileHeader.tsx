@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp, Ellipsis } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -168,7 +168,9 @@ export default function ProfileHeader({
             aria-label={showMore ? "Show fewer links" : "Show more links"}
             className="inline-flex min-h-10 items-center text-muted-foreground transition-colors hover:text-foreground sm:hidden"
           >
-            {showMore ? <ChevronUp className="size-4" /> : <Ellipsis className="size-4" />}
+            <ChevronDown
+              className={cn("size-4 transition-transform duration-300 ease-out", showMore && "rotate-180")}
+            />
           </button>
         )}
 
