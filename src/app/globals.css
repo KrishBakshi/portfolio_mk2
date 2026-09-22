@@ -193,6 +193,12 @@ body {
   outline-offset: 3px;
 }
 
+/* cmdk auto-focuses the search input when the palette opens, which would
+ * otherwise draw the global focus ring around it every time. */
+[cmdk-input]:focus-visible {
+  outline: none;
+}
+
 /* Support for html.dark and html.light selectors used in theme toggle */
 html.dark {
   color-scheme: dark;
