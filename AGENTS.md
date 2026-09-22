@@ -62,7 +62,7 @@ Search index is built in `src/lib/search-index.ts` (server-only).
 Videos, blog images and the resume live in a Cloudflare R2 bucket (`assets`) with three folders: `blogs`, `demo-preview` and `documents`. It is public through the R2 custom domain `https://assets.krishbakshi.com`. Object keys match the URL path, e.g. `demo-preview/wingmate.mp4`. These files are NOT in git.
 
 - **Local copy:** `assets-source/` (git-ignored) mirrors the bucket layout: `demo-preview/`, `blogs/<slug>/`, `documents/`. Add or rename files there, then sync with `scripts/assets.sh copy assets-source assets:assets`.
-- **Base URL:** `src/lib/assets.ts` defaults to `https://assets.krishbakshi.com`; set `ASSETS_BASE_URL` (in `.env` / Vercel) only to point somewhere else.
+- **Base URL:** `ASSETS_BASE_URL` is required — set it in `.env` locally and in the deploy environment (Vercel Project Settings → Environment Variables). `src/lib/assets.ts` throws a clear build-time error if it's missing; the URL is never hard-coded in source.
 - **Videos:** frontmatter `videoPreview` stays `/assets/demo/preview/<name>.mp4`; it maps to `<base>/demo-preview/<name>.mp4`.
 - **Blog images:** MDX and frontmatter keep `/data/blog/<slug>/<file>`; the loader maps them to `<base>/blogs/<slug>/<file>`. The `.mdx` files stay in the repo.
 - **Resume:** `/resume.pdf` stays the public link; `next.config.ts` rewrites it (no redirect) to `<base>/documents/resume.pdf`.
