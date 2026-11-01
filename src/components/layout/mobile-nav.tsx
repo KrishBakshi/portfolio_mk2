@@ -36,18 +36,21 @@ export function MobileNav({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-64" align="end" sideOffset={8}>
-        {items.map((link) => (
-          <DropdownMenuItem key={link.href} asChild>
-            <Link
-              href={link.href}
-              aria-current={pathname.startsWith(link.href) ? "page" : undefined}
-              className={cn(pathname.startsWith(link.href) && "bg-accent font-medium text-foreground")}
-            >
-              {link.title}
-            </Link>
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent className="w-64 lowercase" align="end" sideOffset={8}>
+        {items.map((link) => {
+          const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+          return (
+            <DropdownMenuItem key={link.href} asChild>
+              <Link
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(active && "bg-accent font-medium text-foreground")}
+              >
+                {link.title}
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
