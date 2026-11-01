@@ -10,6 +10,8 @@ export interface ProjectFrontmatter {
     videoPreview?: string;
     link: string;
     github?: string;
+    /** Paper URL (e.g. arXiv abstract page); adds a "Paper" button on the project page. */
+    paper?: string;
     technologies: string[];
     domains?: string[];
     isWorking?: boolean;

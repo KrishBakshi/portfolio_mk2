@@ -34,8 +34,8 @@ export const SITE_INFO = {
 };
 
 export const META_THEME_COLORS = {
-  light: "#ffffff",
-  dark: "#0a0a0a",
+  light: "#f2ecbc",
+  dark: "#1f1f28",
 };
 
 export const MAIN_NAV: NavItem[] = [
@@ -46,6 +46,10 @@ export const MAIN_NAV: NavItem[] = [
   {
     title: "Projects",
     href: "/projects",
+  },
+  {
+    title: "Research",
+    href: "/research",
   },
   {
     title: "Writing",

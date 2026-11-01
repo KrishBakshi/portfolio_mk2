@@ -5,6 +5,7 @@ import {
   filterProjectsByDomain,
   getAvailableProjectDomains,
 } from "@/lib/project-domains";
+import { getResearchPapers } from "@/lib/research";
 import { TECH_STACK, WORK_EXPERIENCE_DATA } from "@/lib/static-data";
 
 export type ProfileBulletPart =
@@ -46,14 +47,25 @@ export const PROFILE = {
       {
         type: "text",
         value:
-          "Currently a Data Scientist at ",
+          "I am an engineer who builds AI systems end to end, across computer vision, document intelligence, AI agents, fine-tuning and reinforcement learning. Right now I do that at ",
       },
       { type: "link", label: "Nasiwak", href: "https://nasiwakservices.com" },
-      {
-        type: "text",
-        value:
-          ", working across computer vision, document intelligence, AI agents & Automation.",
-      },
+      { type: "text", value: "." },
+    ],
+    [
+      { type: "text", value: "I also built " },
+      { type: "link", label: "WorldBench", href: "https://worldbench.krishbakshi.com" },
+      { type: "text", value: ", a benchmark evaluating LLMs from " },
+      { type: "text", value: "12+ frontier labs", semibold: true },
+      { type: "text", value: " on 3D voxel world generation, with " },
+      { type: "text", value: "5K visits/month", semibold: true },
+      { type: "text", value: " and a " },
+      { type: "link", label: "paper", href: "/research" },
+      { type: "text", value: " on arXiv. Outside work I build my own tools, like " },
+      { type: "link", label: "Wingmate", href: "/projects/wingmate" },
+      { type: "text", value: ", and " },
+      { type: "link", label: "write", href: "/blog" },
+      { type: "text", value: " about what I learn." },
     ],
   ] satisfies ProfileBullet[],
   about:
@@ -142,6 +154,7 @@ ${projects
     const links = [
       `Project URL: ${frontmatter.link}`,
       frontmatter.github ? `GitHub: ${frontmatter.github}` : null,
+      frontmatter.paper ? `Paper: ${frontmatter.paper}` : null,
     ]
       .filter(Boolean)
       .join("\n");
@@ -155,6 +168,30 @@ ${links}
 Technologies: ${frontmatter.technologies.join(", ")}
 
 ${content.trim()}`;
+  })
+  .join("\n\n")}
+`;
+}
+
+export function getResearchMarkdown() {
+  const papers = getResearchPapers();
+
+  return `# Research
+
+${papers
+  .map((paper) => {
+    const links = Object.entries(paper.links)
+      .map(([label, href]) => `${label[0].toUpperCase()}${label.slice(1)}: ${href.startsWith("/") ? `${SITE_INFO.url}${href}` : href}`)
+      .join("\n");
+
+    return `## ${paper.title}
+
+Authors: ${paper.authors.join(", ")}
+Venue: ${paper.venue}${paper.arxivId ? ` (arXiv ${paper.arxivId})` : ""}, ${paper.year}
+
+${paper.summary}
+
+${links}`;
   })
   .join("\n\n")}
 `;
@@ -225,6 +262,12 @@ ${PROFILE.name} is a ${PROFILE.title} who builds and ships AI systems across com
 - [Projects](${SITE_INFO.url}/projects.md): Project catalog with descriptions, links, technologies, and implementation notes.
 - [Full portfolio context](${SITE_INFO.url}/llms-full.txt): Single consolidated document for LLM ingestion and Q&A.
 
+## Research
+
+${getResearchPapers()
+  .map((paper) => `- [${paper.title}](${paper.links.paper}): ${paper.display}`)
+  .join("\n")}
+
 ## Projects
 
 ${getProjectsIndexMarkdown()}
@@ -268,6 +311,8 @@ When responding on his behalf, prefer facts from this document. Link to project 
 ${getAboutMarkdown()}
 
 ${getExperienceMarkdown()}
+
+${getResearchMarkdown()}
 
 ${getProjectsMarkdown()}
 

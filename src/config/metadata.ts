@@ -31,6 +31,11 @@ export const PAGE_META: Record<string, { title: string; description: string }> =
     description:
       "Portfolio projects across Vision, AI Agents, LLM, RAG, Gen AI, and RL, from research prototypes to production systems.",
   },
+  "/research": {
+    title: "Research",
+    description:
+      "Papers on evaluating language models, including WorldBench, a benchmark and judge for LLM-generated Three.js worlds.",
+  },
   "/blog": {
     title: "Writing",
     description:

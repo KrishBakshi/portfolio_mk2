@@ -1,36 +1,32 @@
 import dynamic from "next/dynamic";
 
 import { DesktopNav } from "./desktop-nav";
-import { CommandMenu } from "./command-menu";
 import { MAIN_NAV } from "@/config/site";
-import { getCommandSearchItems } from "@/lib/search-index";
-import { SiteHeaderMark } from "./site-header-mark";
+import { SideNav } from "./side-nav";
 import { ThemeToggle } from "./theme-toggle";
+import type { NavItem } from "@/types/nav";
 
 const MobileNav = dynamic(() =>
   import("@/components/layout/mobile-nav").then((mod) => mod.MobileNav)
 );
 
+const NAV_WITH_HOME: NavItem[] = [{ title: "Home", href: "/" }, ...MAIN_NAV];
+
 export function SiteHeader() {
-  const searchItems = getCommandSearchItems();
-
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-2xl items-center justify-between gap-2 px-5 sm:gap-4 sm:px-8">
-        <SiteHeaderMark />
+    <>
+      {/* From 1080px the side list takes over, so the top bar is not needed. */}
+      <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md min-[1080px]:hidden">
+        <div className="mx-auto flex h-14 max-w-2xl items-center justify-end gap-2 px-5 sm:gap-4 sm:px-8">
+          <DesktopNav items={NAV_WITH_HOME} />
 
-        <div className="flex-1" />
-
-        <DesktopNav items={MAIN_NAV} />
-
-        <div className="-mr-[9px] flex items-center gap-1">
-          <CommandMenu searchItems={searchItems} />
-          <ThemeToggle />
-          <MobileNav className="min-[765px]:hidden" items={MAIN_NAV} />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <MobileNav className="-mr-[9px] min-[765px]:hidden" items={NAV_WITH_HOME} />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <SideNav items={MAIN_NAV} />
+    </>
   );
 }
-
-

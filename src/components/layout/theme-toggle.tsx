@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { META_THEME_COLORS } from "@/config/site";
 import { useMetaColor } from "@/hooks/use-meta-color";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -31,15 +31,24 @@ export function ThemeToggle() {
 
   const isDark = mounted && resolvedTheme === "dark";
 
+  // A small switch with square corners: the knob slides right for dark mode.
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label="Dark mode"
       onClick={switchTheme}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-[4px] border border-border bg-muted p-[2px] transition-colors hover:border-muted-foreground/60"
     >
-      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-    </Button>
+      <span
+        className={cn(
+          "grid size-[18px] place-items-center rounded-[3px] bg-foreground text-background shadow-sm transition-transform duration-200 ease-out",
+          isDark && "translate-x-5"
+        )}
+      >
+        {isDark ? <Moon className="size-3" /> : <Sun className="size-3" />}
+      </span>
+    </button>
   );
 }
-

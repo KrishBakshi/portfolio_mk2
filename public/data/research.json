@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "worldbench",
+    "title": "WorldBench: Evaluating LLMs on Three.js Voxel World Generation",
+    "authors": ["Krish Bakshi"],
+    "year": 2026,
+    "venue": "arXiv preprint",
+    "arxivId": "2610.10622",
+    "display": "A benchmark and judge that explores and reads LLM-written 3D worlds",
+    "summary": "Language models can now write whole interactive 3D worlds as code, but grading them automatically is unreliable: a judge that only looks at screenshots, or only reads the source, misses a lot. WorldBench gives every model one prompt describing a floating voxel island with ten biomes, physics, and day/night and seasonal cycles. Its judge explores the running world and reads the code, and trusts neither on its own: a code quote only counts if the file really contains it, and visual claims are checked against measured pixels. In a mutation test, code-only judging still gave full credit to four of five deliberately removed features; WorldBench cuts the points kept on removed features by a third.",
+    "links": {
+      "paper": "https://arxiv.org/abs/2610.10622",
+      "code": "https://github.com/KrishBakshi/worldbench",
+      "website": "https://worldbench.krishbakshi.com",
+      "dataset": "https://huggingface.co/datasets/KrishBakshi/worldbench",
+      "project": "/projects/worldbench"
+    }
+  }
+]

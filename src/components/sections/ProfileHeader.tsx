@@ -1,10 +1,8 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn, textLink } from "@/lib/utils";
 import Image from "next/image";
 import type { ProfileBullet } from "@/lib/llms";
 
@@ -22,11 +20,12 @@ interface ProfileHeaderProps {
   };
 }
 
-const socialLinkClassName =
-  "inline-flex min-h-10 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline active:opacity-75 touch-manipulation transition-colors";
+const socialLinkClassName = cn(
+  "inline-flex min-h-10 items-center text-sm text-muted-foreground hover:text-foreground active:opacity-75 touch-manipulation",
+  textLink
+);
 
-const inlineLinkClassName =
-  "font-semibold text-inherit no-underline transition-colors hover:text-foreground hover:underline hover:decoration-foreground hover:underline-offset-2";
+const inlineLinkClassName = cn("font-semibold text-inherit hover:text-foreground", textLink);
 
 function profileTextClassName(part: {
   italic?: boolean;
@@ -104,18 +103,12 @@ export default function ProfileHeader({
     mail: "",
   },
 }: ProfileHeaderProps) {
-  const [showMore, setShowMore] = useState(false);
-
-  // One line on phones: the last link waits behind the "…" button.
-  const primaryLinks: SocialLinkItem[] = [
+  const links: SocialLinkItem[] = [
     socialLinks.github && { label: "GitHub", href: socialLinks.github },
     socialLinks.huggingface && { label: "Hugging Face", href: socialLinks.huggingface },
     socialLinks.twitter && { label: "X", href: socialLinks.twitter },
     socialLinks.linkedin && { label: "LinkedIn", href: socialLinks.linkedin },
     socialLinks.mail && { label: "Email", href: socialLinks.mail, external: false },
-  ].filter((link): link is SocialLinkItem => Boolean(link));
-  const extraLinks: SocialLinkItem[] = [
-    socialLinks.resume && { label: "Resume", href: socialLinks.resume },
   ].filter((link): link is SocialLinkItem => Boolean(link));
 
   return (
@@ -150,32 +143,10 @@ export default function ProfileHeader({
       <nav
         id="profile-links"
         aria-label="Profile links"
-        className={cn(
-          "mt-7 flex items-center gap-y-1 sm:flex-wrap sm:justify-start sm:gap-x-5",
-          showMore ? "flex-wrap gap-x-4" : "flex-nowrap justify-between gap-x-2"
-        )}
+        className="mt-7 flex flex-nowrap items-center justify-between gap-x-2 gap-y-1 sm:flex-wrap sm:justify-start sm:gap-x-5"
       >
-        {primaryLinks.map((link) => (
+        {links.map((link) => (
           <SocialLink key={link.label} {...link} />
-        ))}
-
-        {extraLinks.length > 0 && (
-          <button
-            type="button"
-            onClick={() => setShowMore((open) => !open)}
-            aria-expanded={showMore}
-            aria-controls="profile-links"
-            aria-label={showMore ? "Show fewer links" : "Show more links"}
-            className="inline-flex min-h-10 items-center text-muted-foreground transition-colors hover:text-foreground sm:hidden"
-          >
-            <ChevronDown
-              className={cn("size-4 transition-transform duration-300 ease-out", showMore && "rotate-180")}
-            />
-          </button>
-        )}
-
-        {extraLinks.map((link) => (
-          <SocialLink key={link.label} {...link} className={cn(!showMore && "max-sm:hidden")} />
         ))}
       </nav>
     </header>

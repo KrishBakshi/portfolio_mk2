@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { CopyButton } from "./CopyButton";
+import { ExternalArrow, isExternalHref } from "@/components/ui/external-arrow";
 
 // SVG Icons for specific AI services
 function ClaudeIcon({ className }: { className?: string }) {
@@ -188,6 +189,7 @@ export function ViewOptions({
                 >
                   <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
                   {item.title}
+                  {isExternalHref(item.href) ? <ExternalArrow className="ml-auto" /> : null}
                 </a>
               </DropdownMenuItem>
             )

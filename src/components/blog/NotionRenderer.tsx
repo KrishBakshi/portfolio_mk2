@@ -4,7 +4,8 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkUnwrapImages from 'remark-unwrap-images';
-import { cn, sectionTitle } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { ExternalArrow, isExternalHref } from '@/components/ui/external-arrow';
 import { CodeHeader } from './CodeHeader';
 import { BlogConfigDropdown } from './BlogConfigDropdown';
 import { BlogInstallToggle } from './BlogInstallToggle';
@@ -58,9 +59,10 @@ function omitMarkdownNode<T extends { node?: unknown }>({ node, ...props }: T): 
 }
 
 const markdownComponents = {
-    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className={sectionTitle} {...props} />,
-    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className={sectionTitle} {...props} />,
-    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-[15px] font-medium text-foreground" {...props} />,
+    // Post headings step down 20 / 18 / 17px so each level reads clearly above body text (15px).
+    h1: (props: React.ComponentProps<'h1'>) => <Heading as="h2" className="text-xl font-semibold tracking-tight text-foreground" {...props} />,
+    h2: (props: React.ComponentProps<'h2'>) => <Heading as="h3" className="text-lg font-semibold tracking-tight text-foreground" {...props} />,
+    h3: (props: React.ComponentProps<'h3'>) => <Heading as="h4" className="text-[17px] font-semibold tracking-tight text-foreground" {...props} />,
     h4: (props: React.ComponentProps<'h4'>) => <Heading as="h5" className="text-[15px] font-medium text-muted-foreground" {...props} />,
     h5: (props: React.ComponentProps<'h5'>) => <Heading as="h6" className="text-[15px] font-medium text-muted-foreground" {...props} />,
     h6: (props: React.ComponentProps<'h6'>) => <Heading as="h6" className="text-[15px] font-medium text-muted-foreground" {...props} />,
@@ -121,6 +123,7 @@ const markdownComponents = {
                 rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
                 {children}
+                {isExternalHref(href) ? <ExternalArrow /> : null}
             </a>
         );
     },

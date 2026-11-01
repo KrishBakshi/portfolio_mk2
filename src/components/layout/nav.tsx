@@ -17,7 +17,7 @@ export function Nav({
     <nav
       aria-label="Primary navigation"
       data-active-id={activeId}
-      className={cn("flex items-center gap-3", className)}
+      className={cn("flex items-center gap-3 lowercase", className)}
     >
       {items.map(({ title, href }) => {
         const active =

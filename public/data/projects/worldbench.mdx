@@ -2,19 +2,20 @@
 title: 'WorldBench'
 slug: 'worldbench'
 id: 10
-display: 'One prompt, one 3D island per model, judged side by side by a human'
-description: 'A human-as-judge benchmark for whether a model can build a coherent world. One ~3,000 token prompt, one self-contained Three.js island per model, compared side by side.'
+display: 'A benchmark to evaluate LLMs on 3D voxel world generation'
+description: 'A live benchmark where language models build a 3D world from one prompt: 30 models from 12 labs, viewable live, compared side by side and ranked on a leaderboard, with 5K visits/month and a paper on arXiv.'
 image: '/file.svg'
 videoPreview: '/assets/demo/preview/worldbench.mp4'
 link: 'https://worldbench.krishbakshi.com/'
 github: 'https://github.com/KrishBakshi/worldbench'
+paper: 'https://arxiv.org/abs/2610.10622'
 technologies:
+  - Python
+  - Three.js
+  - Headless Chromium
   - Next.js
   - TypeScript
-  - Three.js
-  - Tailwind CSS
-  - MDX
-  - Vercel
+  - HuggingFace
 domains:
   - LLM
   - Gen AI
@@ -23,26 +24,44 @@ isWorking: true
 
 ## Overview
 
-**WorldBench** asks one question: can a model build a world that holds together?
+**[WorldBench](https://worldbench.krishbakshi.com/)** is a live benchmark that asks one question: can a language model build a living 3D world from a single description?
 
-Every model gets the same natural-language prompt, **~3,000 tokens**, and has to return a single self-contained `world.html` that renders a floating, multi-biome voxel island in **Three.js**. No image, no schema, no reference file, no build step. It has to open in a browser and run.
+Every model gets the same prompt: a detailed description of a floating voxel island with **ten biomes**, rivers, weather, wildlife, a **day/night cycle** and **seasons**. It has to answer with **one self-contained `world.html`** that renders the world in **Three.js**, imported from a CDN, with no build step and no asset files. The file has to open in a browser and just run.
 
-It is a **human-as-judge benchmark**. No rubric, no automated scorer, because there is no single correct island: only a hand-tuned reference built by a human, and your own eyes to compare it against a range of very different automated attempts.
+So far it holds worlds from **30 models across 12 labs**, including Anthropic, Google, OpenAI, xAI, Meta and DeepSeek, and the site gets about **5K visits/month**.
 
 ---
 
-## Why It Is Hard
+## The Website
 
-The island is the visible part. What the prompt actually demands is that several kinds of reasoning hold at the same time:
+[worldbench.krishbakshi.com](https://worldbench.krishbakshi.com/) is where people use it:
 
-- **Spatial and relational placement**: the prompt encodes a placement graph, not a list. The model has to satisfy the whole adjacency structure, not place ten biomes wherever they fit.
-- **Ecological causality**: water has to behave like water. Mountain melt feeds a wet corridor. The desert is a rain-shadow basin with no through-river. Lava touching water quenches to obsidian. It is a small causal system to simulate, not decorate.
-- **Elevation and scale**: peaks dominate, shelves sit mid-height, plains stay low, and every biome still has to read as its own region from a high orbit instead of collapsing into its neighbor.
-- **Ecological grounding**: cacti in the desert, pines in the snow forest, deer at jungle edges. Placing life that matches its climate.
-- **Temporal systems**: a day/night cycle, a seasonal cycle, and cyclic weather that stays staggered by biome instead of blanketing the island at once.
-- **Interaction logic**: a clickable legend that flies the camera to each region, wiring 3D scene state to on-screen UI.
+- **Evaluations**: every model's island runs live and interactive in the browser. Search or filter by lab, or open any world in its own window.
+- **Compare**: put up to six worlds side by side, in a link you can share.
+- **Leaderboard**: every scored model ranked, with each test broken out and the exact scores in a table.
+- **About**: what the benchmark tests, how scoring works, and how to cite it.
 
-All of it in one file, first try.
+The scoring code is on [GitHub](https://github.com/KrishBakshi/worldbench), the results are a [Hugging Face dataset](https://huggingface.co/datasets/KrishBakshi/worldbench), and the method is written up in the paper **[WorldBench: Evaluating LLMs on Three.js Voxel World Generation](https://arxiv.org/abs/2610.10622)** (arXiv 2610.10622).
+
+---
+
+## Why Grading Is the Hard Part
+
+Models can now write complete interactive worlds as code, but judging those worlds is unreliable. Existing judges take one view of the output: a vision-language model scores a few screenshots, or a language model reads the source.
+
+On worlds written by five frontier models, those two views **disagree on 32% of required items**, mostly code that no frame ever shows. Fixed camera views also miss small close-up contents. A judge that trusts either view alone gets fooled.
+
+---
+
+## Why the Task Is Hard
+
+The island is the visible part. What the prompt actually demands is that several kinds of reasoning hold at the same time, all in one file:
+
+- **Holding a large spec in mind**: well over a hundred concrete requirements, from snow on tree canopies to obsidian where water meets lava.
+- **Spatial reasoning**: biomes are described by their relationships, not coordinates, so the model has to hold a mental map and build to it.
+- **Causal reasoning**: water runs from mountain melt through the jungle to the plains and out to a delta, the desert stays dry, and rivers never flow into the volcano.
+- **Code that works, not code that looks right**: thousands of lines of Three.js that have to run, render and animate without crashing.
+- **A world that is alive over time**: rain falls, rivers flow, clouds drift, the sun crosses the sky and the seasons turn.
 
 ---
 
@@ -88,26 +107,43 @@ The ecology is a typed graph rather than prose. One perennial water corridor run
 
 The flowering grove has two valid sources, down the highland slope and/or across from the grassland plateau, which gives the graph its one real cycle. The desert touches the grassland only through dry washes that fade out before they arrive: a genuine relation, but never a through-river. The backwater swamp hangs off the jungle's wet side as a dead end. The volcano sits off the water system entirely, reached by a single causal rule.
 
-Holding that adjacency structure while laying out geometry is the benchmark.
+Holding that adjacency structure while laying out geometry is part of what is being tested.
 
 ---
 
-## Results
+## How It Judges
 
-A growing roster, currently spanning `Claude`, `GPT`, `Gemini`, `Grok`, `Kimi`, `GLM` and `Qwen`, with new models added as they ship.
+The judge **explores** the running world and **reads** the code for what it sees.
 
-Worlds render live and interactive on the site, and up to six can be compared side by side.
+1. **Structural gate**: the file must exist and actually be a Three.js / WebGL page, or it fails fast with a reason.
+2. **Instrumented capture**: the world runs in headless Chromium with its randomness seeded and its clock pinned, so every reload builds the same island. The capture records fixed views, every time of day and season, and a **navigator agent** that uses the world's own legend and camera to frame each biome.
+3. **Dual evidence per rubric item**: an LLM reads the source and must quote the exact lines that build each item, and every quote is **verified verbatim against the file**. A VLM judges the captured frames, and motion, day/night brightness and seasonal tint are **measured from the pixels** instead of asked about.
+4. **Disputes**: when the frames show something the code half missed, a tool-using agent searches a sandboxed copy of the source to settle it, with its quote verified the same way.
+
+Every world is scored on the same five tests, **280 points** in total:
+
+| Test | Points | What it asks |
+| --- | --- | --- |
+| WC001 Voxel island | 40 | Is it a cube-built island floating in a void, with no visible rendering bugs? |
+| WC002 Coverage and placement | 20 | Is every biome built, next to the right neighbours at the right height? |
+| WC003 Micro-contents | 100 | Does each biome contain what makes it that biome? |
+| WC004 Physics | 100 | Do rain, rivers, clouds and lava look and move right? |
+| WC005 Temporal cycles | 20 | Do day/night and the seasons actually change the world? |
 
 ---
 
-## What's Next
+## What the Paper Found
 
-Judgement today is **human** and whole-island: you look at it and decide whether it holds together. That resolves the question at only one level of detail.
+A **mutation test** removes features from worlds by construction and checks whether a judge notices. Code-only judging still gives **full credit to four of five removed features**, because their code remains in the file.
 
-Next is to go finer, either an **LLM-as-judge** or a per-component breakdown scoring **logical alignment**, **rendering**, **flora and fauna** and **placement graph** separately, so a world can be strong in one and weak in another instead of collapsing to a single impression. Making those scores mean anything takes heavy iteration, so it is near-future rather than now.
+WorldBench's judge cuts the points kept on removed features **by a third (5.44 to 3.55 of 7.11)**, and what it still credits is mostly code that exists but never runs.
+
+The paper evaluates five frontier models: **Claude Fable 5.1**, **GPT-6 Astra**, **Kimi K3**, **Grok 4.7** and **Gemini 3.1 Pro**. The website and the Hugging Face dataset cover a wider roster of generated worlds, each with its scores, quotes and frames saved so any result can be audited.
 
 ---
 
 ## Try It
 
-Browse the results at [worldbench.krishbakshi.com](https://worldbench.krishbakshi.com/), or run it without the site: copy the prompt, paste it into any model, save the raw output as `world.html`, and open it in your browser.
+- Read the paper on [arXiv](https://arxiv.org/abs/2610.10622).
+- Browse the worlds and scores at [worldbench.krishbakshi.com](https://worldbench.krishbakshi.com/).
+- Get the code, prompt, tests and judge configuration on [GitHub](https://github.com/KrishBakshi/worldbench), and the data on [Hugging Face](https://huggingface.co/datasets/KrishBakshi/worldbench).
