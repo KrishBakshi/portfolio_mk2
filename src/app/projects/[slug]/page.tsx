@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, FileText, Github } from "lucide-react";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
@@ -21,6 +21,7 @@ import { PostShareMenu } from "@/components/blog/PostShareMenu";
 import { ViewCount } from "@/components/blog/ViewCount";
 import { LLMCopyButtonWithViewOptions } from "@/components/blog/PostActions";
 import { getProjectPrimaryLink } from "@/lib/project-links";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -108,6 +109,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <Link href={primaryLink.href} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="mr-2 size-4" />
                     {primaryLink.label}
+                    <ExternalArrow className="ml-1.5" />
+                  </Link>
+                </Button>
+              ) : null}
+              {frontmatter.paper ? (
+                <Button asChild variant="outline" className="min-h-10">
+                  <Link href={frontmatter.paper} target="_blank" rel="noopener noreferrer">
+                    <FileText className="mr-2 size-4" />
+                    Paper
+                    <ExternalArrow className="ml-1.5" />
                   </Link>
                 </Button>
               ) : null}
@@ -116,6 +127,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <Link href={frontmatter.github} target="_blank" rel="noopener noreferrer">
                     <Github className="mr-2 size-4" />
                     Source
+                    <ExternalArrow className="ml-1.5" />
                   </Link>
                 </Button>
               ) : null}
