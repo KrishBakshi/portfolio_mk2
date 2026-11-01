@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "@/components/layout/providers";
 import { SiteHeader } from "@/components/layout/site-header";
 import Footer from "@/components/Footer";
+import { Mew } from "@/components/companion/Mew";
 import { getRootMetadata } from "@/config/metadata";
 import { META_THEME_COLORS } from "@/config/site";
 import { fontMono, fontSans } from "@/lib/fonts";
@@ -45,13 +46,16 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} antialiased`}
+        // relative: Mew's layer is clipped to the body's size (see Mew.tsx).
+        className={`${fontSans.variable} ${fontMono.variable} relative antialiased`}
         suppressHydrationWarning
       >
         <Providers>
           <div className="relative mx-auto w-full max-w-2xl overflow-x-clip px-3 min-[765px]:px-5 min-[900px]:px-0">
             <SiteHeader />
-            <div className="mx-auto w-full">
+            {/* From 1080px the top bar is hidden; keep its height as margin so every
+                page starts level with the first link in the side list. */}
+            <div className="mx-auto w-full min-[1080px]:pt-14">
               {children}
               <Analytics />
             </div>
@@ -59,6 +63,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </div>
+          <Mew />
         </Providers>
       </body>
     </html>
