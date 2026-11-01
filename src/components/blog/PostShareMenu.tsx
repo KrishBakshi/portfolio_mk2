@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SiX, SiLinkedin } from "react-icons/si";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 
 export function PostShareMenu({ url }: { url: string }) {
   const [absoluteUrl, setAbsoluteUrl] = React.useState(url);
@@ -61,6 +62,7 @@ export function PostShareMenu({ url }: { url: string }) {
           >
             <SiX className="mr-2 h-4 w-4" />
             Share on X
+            <ExternalArrow className="ml-auto pl-2" />
           </a>
         </DropdownMenuItem>
 
@@ -78,6 +80,7 @@ export function PostShareMenu({ url }: { url: string }) {
           >
             <SiLinkedin className="mr-2 h-4 w-4" />
             Share on LinkedIn
+            <ExternalArrow className="ml-auto pl-2" />
           </a>
         </DropdownMenuItem>
       </DropdownMenuContent>

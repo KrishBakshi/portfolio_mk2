@@ -5,35 +5,44 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --card: #ffffff;
-  --card-foreground: #171717;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --border: #e5e5e5;
-  --frame-border: #e5e5e5;
-  --input: #e5e5e5;
-  --accent: #f5f5f5;
-  --accent-foreground: #171717;
-  --popover: #ffffff;
-  --popover-foreground: #111318;
-  --ring: #171717;
-  --primary: #171717;
-  --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
-  --secondary-foreground: #171717;
-  --technical: #525252;
-  --technical-soft: #f5f5f5;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --info: #3b82f6;
-  --code: #fafafa;
-  --code-foreground: #24292e;
-  --code-number: #a3a3a3;
-  --code-highlight: #f0f0f0;
-  --selection: #171717;
-  --selection-foreground: #ffffff;
+  /* Kanagawa: Lotus (light) / Wave (dark), the Hokusai "Great Wave" palette of ink
+   * navy, cream, orange, reds and sakura pink. --brand is the accent for small
+   * markers; --heat-0..4 are the GitHub heatmap levels (0 = no contributions). */
+  --background: #f2ecbc;
+  --foreground: #545464;
+  --card: #f2ecbc;
+  --card-foreground: #545464;
+  --muted: #e5ddb0;
+  --muted-foreground: #625f53;
+  --border: #d5cea3;
+  --frame-border: #d5cea3;
+  --input: #d5cea3;
+  --accent: #e5ddb0;
+  --accent-foreground: #43436c;
+  --popover: #f5f0c8;
+  --popover-foreground: #545464;
+  --ring: #4d699b;
+  --primary: #43436c;
+  --primary-foreground: #f2ecbc;
+  --secondary: #e5ddb0;
+  --secondary-foreground: #545464;
+  --technical: #625f53;
+  --technical-soft: #e5ddb0;
+  --destructive: #c84053;
+  --destructive-foreground: #f2ecbc;
+  --info: #4d699b;
+  --code: #e7dba0;
+  --code-foreground: #545464;
+  --code-number: #8a8980;
+  --code-highlight: #dcd5ac;
+  --selection: #c7d7e0;
+  --selection-foreground: #43436c;
+  --brand: #9c5200;
+  --heat-0: #e5ddb0;
+  --heat-1: #e9b98f;
+  --heat-2: #e98a00;
+  --heat-3: #d7474b;
+  --heat-4: #a8323e;
 }
 
 @theme inline {
@@ -66,6 +75,12 @@
   --color-code-highlight: var(--code-highlight);
   --color-selection: var(--selection);
   --color-selection-foreground: var(--selection-foreground);
+  --color-brand: var(--brand);
+  --color-heat-0: var(--heat-0);
+  --color-heat-1: var(--heat-1);
+  --color-heat-2: var(--heat-2);
+  --color-heat-3: var(--heat-3);
+  --color-heat-4: var(--heat-4);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
@@ -98,35 +113,41 @@
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card: #0a0a0a;
-  --card-foreground: #ededed;
-  --muted: #171717;
-  --muted-foreground: #a3a3a3;
-  --border: #262626;
-  --frame-border: #262626;
-  --input: #262626;
-  --accent: #1c1c1c;
-  --accent-foreground: #ededed;
-  --popover: #171717;
-  --popover-foreground: #ededed;
-  --ring: #ededed;
-  --primary: #ededed;
-  --primary-foreground: #0a0a0a;
-  --secondary: #171717;
-  --secondary-foreground: #ededed;
-  --technical: #a3a3a3;
-  --technical-soft: #171717;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --info: #60a5fa;
-  --code: #171717;
-  --code-foreground: #ededed;
-  --code-number: #525252;
-  --code-highlight: #262626;
-  --selection: #ededed;
-  --selection-foreground: #0a0a0a;
+  --background: #1f1f28;
+  --foreground: #dcd7ba;
+  --card: #1f1f28;
+  --card-foreground: #dcd7ba;
+  --muted: #2a2a37;
+  --muted-foreground: #a6a28c;
+  --border: #363646;
+  --frame-border: #363646;
+  --input: #363646;
+  --accent: #2a2a37;
+  --accent-foreground: #dcd7ba;
+  --popover: #16161d;
+  --popover-foreground: #dcd7ba;
+  --ring: #7e9cd8;
+  --primary: #dcd7ba;
+  --primary-foreground: #1f1f28;
+  --secondary: #2a2a37;
+  --secondary-foreground: #dcd7ba;
+  --technical: #a6a28c;
+  --technical-soft: #2a2a37;
+  --destructive: #e46876;
+  --destructive-foreground: #1f1f28;
+  --info: #7e9cd8;
+  --code: #16161d;
+  --code-foreground: #dcd7ba;
+  --code-number: #54546d;
+  --code-highlight: #2a2a37;
+  --selection: #2d4f67;
+  --selection-foreground: #dcd7ba;
+  --brand: #ffa066;
+  --heat-0: #2a2a37;
+  --heat-1: #4a2a35;
+  --heat-2: #8f3540;
+  --heat-3: #c34043;
+  --heat-4: #ffa066;
 }
 
 ::selection {
@@ -193,12 +214,6 @@ body {
   outline-offset: 3px;
 }
 
-/* cmdk auto-focuses the search input when the palette opens, which would
- * otherwise draw the global focus ring around it every time. */
-[cmdk-input]:focus-visible {
-  outline: none;
-}
-
 /* Support for html.dark and html.light selectors used in theme toggle */
 html.dark {
   color-scheme: dark;
@@ -247,86 +262,86 @@ html.light {
     padding: 0 !important;
   }
 
-  /* Light mode syntax (github) */
+  /* Syntax: Kanagawa Lotus (light) */
   .blog-code-block .hljs-comment,
   .blog-code-block .hljs-quote {
-    color: #6a737d;
+    color: #716e61;
   }
 
   .blog-code-block .hljs-keyword,
   .blog-code-block .hljs-selector-tag,
   .blog-code-block .hljs-subst {
-    color: #d73a49;
+    color: #624c83;
   }
 
   .blog-code-block .hljs-string,
   .blog-code-block .hljs-meta,
   .blog-code-block .hljs-symbol,
   .blog-code-block .hljs-bullet {
-    color: #032f62;
+    color: #6f894e;
   }
 
   .blog-code-block .hljs-title,
   .blog-code-block .hljs-section,
   .blog-code-block .hljs-attribute {
-    color: #6f42c1;
+    color: #4d699b;
   }
 
   .blog-code-block .hljs-number,
   .blog-code-block .hljs-literal {
-    color: #005cc5;
+    color: #b35b79;
   }
 
   .blog-code-block .hljs-built_in,
   .blog-code-block .hljs-type {
-    color: #e36209;
+    color: #597b75;
   }
 
   .blog-code-block .hljs-variable,
   .blog-code-block .hljs-template-variable,
   .blog-code-block .hljs-params {
-    color: #24292e;
+    color: #545464;
   }
 
-  /* Dark mode syntax (github-dark) */
+  /* Syntax: Kanagawa Wave (dark) */
   .dark .blog-code-block .hljs-comment,
   .dark .blog-code-block .hljs-quote {
-    color: #8b949e;
+    color: #8a8a80;
   }
 
   .dark .blog-code-block .hljs-keyword,
   .dark .blog-code-block .hljs-selector-tag,
   .dark .blog-code-block .hljs-subst {
-    color: #ff7b72;
+    color: #957fb8;
   }
 
   .dark .blog-code-block .hljs-string,
   .dark .blog-code-block .hljs-meta,
   .dark .blog-code-block .hljs-symbol,
   .dark .blog-code-block .hljs-bullet {
-    color: #a5d6ff;
+    color: #98bb6c;
   }
 
   .dark .blog-code-block .hljs-title,
   .dark .blog-code-block .hljs-section,
   .dark .blog-code-block .hljs-attribute {
-    color: #d2a8ff;
+    color: #7e9cd8;
   }
 
   .dark .blog-code-block .hljs-number,
   .dark .blog-code-block .hljs-literal {
-    color: #79c0ff;
+    color: #d27e99;
   }
 
   .dark .blog-code-block .hljs-built_in,
   .dark .blog-code-block .hljs-type {
-    color: #ffa657;
+    color: #7aa89f;
   }
 
   .dark .blog-code-block .hljs-variable,
   .dark .blog-code-block .hljs-template-variable,
   .dark .blog-code-block .hljs-params {
-    color: #c9d1d9;
+    color: #dcd7ba;
   }
 }
 

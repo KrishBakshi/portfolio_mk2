@@ -19,6 +19,7 @@ import {
     CollapsibleChevronsIcon,
 } from "@/components/ui/collapsible";
 import { cn, pageTitle, sectionTitle } from "@/lib/utils";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 
 const iconMap = {
     code: CodeXmlIcon,
@@ -282,6 +283,7 @@ export function ExperiencePositionItem({
                                             }
                                         >
                                             {children}
+                                            {isExternal ? <ExternalArrow /> : null}
                                         </a>
                                         );
                                     },

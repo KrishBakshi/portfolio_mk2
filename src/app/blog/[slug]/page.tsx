@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/config/metadata";
 import { NotionRenderer } from "@/components/blog/NotionRenderer";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { BlogCard } from "@/components/blog/BlogCard";
-import { pageTitle, sectionTitle } from "@/lib/utils";
+import { cn, pageTitle, sectionTitle, textLink } from "@/lib/utils";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 
 import { PageDetailShell } from "@/components/PageDetailShell";
 import { BackButton } from "@/components/BackButton";
@@ -157,10 +158,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 href={frontmatter.externalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                className={cn("inline-flex items-center gap-2 text-sm text-primary", textLink)}
               >
                 Read full article on external site
-                <ExternalLink className="size-4" />
+                <ExternalArrow className="ml-0" />
               </a>
             </div>
           )}

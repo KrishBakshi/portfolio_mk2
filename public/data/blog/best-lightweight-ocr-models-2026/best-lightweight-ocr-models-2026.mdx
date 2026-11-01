@@ -96,7 +96,7 @@ Put simply, if you already know the exact ROI (region of interest), you may not 
 
 For more complex layouts and variable inputs, benchmark the models below against representative samples from your own data.
 
-### Falcon-OCR
+## Falcon-OCR
 
 [huggingface.co/tiiuae/Falcon-OCR](https://huggingface.co/tiiuae/Falcon-OCR)
 
@@ -124,7 +124,7 @@ On olmOCR-Bench it scores 80.3% average, competitive with models several times i
 
 For a 0.3B model, Falcon OCR punches well above its weight, especially on tables and multi-column docs. It's a solid default if you're optimizing for cost and latency without giving up much accuracy.
 
-### GLM-OCR
+## GLM-OCR
 
 [huggingface.co/zai-org/GLM-OCR](https://huggingface.co/zai-org/GLM-OCR)
 
@@ -152,7 +152,7 @@ On OmniDocBench v1.5 it scores 94.62, ranking #1 overall at the time of release,
 
 GLM-OCR is a good pick when you want a single model that's fast enough for production and still tops the accuracy charts, especially for messy real-world business documents rather than clean academic ones.
 
-### MinerU2.5-Pro
+## MinerU2.5-Pro
 
 [huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B](https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B)
 
@@ -174,7 +174,7 @@ On OmniDocBench v1.6 (full) it scores 95.72 overall, which it claims as SOTA, be
 
 It's a strong reminder that architecture isn't the only lever. If you're stuck at a parameter budget, MinerU2.5-Pro shows how much headroom good data alone can unlock.
 
-### Surya-OCR-2
+## Surya-OCR-2
 
 [huggingface.co/datalab-to/surya-ocr-2](https://huggingface.co/datalab-to/surya-ocr-2)
 
@@ -198,7 +198,7 @@ On olmOCR-bench it scores 83.3%, the top score under 3B parameters, while runnin
 
 If speed and multilingual coverage matter more than squeezing out the last few points of accuracy, Surya is a strong candidate. Chandra OCR 2 is Datalab's larger model for more complex document problems, but it sits above the parameter threshold for this post.
 
-### PaddleOCR-VL-1.6
+## PaddleOCR-VL-1.6
 
 [huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6](https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6)
 

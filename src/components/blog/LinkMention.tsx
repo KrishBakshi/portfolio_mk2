@@ -1,39 +1,19 @@
 import React from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 
-const SITE_NAMES: Record<string, string> = {
-    "huggingface.co": "Hugging Face",
-    "github.com": "GitHub",
-    "arxiv.org": "arXiv",
-    "docs.z.ai": "Z.ai Docs",
-    "z.ai": "Z.ai",
-    "aistudio.baidu.com": "Baidu AI Studio",
-    "datalab.to": "Datalab",
-    "www.datalab.to": "Datalab",
-};
+const MAX_LABEL = 60;
 
-function getSiteName(hostname: string) {
-    const bare = hostname.replace(/^www\./, "");
-    if (SITE_NAMES[hostname]) return SITE_NAMES[hostname];
-    if (SITE_NAMES[bare]) return SITE_NAMES[bare];
-
-    const label = bare.split(".")[0];
-    return label.charAt(0).toUpperCase() + label.slice(1);
-}
-
-function formatPath(url: URL) {
-    const path = decodeURIComponent(url.pathname).replace(/^\/|\/$/g, "");
-    if (!path) return url.hostname.replace(/^www\./, "");
-
-    if (path.length > 44) {
-        return `${path.slice(0, 44)}…`;
-    }
-    return path;
+/** "https://www.github.com/user/repo/" → "github.com/user/repo", shortened if very long. */
+function formatLabel(url: URL) {
+    const host = url.hostname.replace(/^www\./, "");
+    const path = decodeURIComponent(url.pathname).replace(/\/$/, "");
+    const label = `${host}${path}`;
+    return label.length > MAX_LABEL ? `${label.slice(0, MAX_LABEL)}…` : label;
 }
 
 /**
  * A link counts as a "mention" only when its visible text is just the URL
- * itself (a bare autolink, or `[host/path](https://host/path)`) — never when
+ * itself (a bare autolink, or `[host/path](https://host/path)`): never when
  * the author wrote custom anchor text, so ordinary inline links are untouched.
  */
 export function isMentionLink(href: string, text: string) {
@@ -46,34 +26,21 @@ interface LinkMentionProps {
 }
 
 /**
- * Small inline "path · Site Name" badge for bare links.
- * Compact by design: it should sit inline in a sentence like a tiny pill,
- * not read as a separate block.
+ * A bare URL in a post, shown as a plain link with a tidy label (no protocol,
+ * no "www.", long paths shortened) and the usual arrow for links to other sites.
  */
 export function LinkMention({ url }: LinkMentionProps) {
-    let parsed: URL;
+    let label = url;
     try {
-        parsed = new URL(url);
+        label = formatLabel(new URL(url));
     } catch {
-        return (
-            <a href={url} target="_blank" rel="noopener noreferrer">
-                {url}
-            </a>
-        );
+        // Not a parseable URL: show it as written.
     }
 
-    const siteName = getSiteName(parsed.hostname);
-    const path = formatPath(parsed);
     return (
-        <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="not-prose inline-flex items-center gap-1 rounded border border-border/60 bg-muted/40 px-1 py-0 align-middle text-xs leading-none text-foreground no-underline transition-colors hover:bg-muted"
-        >
-            <ExternalLink className="size-3 shrink-0 text-muted-foreground" aria-hidden />
-            <span>{path}</span>
-            <span className="text-muted-foreground">· {siteName}</span>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+            {label}
+            <ExternalArrow />
         </a>
     );
 }
