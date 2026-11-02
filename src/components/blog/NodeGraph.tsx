@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react-hooks/preserve-manual-memoization */
 
 import React from "react";
 import { Minus, Plus, RotateCcw } from "lucide-react";

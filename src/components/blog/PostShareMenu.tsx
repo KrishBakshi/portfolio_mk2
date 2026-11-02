@@ -12,15 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SiX, SiLinkedin } from "react-icons/si";
 import { ExternalArrow } from "@/components/ui/external-arrow";
+import { useAbsoluteUrl } from "@/hooks/use-absolute-url";
 
 export function PostShareMenu({ url }: { url: string }) {
-  const [absoluteUrl, setAbsoluteUrl] = React.useState(url);
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setAbsoluteUrl(new URL(url, window.location.origin).toString());
-    }
-  }, [url]);
+  const absoluteUrl = useAbsoluteUrl(url);
 
   const urlEncoded = encodeURIComponent(absoluteUrl);
 
