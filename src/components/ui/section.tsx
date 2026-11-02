@@ -18,7 +18,7 @@ export function SlashHeading({
   className?: string;
 }) {
   return (
-    <h2 id={id} data-mew-perch="beside" className={cn("font-mono text-sm font-medium tracking-tight text-foreground", className)}>
+    <h2 id={id} data-mew-perch="beside" data-mew-hide="top" className={cn("font-mono text-sm font-medium tracking-tight text-foreground", className)}>
       <span aria-hidden className="text-brand">
         /
       </span>
@@ -29,12 +29,12 @@ export function SlashHeading({
 
 export function Section({ title, href, children }: SectionProps) {
   return (
-    <section className="px-5 sm:px-8">
+    <section data-mew-hide="left right" className="px-5 sm:px-8">
       <div className="mb-3 flex items-baseline justify-between">
         {href ? (
           <SlashHeading title={title} />
         ) : (
-          <h1 className={`${pageTitle} mb-4`}>{title}</h1>
+          <h1 data-mew-hide="top" className={`${pageTitle} mb-4`}>{title}</h1>
         )}
         {href ? (
           <Link href={href} className={cn("text-xs text-muted-foreground hover:text-foreground", textLink)}>

@@ -135,7 +135,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </header>
 
           {previewSrc || frontmatter.image ? (
-          <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
+          <div data-mew-hide="top left right" className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted">
             {previewSrc ? (
               <video
                 src={previewSrc}

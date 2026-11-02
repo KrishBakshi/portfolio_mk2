@@ -10,7 +10,7 @@ export async function GithubActivity({ profileUrl }: { profileUrl: string }) {
   if (!contributions) return null;
 
   return (
-    <section className="px-5 sm:px-8" aria-labelledby="github-activity-title">
+    <section data-mew-hide="left right" className="px-5 sm:px-8" aria-labelledby="github-activity-title">
       <div className="mb-3 flex items-baseline justify-between gap-4">
         <SlashHeading id="github-activity-title" title="GitHub" />
         <a

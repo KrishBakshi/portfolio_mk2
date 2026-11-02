@@ -54,7 +54,7 @@ export function GithubHeatmap({ days }: { days: GithubContributionDay[] }) {
 
   return (
     <div className="w-fit max-w-full space-y-2">
-      <div ref={scrollRef} className="overflow-x-auto pb-1 [scrollbar-width:none]">
+      <div ref={scrollRef} data-mew-hide className="overflow-x-auto pb-1 [scrollbar-width:none]">
         <CalendarHeatmap
           data={data}
           startDate={startDate}

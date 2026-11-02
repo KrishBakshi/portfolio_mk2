@@ -34,17 +34,17 @@ export function EntryRow({ href, title, meta, sub, external }: EntryRowProps) {
 
   if (href && external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="group block py-3">
+      <a href={href} target="_blank" rel="noopener noreferrer" data-mew-hide="top" className="group block py-3">
         {content}
       </a>
     );
   }
 
   return href ? (
-    <Link href={href} className="group block py-3">
+    <Link href={href} data-mew-hide="top" className="group block py-3">
       {content}
     </Link>
   ) : (
-    <div className="py-3">{content}</div>
+    <div data-mew-hide="top" className="py-3">{content}</div>
   );
 }
