@@ -102,10 +102,14 @@ export function Mew() {
   const rotate = useMotionValue(0);
   const scale = useMotionValue(1);
   const [puffs, setPuffs] = useState<Puff[]>([]);
-  // The hand-drawn note: drawn once per visit when Mew first lands on its home by the
-  // intro, then it stays, pointing at that spot whether Mew is there or not.
+  // The hand-drawn note: put up on every visit to a page with a home, then it stays,
+  // pointing at that spot whether Mew is there or not. `noted`: it's up on this page.
   const [note, setNote] = useState<Spot | null>(null);
   const noted = useRef(false);
+  // The cloud and note animate in only the first time; coming back to the page later,
+  // they're simply there. The ref is for Mew's plans, the state for rendering.
+  const introducedRef = useRef(false);
+  const [introduced, setIntroduced] = useState(false);
   // Home: the intro perch on this page (null on pages without one).
   const homeRef = useRef<Spot | null>(null);
   const [home, setHome] = useState<Spot | null>(null);
@@ -147,6 +151,8 @@ export function Mew() {
   const token = useRef(0);
   const flights = useRef<AnimationPlaybackControls[]>([]);
   const asleep = useRef(false);
+  // Mew sleeps in its cloud from the first visit until someone clicks it awake.
+  const woken = useRef(false);
   const shown = useRef(false);
   const arrivedAt = useRef(0);
   const hiddenAt = useRef<number | null>(null);
@@ -398,7 +404,7 @@ export function Mew() {
   );
 
   /**
-   * The first time Mew is sitting on the intro perch, point at it with the hand-drawn
+   * If the sign isn't up yet when Mew sits on the intro perch, point at it with the hand-drawn
    * note (only if there's room to its right; phones skip it).
    */
   const notePerch = useCallback(() => {
@@ -645,10 +651,9 @@ export function Mew() {
   }, [perch, size]);
 
 
-  /** The page entrance: by the intro if there is one, otherwise somewhere, a bit later. */
   /**
-   * The sign goes up first: on arrival the note points at the empty home spot (marked
-   * with dashes), and Mew turns up there a moment later. Only where there's room for it.
+   * The sign goes up first: it points at the home cloud, and Mew turns up there a moment
+   * later. Only where there's room for it.
    */
   const signHome = useCallback(() => {
     const spot = perch();
@@ -658,35 +663,52 @@ export function Mew() {
     setNote({ x: spot.x + size, y: spot.y });
   }, [perch, size]);
 
+  /**
+   * The page entrance. Until someone wakes Mew (a click), it sleeps in its cloud on the
+   * home page and stays put; it isn't around on other pages. Once woken it's its own
+   * creature: it doesn't wait at home for you, it turns up somewhere after a while,
+   * sometimes just appearing, sometimes peeking out from behind something.
+   */
   const arrive = useCallback(
     async (own: number) => {
       const spot = perch();
-      if (spot) {
+      // The very first time on a page with a home: the sign draws in, then Mew fades in.
+      const intro = !!spot && !introducedRef.current;
+      if (intro) {
         await wait(300, own); // let the layout settle (fonts) before putting the sign up
         updateHome();
         signHome();
-        await wait(2000, own); // the sign draws in, then Mew comes
-      } else {
-        await wait(random(4000, 10000), own);
+        await wait(2000, own);
+        introducedRef.current = true;
+        setIntroduced(true);
       }
-      updateHome();
-      const home = perch();
-      if (home) {
-        // Found asleep in its cloud; it naps a little, yawns and wakes up with a wave.
+
+      if (!woken.current) {
+        updateHome();
+        const home = perch();
+        if (home) {
+          x.set(home.x);
+          y.set(home.y);
+          setFlipped(false);
+          setPose("sleep");
+          shown.current = true;
+          setPresent(true);
+          arrivalPending.current = false;
+          if (intro) await fly(own, { opacity: 1 }, 1.2, "easeOut");
+          else opacity.set(1);
+        }
+        // Fast asleep until a click wakes it (onClick); nothing else moves it.
         asleep.current = true;
-        await appear(own, home, "sleep", { fadeIn: "sleep", hold: random(3000, 5000) });
-        asleep.current = false;
-        setPose("yawn");
-        await wait(1500, own);
-        setPose("wave");
-        await wait(random(1600, 2200), own);
-        setPose("idle");
-      } else {
-        await appear(own, spot ?? somewhere(), "wave");
+        for (;;) await wait(60000, own);
       }
-      notePerch();
+
+      await wait(random(3000, 9000), own);
+      arrivalPending.current = false;
+      const place = Math.random() < 0.5 ? hidingPlace() : null;
+      if (place) await hide(own, place);
+      else await appear(own, somewhere(), Math.random() < 0.5 ? "sparkle" : "wave");
     },
-    [appear, notePerch, perch, signHome, somewhere, updateHome, wait]
+    [appear, fly, hide, hidingPlace, opacity, perch, signHome, somewhere, updateHome, wait, x, y]
   );
 
   /** Drop whatever Mew is doing, run `first`, then go back to its own plans. */
@@ -738,7 +760,15 @@ export function Mew() {
       opacity.set(0);
       shown.current = false;
       setPresent(false);
+      // A new page: its own sign goes up again on arrival (instantly after the first time).
       setNote(null);
+      noted.current = false;
+      // Back on a page after the intro: the sign is part of the furniture, so it goes up
+      // in this same frame as the cloud instead of waiting for Mew's arrival.
+      if (introducedRef.current) {
+        updateHome();
+        signHome();
+      }
 
       if (reducedMotion) {
         // No roaming: Mew just sits by the intro (or bottom corner) and changes pose when poked.
@@ -765,7 +795,7 @@ export function Mew() {
       invalidate();
       stopFlights();
     };
-  }, [mounted, pathname, reducedMotion, size, arrive, invalidate, opacity, rotate, updateClip, perch, replan, stopFlights, x, y]);
+  }, [mounted, pathname, reducedMotion, size, arrive, invalidate, opacity, rotate, updateClip, perch, replan, signHome, stopFlights, updateHome, x, y]);
 
   // Mew doesn't follow the page as you scroll. Once you settle somewhere it can't see
   // you from, it may poof onto your screen a moment later (or keep napping).
@@ -783,7 +813,7 @@ export function Mew() {
       clearTimeout(settle);
       clearTimeout(visit);
       settle = setTimeout(() => {
-        if (!shown.current || !offScreen()) return;
+        if (!woken.current || !shown.current || !offScreen()) return;
         visit = setTimeout(() => {
           if (!shown.current || !offScreen()) return;
           if (asleep.current && Math.random() < 0.6) return;
@@ -812,8 +842,9 @@ export function Mew() {
       const away = hiddenAt.current ? Date.now() - hiddenAt.current : 0;
       hiddenAt.current = null;
       replan(async (own) => {
+        // Not woken yet: back to sleep in the cloud (or keep away from this page).
         // Opened in a background tab: the entrance never happened, so make it now.
-        if (arrivalPending.current) {
+        if (!woken.current || arrivalPending.current) {
           await arrive(own);
         } else if (shown.current && opacity.get() < 1) {
           // Animations don't run in background tabs, so an entrance may have stalled.
@@ -872,6 +903,19 @@ export function Mew() {
   const onClick = () => {
     if (!shown.current) return;
     if (reducedMotion) return setPose((current) => (current === "giggle" ? "idle" : "giggle"));
+    if (!woken.current) {
+      // Woken up at last: a stretch and a yawn, a wave, then off on its own business.
+      woken.current = true;
+      replan(async (own) => {
+        setPose("yawn");
+        await wait(1500, own);
+        setPose("wave");
+        await wait(random(1600, 2200), own);
+        setPose("idle");
+        arrivedAt.current = Date.now();
+      });
+      return;
+    }
     if (hidingRef.current) return duckAway();
     // Already reacting to a flick: extra clicks and double clicks don't stack up.
     if (reacting.current) return;
@@ -918,11 +962,13 @@ export function Mew() {
   // body), so a spot left over from a longer page can never stretch this one.
   return createPortal(
     <div aria-hidden className="pointer-events-none absolute inset-0 z-40 overflow-clip">
-      {home ? <HomeCloud x={home.x} y={home.y} size={size} /> : null}
+      {home ? <HomeCloud x={home.x} y={home.y} size={size} instant={introduced} /> : null}
       {puffs.map((p) => (
         <PuffCloud key={p.id} x={p.x} y={p.y} size={size} />
       ))}
-      <AnimatePresence>{note ? <HandNote key="note" x={note.x} y={note.y} size={size} /> : null}</AnimatePresence>
+      <AnimatePresence>
+        {note ? <HandNote key="note" x={note.x} y={note.y} size={size} instant={introduced} /> : null}
+      </AnimatePresence>
 
     <motion.div
       aria-hidden
@@ -990,9 +1036,10 @@ function PuffCloud({ x, y, size }: { x: number; y: number; size: number }) {
  * A hand-drawn arrow and note pointing back at Mew, drawn in stroke by stroke. Sits to
  * the right of Mew's first perch and fades when Mew leaves.
  */
-function HandNote({ x, y, size }: { x: number; y: number; size: number }) {
+function HandNote({ x, y, size, instant }: { x: number; y: number; size: number; instant?: boolean }) {
+  // instant: already introduced, so it's just there (initial={false} skips the draw-in).
   const draw = (delay: number, duration: number) => ({
-    initial: { pathLength: 0, opacity: 0 },
+    initial: instant ? false : { pathLength: 0, opacity: 0 },
     animate: { pathLength: 1, opacity: 1 },
     transition: { pathLength: { delay, duration, ease: "easeOut" as const }, opacity: { delay, duration: 0.01 } },
   });
@@ -1017,7 +1064,7 @@ function HandNote({ x, y, size }: { x: number; y: number; size: number }) {
       <motion.span
         className="absolute whitespace-nowrap font-hand leading-none"
         style={{ left: 82, top: 52 }}
-        initial={{ opacity: 0, y: 4 }}
+        initial={instant ? false : { opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.4 }}
       >
@@ -1034,7 +1081,7 @@ function HandNote({ x, y, size }: { x: number; y: number; size: number }) {
  * Mew's feet land in the dip in its middle.
  */
 const CLOUD_RATIO = 174 / 240; // /sprites/cloud.png
-function HomeCloud({ x, y, size }: { x: number; y: number; size: number }) {
+function HomeCloud({ x, y, size, instant }: { x: number; y: number; size: number; instant?: boolean }) {
   const width = size * 1.25;
   const height = width * CLOUD_RATIO;
   const feet = y + size * FRAME_RATIO * 0.93;
@@ -1042,7 +1089,7 @@ function HomeCloud({ x, y, size }: { x: number; y: number; size: number }) {
     <motion.div
       className="pointer-events-none absolute left-0 top-0 bg-[url(/sprites/cloud.png)] bg-contain bg-no-repeat"
       style={{ x: x + size / 2 - width / 2, y: feet - height * 0.45, width, height }}
-      initial={{ opacity: 0, scale: 0.6 }}
+      initial={instant ? false : { opacity: 0, scale: 0.6 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
     />
