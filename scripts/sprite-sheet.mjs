@@ -1,46 +1,68 @@
 #!/usr/bin/env node
-// Turn a generated sprite grid (poses on a near-white background) into a
+// Turn a generated sprite grid (poses on a plain white or black background) into a
 // transparent, evenly framed sprite sheet for the site companion.
 //
-//   node scripts/sprite-sheet.mjs <input.png> <output.png> [cols=5] [rows=3] [frameWidth=192] [--holes x,y;x,y]
+//   node scripts/sprite-sheet.mjs <input.png> <output.png> [cols=5] [rows=3] [frameWidth=192]
+//     [--bg light|dark]        background colour of the input (default light = white)
+//     [--holes x,y;x,y]        enclosed background gaps to clear (pixel coords in the input)
+//     [--blank x,y,w,h;...]    rectangles to paint over first (labels, watermarks)
+//     [--frame WxH]            exact frame size; the crop grows to that aspect (keeps sheets
+//                              made from different inputs the same size)
 //
-// Steps: flood-fill the white background from the edges (so white inside the
-// character, like eye highlights, survives), clear any enclosed white gaps listed in
-// --holes (pixel coords in the input), drop stray specks, take the white back out of
-// the pale anti-aliased edge pixels so no light halo shows on dark pages, find one
-// crop box that fits every pose so they stay aligned, then downscale into the grid.
+// Steps: flood-fill the background from the edges (so highlights inside the character
+// survive), clear the --holes gaps, drop stray specks, take the background colour back
+// out of the anti-aliased edge pixels so no halo shows on the other theme, find one crop
+// box that fits every pose so they stay aligned, then downscale into the grid.
 import sharp from "sharp";
 
 const args = process.argv.slice(2);
-const holesAt = args.indexOf("--holes");
-const holes =
-  holesAt === -1
-    ? []
-    : args[holesAt + 1]
-        .split(";")
-        .filter(Boolean)
-        .map((pair) => pair.split(",").map(Number));
-const positional = holesAt === -1 ? args : args.filter((_, i) => i !== holesAt && i !== holesAt + 1);
+const flags = {};
+const positional = [];
+for (let i = 0; i < args.length; i++) {
+  if (args[i].startsWith("--")) flags[args[i].slice(2)] = args[++i];
+  else positional.push(args[i]);
+}
+const list = (value) =>
+  (value ?? "")
+    .split(";")
+    .filter(Boolean)
+    .map((item) => item.split(",").map(Number));
+const holes = list(flags.holes);
+const blanks = list(flags.blank);
+const dark = flags.bg === "dark";
 const [input, output, colsArg = "5", rowsArg = "3", frameWidthArg = "192"] = positional;
 if (!input || !output) {
   console.error(
-    "usage: node scripts/sprite-sheet.mjs <input.png> <output.png> [cols] [rows] [frameWidth] [--holes x,y;x,y]"
+    "usage: node scripts/sprite-sheet.mjs <input.png> <output.png> [cols] [rows] [frameWidth] [--bg light|dark] [--holes x,y;...] [--blank x,y,w,h;...] [--frame WxH]"
   );
   process.exit(1);
 }
 const cols = Number(colsArg);
 const rows = Number(rowsArg);
-const frameWidth = Number(frameWidthArg);
+const [fixedW, fixedH] = flags.frame ? flags.frame.split("x").map(Number) : [];
+const frameWidth = fixedW ?? Number(frameWidthArg);
 
 const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const { width: W, height: H } = info;
 const px = (i) => [data[i * 4], data[i * 4 + 1], data[i * 4 + 2]];
 
-// Background: bright and nearly grey.
+// 0. Paint over labels and watermarks with the background colour.
+const BG = dark ? 0 : 255;
+for (const [bx, by, bw, bh] of blanks) {
+  for (let y = Math.max(0, by); y < Math.min(H, by + bh); y++) {
+    for (let x = Math.max(0, bx); x < Math.min(W, bx + bw); x++) {
+      const i = (y * W + x) * 4;
+      data[i] = data[i + 1] = data[i + 2] = BG;
+    }
+  }
+}
+
+// Background: nearly grey, and bright (light) or very dark (dark).
 const isBackground = (i) => {
   const [r, g, b] = px(i);
   const min = Math.min(r, g, b);
-  return min >= 222 && Math.max(r, g, b) - min <= 22;
+  const max = Math.max(r, g, b);
+  return dark ? max <= 40 && max - min <= 25 : min >= 222 && max - min <= 22;
 };
 
 // 1. Flood fill from every image edge pixel.
@@ -91,11 +113,13 @@ for (let start = 0; start < W * H; start++) {
 }
 
 // 1c. Gaps named on the command line (e.g. between legs): flood each one as
-// background, with a slightly looser idea of "white" to take its shaded rim too.
+// background, with a slightly looser idea of the background colour to take its rim too.
 const isLight = (i) => {
   const [r, g, b] = px(i);
   const min = Math.min(r, g, b);
-  return min >= 205 && Math.max(r, g, b) - min <= 30;
+  const max = Math.max(r, g, b);
+  // Near-black is background whatever its tint; near-white has to be fairly grey.
+  return dark ? max <= 60 : min >= 205 && max - min <= 30;
 };
 for (const [hx, hy] of holes) {
   const fill = [hy * W + hx];
@@ -133,11 +157,11 @@ for (let start = 0; start < W * H; start++) {
 
 for (let i = 0; i < W * H; i++) if (bg[i]) data[i * 4 + 3] = 0;
 
-// 2b. Defringe. Edge pixels near the background were blended with white, which
-// shows as a pale halo on dark pages. For pale, low-saturation pixels within a few
-// pixels of the background, take the white back out (colour-to-alpha against
-// white): keep the colour that was mixed in and make the pixel partly transparent.
-// Saturated pixels (pink fur, lavender sparkles) and the dark outline are left alone.
+// 2b. Defringe. Edge pixels near the background were blended with it, which shows as
+// a halo on the other theme. For low-saturation pixels within a few pixels of the
+// background, take the background colour back out (colour-to-alpha): keep the colour
+// that was mixed in and make the pixel partly transparent. Saturated pixels (pink fur,
+// lavender sparkles) are left alone, and on white the dark outline is too.
 const EDGE_BAND = 6;
 const depth = new Uint8Array(W * H); // 0 = not in band; d = distance to background
 let frontier = [];
@@ -167,10 +191,16 @@ for (let i = 0; i < W * H; i++) {
   if (!depth[i]) continue;
   const [r, g, b] = px(i);
   const min = Math.min(r, g, b);
-  if (min < 110 || Math.max(r, g, b) - min > 40) continue;
-  const alpha = Math.max(255 - r, 255 - g, 255 - b) / 255;
+  const max = Math.max(r, g, b);
+  if (max - min > 40) continue;
+  if (dark ? max > 150 : min < 110) continue;
+  // Against black: alpha is the brightest channel. Against white: how far from white.
+  const alpha = dark ? max / 255 : Math.max(255 - r, 255 - g, 255 - b) / 255;
   if (alpha >= 0.98) continue;
-  const unmix = (c) => (alpha <= 0.02 ? 0 : Math.max(0, Math.min(255, Math.round(255 - (255 - c) / alpha))));
+  const unmix = (c) =>
+    alpha <= 0.02
+      ? 0
+      : Math.max(0, Math.min(255, Math.round(dark ? c / alpha : 255 - (255 - c) / alpha)));
   data[i * 4] = unmix(r);
   data[i * 4 + 1] = unmix(g);
   data[i * 4 + 2] = unmix(b);
@@ -201,9 +231,22 @@ for (let r = 0; r < rows; r++) {
 const PAD = 6;
 minX = Math.max(0, minX - PAD);
 minY = Math.max(0, minY - PAD);
-const cropW = Math.min(Math.floor(cellW), maxX + PAD + 1) - minX;
-const cropH = Math.min(Math.floor(cellH), maxY + PAD + 1) - minY;
-const frameHeight = Math.round((frameWidth * cropH) / cropW);
+let cropW = Math.min(Math.floor(cellW), maxX + PAD + 1) - minX;
+let cropH = Math.min(Math.floor(cellH), maxY + PAD + 1) - minY;
+if (fixedW && fixedH) {
+  // Grow the crop (centred, within the cell) to the requested frame aspect.
+  const aspect = fixedH / fixedW;
+  if (cropH / cropW < aspect) {
+    const grow = Math.round(cropW * aspect) - cropH;
+    minY = Math.max(0, Math.min(Math.floor(cellH) - (cropH + grow), minY - Math.floor(grow / 2)));
+    cropH += grow;
+  } else {
+    const grow = Math.round(cropH / aspect) - cropW;
+    minX = Math.max(0, Math.min(Math.floor(cellW) - (cropW + grow), minX - Math.floor(grow / 2)));
+    cropW += grow;
+  }
+}
+const frameHeight = fixedH ?? Math.round((frameWidth * cropH) / cropW);
 
 // 4. Cut, downscale and lay out the frames.
 const cleaned = sharp(data, { raw: { width: W, height: H, channels: 4 } });
