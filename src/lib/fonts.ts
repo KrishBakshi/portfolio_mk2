@@ -1,4 +1,5 @@
 import {
+    Caveat as FontHand,
     IBM_Plex_Mono as FontMono,
     IBM_Plex_Sans as FontSans,
 } from "next/font/google";
@@ -15,4 +16,12 @@ export const fontMono = FontMono({
     display: "swap",
     subsets: ["latin"],
     variable: "--font-mono",
+});
+
+// Handwriting, only for the little note that points at Mew.
+export const fontHand = FontHand({
+    weight: ["500"],
+    display: "swap",
+    subsets: ["latin"],
+    variable: "--font-hand",
 });
