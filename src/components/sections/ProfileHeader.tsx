@@ -118,7 +118,7 @@ export default function ProfileHeader({
           <span className="mb-1 block text-lg text-muted-foreground sm:text-xl">Hi, I&apos;m</span>
           {name}
         </h1>
-        <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl sm:size-20">
+        <div data-mew-hide className="relative size-16 shrink-0 overflow-hidden rounded-2xl sm:size-20">
           <Image
             src={profileImage}
             alt={`${name} profile photo`}

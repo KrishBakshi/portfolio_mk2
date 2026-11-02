@@ -133,6 +133,7 @@ const markdownComponents = {
 
         return (
             <figure
+                data-mew-hide="top left right"
                 className={cn("not-prose my-8", width && "mx-auto")}
                 style={width ? { width, maxWidth: "100%" } : undefined}
             >

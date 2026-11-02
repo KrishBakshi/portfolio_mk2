@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import { Mew } from "@/components/companion/Mew";
 import { getRootMetadata } from "@/config/metadata";
 import { META_THEME_COLORS } from "@/config/site";
-import { fontMono, fontSans } from "@/lib/fonts";
+import { fontHand, fontMono, fontSans } from "@/lib/fonts";
 
 import { Analytics } from "@vercel/analytics/next"
 
@@ -47,7 +47,7 @@ export default function RootLayout({
       </head>
       <body
         // relative: Mew's layer is clipped to the body's size (see Mew.tsx).
-        className={`${fontSans.variable} ${fontMono.variable} relative antialiased`}
+        className={`${fontSans.variable} ${fontMono.variable} ${fontHand.variable} relative antialiased`}
         suppressHydrationWarning
       >
         <Providers>

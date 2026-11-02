@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { CopyButton } from "./CopyButton";
+import { useAbsoluteUrl } from "@/hooks/use-absolute-url";
 import { ExternalArrow, isExternalHref } from "@/components/ui/external-arrow";
 
 // SVG Icons for specific AI services
@@ -60,18 +61,6 @@ function getPrompt(url: string, isComponent?: boolean) {
     return `Read ${url}. This is a React component. I want to ask questions about it.`;
   }
   return `Read ${url}, I want to ask questions about it.`;
-}
-
-function useAbsoluteUrl(url: string) {
-  const [absoluteUrl, setAbsoluteUrl] = React.useState(url);
-  
-  React.useEffect(() => {
-      if (typeof window !== "undefined") {
-         setAbsoluteUrl(new URL(url, window.location.origin).toString());
-      }
-  }, [url]);
-  
-  return absoluteUrl;
 }
 
 type MenuItem = 

@@ -83,6 +83,7 @@
   --color-heat-4: var(--heat-4);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-hand: var(--font-hand);
 
   --animate-collapsible-down: collapsible-down 140ms ease-out;
   --animate-collapsible-up: collapsible-up 140ms ease-out;
